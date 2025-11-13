@@ -197,6 +197,7 @@ export default function StudentProfilePage({ params }: { params: { id: string } 
                   <TableHead>Amount</TableHead>
                   <TableHead>Due Date</TableHead>
                   <TableHead>Status</TableHead>
+                  <TableHead>Action</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -215,11 +216,18 @@ export default function StudentProfilePage({ params }: { params: { id: string } 
                         {fee.status}
                       </Badge>
                     </TableCell>
+                    <TableCell>
+                      {fee.status !== 'paid' ? (
+                        <Button size="sm">Pay Now</Button>
+                      ) : (
+                        <Button size="sm" variant="outline" disabled>Paid</Button>
+                      )}
+                    </TableCell>
                   </TableRow>
                 ))}
                  {student.fees.length === 0 && (
                     <TableRow>
-                        <TableCell colSpan={4} className="text-center text-muted-foreground h-24">
+                        <TableCell colSpan={5} className="text-center text-muted-foreground h-24">
                             No fee records found.
                         </TableCell>
                     </TableRow>
