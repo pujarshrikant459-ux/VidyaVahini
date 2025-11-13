@@ -8,6 +8,7 @@ import {
   CreditCard,
   GraduationCap,
   Home,
+  Megaphone,
   Settings,
   Users,
 } from "lucide-react";
@@ -26,6 +27,7 @@ import {
 import { cn } from "@/lib/utils";
 import { DashboardHeader } from "@/components/dashboard/header";
 import { Button } from "@/components/ui/button";
+import { useUserRole } from "@/hooks/use-user-role";
 
 export default function DashboardLayout({
   children,
@@ -33,6 +35,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const { role } = useUserRole();
   const isActive = (path: string) => {
     if (path === "/dashboard") {
       return pathname === path;
@@ -99,6 +102,16 @@ export default function DashboardLayout({
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
+            {role === 'admin' && (
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={isActive("/dashboard/announcements")} tooltip="Announcements">
+                  <Link href="/dashboard/announcements">
+                    <Megaphone />
+                    <span>Announcements</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            )}
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter>

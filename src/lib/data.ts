@@ -1,4 +1,4 @@
-import type { Student, Teacher, Homework, TimetableEntry, Transport } from './types';
+import type { Student, Teacher, Homework, TimetableEntry, Transport, Announcement } from './types';
 import { PlaceHolderImages } from './placeholder-images';
 
 const student1Photo = PlaceHolderImages.find(p => p.id === 'student-1')?.imageUrl || '';
@@ -121,4 +121,19 @@ export const transport: Transport[] = [
       { stop: 'School Campus', pickupTime: '08:15 AM', dropTime: '04:00 PM' },
     ],
   },
+];
+
+export const announcements: Announcement[] = [
+    {
+      id: 'anno-1',
+      title: 'Annual Day Function',
+      content: 'The annual day will be held on December 15th. All parents are invited to attend and celebrate the students\' achievements.',
+      date: '2023-11-10',
+    },
+    {
+      id: 'anno-2',
+      title: 'Mid-term Exams',
+      content: 'Mid-term exams will commence from November 20th. The schedule has been shared with the students.',
+      date: '2023-11-05',
+    },
 ];

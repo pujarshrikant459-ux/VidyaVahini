@@ -61,3 +61,10 @@ export interface Transport {
   };
   stops: { stop: string; pickupTime: string; dropTime: string }[];
 }
+
+export interface Announcement {
+  id: string;
+  title: string;
+  content: string;
+  date: string;
+}
