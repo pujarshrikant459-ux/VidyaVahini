@@ -15,15 +15,17 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { students as initialStudents } from "@/lib/data";
 import { Badge } from "@/components/ui/badge";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, PlusCircle } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { StudentEditDialog } from "@/components/dashboard/student-edit-dialog";
+import { StudentAddDialog } from "@/components/dashboard/student-add-dialog";
 import type { Student } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
 
 export default function StudentsPage() {
   const [students, setStudents] = useState<Student[]>(initialStudents);
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
+  const [isAddDialogOpen, setAddDialogOpen] = useState(false);
   const { toast } = useToast();
 
   const handleEditOpen = (student: Student) => {
@@ -43,12 +45,33 @@ export default function StudentsPage() {
     handleEditClose();
   };
 
+  const handleAddStudent = (newStudentData: Omit<Student, 'id' | 'attendance' | 'fees'>) => {
+    const newStudent: Student = {
+      ...newStudentData,
+      id: `s-${Date.now()}`,
+      attendance: [],
+      fees: [],
+    };
+    setStudents(prev => [newStudent, ...prev]);
+    toast({
+      title: "Student Added",
+      description: `${newStudent.name} has been added to the records.`,
+    });
+    setAddDialogOpen(false);
+  };
+
   return (
     <>
       <Card>
-        <CardHeader>
-          <CardTitle>Students</CardTitle>
-          <CardDescription>Manage all student records in the school.</CardDescription>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle>Students</CardTitle>
+            <CardDescription>Manage all student records in the school.</CardDescription>
+          </div>
+          <Button onClick={() => setAddDialogOpen(true)}>
+            <PlusCircle className="mr-2 h-4 w-4" />
+            Add Student
+          </Button>
         </CardHeader>
         <CardContent>
           <Table>
@@ -117,6 +140,11 @@ export default function StudentsPage() {
           onSave={handleUpdateStudent}
         />
       )}
+       <StudentAddDialog
+        isOpen={isAddDialogOpen}
+        onClose={() => setAddDialogOpen(false)}
+        onSave={handleAddStudent}
+      />
     </>
   );
 }
