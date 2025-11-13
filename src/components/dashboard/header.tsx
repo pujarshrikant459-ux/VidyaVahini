@@ -8,6 +8,7 @@ import {
   LogOut,
   Settings,
   User,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,6 +26,7 @@ import { useSidebar } from "@/components/ui/sidebar";
 import { usePathname } from "next/navigation";
 import { useAnnouncements } from "@/hooks/use-announcements";
 import { useUserRole } from "@/hooks/use-user-role";
+import { cn } from "@/lib/utils";
 
 export function DashboardHeader() {
   const { isMobile } = useSidebar();
@@ -45,10 +47,8 @@ export function DashboardHeader() {
     return "VidyaVahini";
   };
   
-  const handleNotificationClick = (e: React.MouseEvent) => {
-    if (notificationCount > 0) {
-      resetNotificationCount();
-    }
+  const handleClearNotifications = () => {
+    resetNotificationCount();
   };
 
   return (
@@ -56,9 +56,14 @@ export function DashboardHeader() {
       {isMobile && <SidebarTrigger />}
       <h1 className="text-xl font-semibold md:text-2xl font-headline">{getPageTitle()}</h1>
       <div className="ml-auto flex items-center gap-2">
-        <DropdownMenu>
+        <DropdownMenu onOpenChange={(open) => {
+          // Reset count when dropdown is opened if there are notifications
+          if (open && notificationCount > 0) {
+            resetNotificationCount();
+          }
+        }}>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="rounded-full relative" onClick={handleNotificationClick}>
+            <Button variant="ghost" size="icon" className="rounded-full relative">
               <Bell className="h-5 w-5" />
               {role === 'parent' && notificationCount > 0 && (
                 <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-destructive" />
@@ -67,7 +72,19 @@ export function DashboardHeader() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-80">
-            <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+            <div className="flex justify-between items-center">
+              <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+              {announcements.length > 0 && (
+                <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="mr-1 text-xs"
+                    onClick={handleClearNotifications}
+                >
+                  Clear All
+                </Button>
+              )}
+            </div>
             <DropdownMenuSeparator />
              {announcements.slice(0, 3).map(ann => (
               <DropdownMenuItem key={ann.id} asChild>
