@@ -107,7 +107,9 @@ export default function StudentProfilePage({ params }: { params: { id: string } 
                 {student.fees.map((fee) => (
                   <TableRow key={fee.id}>
                     <TableCell>{fee.type}</TableCell>
-                    <TableCell>₹{fee.amount.toLocaleString('en-IN')}</TableCell>
+                    <TableCell className="flex items-center gap-1">
+                      <IndianRupee className="h-4 w-4" />{fee.amount.toLocaleString('en-IN')}
+                    </TableCell>
                     <TableCell>{fee.dueDate}</TableCell>
                     <TableCell>
                       <Badge

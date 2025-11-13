@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { FeeManagementAdmin } from "@/components/dashboard/fee-management-admin";
+import { IndianRupee } from "lucide-react";
 
 export default function FeesPage() {
   const parentStudent = students[0];
@@ -37,7 +38,9 @@ export default function FeesPage() {
                 {parentStudent.fees.map((fee) => (
                   <TableRow key={fee.id}>
                     <TableCell className="font-medium">{fee.type}</TableCell>
-                    <TableCell>₹{fee.amount.toLocaleString('en-IN')}</TableCell>
+                    <TableCell className="flex items-center gap-1">
+                      <IndianRupee className="h-4 w-4" />{fee.amount.toLocaleString('en-IN')}
+                    </TableCell>
                     <TableCell>{fee.dueDate}</TableCell>
                     <TableCell>
                       <Badge
