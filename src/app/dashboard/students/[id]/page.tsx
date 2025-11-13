@@ -1,6 +1,5 @@
 "use client";
 
-import { students as initialStudents } from "@/lib/data";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -9,22 +8,21 @@ import { Calendar } from "@/components/ui/calendar";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { User, Phone, Hash, BookUser, IndianRupee } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
-import type { AttendanceRecord } from "@/lib/types";
+import { useState, use } from "react";
 import { useUserRole } from "@/hooks/use-user-role";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import type { DateRange } from "react-day-picker";
 import { useStudents } from "@/hooks/use-students";
 
-export default function StudentProfilePage({ params }: { params: { id: string } }) {
+export default function StudentProfilePage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
   const { role } = useUserRole();
   const { toast } = useToast();
   const { students, updateStudentAttendance, payFee } = useStudents();
-  const student = students.find((s) => s.id === params.id);
+  const student = students.find((s) => s.id === id);
 
   if (!student) {
     notFound();
