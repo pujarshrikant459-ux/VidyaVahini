@@ -4,16 +4,30 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, CheckCircle, AlertTriangle, IndianRupee, User } from "lucide-react";
 import type { Student } from "@/lib/types";
 import { useUserRole } from "@/hooks/use-user-role";
+import { useStudents } from "@/hooks/use-students";
 
-export function OverviewCards({ students }: { students: Student[] }) {
+export function OverviewCards({ students: allStudents }: { students: Student[] }) {
   const { role } = useUserRole();
+  const { currentStudent } = useStudents();
 
   if (role === 'parent') {
-    const student = students[0];
+    const student = currentStudent;
+
+    if (!student) {
+        return (
+             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                <Card><CardContent className="pt-6"><div className="text-center text-muted-foreground">Loading student data...</div></CardContent></Card>
+                <Card><CardContent className="pt-6"><div className="text-center text-muted-foreground">Loading student data...</div></CardContent></Card>
+                <Card><CardContent className="pt-6"><div className="text-center text-muted-foreground">Loading student data...</div></CardContent></Card>
+                <Card><CardContent className="pt-6"><div className="text-center text-muted-foreground">Loading student data...</div></CardContent></Card>
+            </div>
+        )
+    }
+
     const totalAttendance = student.attendance.length;
     const presentAttendance = student.attendance.filter(a => a.status === 'present' || a.status === 'late').length;
     const attendancePercentage = totalAttendance > 0 ? ((presentAttendance / totalAttendance) * 100).toFixed(0) : 100;
-    const pendingFees = student.fees.filter(f => f.status === 'pending' || f.status === 'overdue').length;
+    const pendingFees = student.fees.filter(f => f.status === 'pending' || f.status === 'overdue' || f.status === 'approved').length;
 
     return (
        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -65,14 +79,14 @@ export function OverviewCards({ students }: { students: Student[] }) {
   }
 
   // Admin view
-  const totalStudents = students.length;
+  const totalStudents = allStudents.length;
 
-  const totalAttendance = students.flatMap(s => s.attendance).length;
-  const presentAttendance = students.flatMap(s => s.attendance).filter(a => a.status === 'present' || a.status === 'late').length;
+  const totalAttendance = allStudents.flatMap(s => s.attendance).length;
+  const presentAttendance = allStudents.flatMap(s => s.attendance).filter(a => a.status === 'present' || a.status === 'late').length;
   const attendancePercentage = totalAttendance > 0 ? ((presentAttendance / totalAttendance) * 100).toFixed(0) : 100;
 
-  const pendingFees = students.flatMap(s => s.fees).filter(f => f.status === 'pending' || f.status === 'overdue').length;
-  const totalFeesValue = students.flatMap(s => s.fees).reduce((acc, fee) => acc + fee.amount, 0);
+  const pendingFees = allStudents.flatMap(s => s.fees).filter(f => f.status === 'pending' || f.status === 'overdue').length;
+  const totalFeesValue = allStudents.flatMap(s => s.fees).reduce((acc, fee) => acc + fee.amount, 0);
 
 
   return (

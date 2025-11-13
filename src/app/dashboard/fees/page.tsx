@@ -15,9 +15,9 @@ import { useToast } from "@/hooks/use-toast";
 
 export default function FeesPage() {
   const { role } = useUserRole();
-  const { students, payFee } = useStudents();
+  const { students, currentStudent, payFee } = useStudents();
   const { toast } = useToast();
-  const parentStudent = students[0];
+  const parentStudent = currentStudent;
   
   const handlePayFee = (studentId: string, feeId: string, feeType: string) => {
     payFee(studentId, feeId);
@@ -49,7 +49,7 @@ export default function FeesPage() {
       <TabsContent value="parent-view">
         <Card>
           <CardHeader>
-            <CardTitle>Fee Details for {parentStudent.name}</CardTitle>
+            <CardTitle>Fee Details for {parentStudent?.name}</CardTitle>
             <CardDescription>View upcoming payments and your payment history.</CardDescription>
           </CardHeader>
           <CardContent>
@@ -64,7 +64,7 @@ export default function FeesPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {parentStudent.fees.map((fee) => (
+                {parentStudent?.fees.map((fee) => (
                   <TableRow key={fee.id}>
                     <TableCell className="font-medium">{fee.type}</TableCell>
                     <TableCell className="flex items-center gap-1">
@@ -83,7 +83,7 @@ export default function FeesPage() {
                     </TableCell>
                   </TableRow>
                 ))}
-                 {parentStudent.fees.length === 0 && (
+                 {!parentStudent || parentStudent.fees.length === 0 && (
                     <TableRow>
                         <TableCell colSpan={5} className="text-center text-muted-foreground h-24">
                             No fee records found for your child.

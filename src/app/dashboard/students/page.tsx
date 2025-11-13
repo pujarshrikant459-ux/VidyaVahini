@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { students as initialStudents } from "@/lib/data";
 import { Badge } from "@/components/ui/badge";
 import { MoreHorizontal, PlusCircle } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -29,18 +28,15 @@ export default function StudentsPage() {
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
   const [isAddDialogOpen, setAddDialogOpen] = useState(false);
   const { toast } = useToast();
-  const { role } = useUserRole();
+  const { role, studentId } = useUserRole();
   const { students, updateStudent, addStudent: addStudentToContext } = useStudents();
   const router = useRouter();
 
   useEffect(() => {
-    if (role === 'parent') {
-      const parentStudentId = students.length > 0 ? students[0].id : null;
-      if (parentStudentId) {
-        router.replace(`/dashboard/students/${parentStudentId}`);
-      }
+    if (role === 'parent' && studentId) {
+      router.replace(`/dashboard/students/${studentId}`);
     }
-  }, [role, router, students]);
+  }, [role, router, studentId]);
 
   const handleEditOpen = (student: Student) => {
     setEditingStudent(student);

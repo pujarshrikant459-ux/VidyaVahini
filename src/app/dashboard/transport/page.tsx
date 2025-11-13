@@ -11,11 +11,19 @@ import { Phone, MapPin, Clock, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DriverEditDialog } from "@/components/dashboard/driver-edit-dialog";
 import { useUserRole } from "@/hooks/use-user-role";
+import { useStudents } from "@/hooks/use-students";
 
 export default function TransportPage() {
   const { role } = useUserRole();
-  const transportDataForParent = role === 'parent' ? [initialTransport[0]] : initialTransport;
-  const [transportData, setTransportData] = useState<Transport[]>(transportDataForParent);
+  const { currentStudent } = useStudents();
+  
+  // For now, let's assume the transport is linked via student's name/ID in a real app.
+  // We'll simulate this by finding a transport record that might match.
+  // In a real app, the student data would have a transportId.
+  const transportForParent = currentStudent ? [initialTransport.find(t => t.id === 'bus-1')] : [];
+  const transportDataForRole = role === 'parent' ? transportForParent.filter(Boolean) as Transport[] : initialTransport;
+
+  const [transportData, setTransportData] = useState<Transport[]>(transportDataForRole);
   const [editingTransport, setEditingTransport] = useState<Transport | null>(null);
   const { toast } = useToast();
 

@@ -1,11 +1,13 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { createContext, useContext, useState, ReactNode, useEffect, useMemo } from 'react';
 import { students as initialStudents } from "@/lib/data";
 import type { Student, FeeRecord } from "@/lib/types";
+import { useUserRole } from './use-user-role';
 
 interface StudentsContextType {
   students: Student[];
+  currentStudent: Student | null;
   updateStudent: (updatedStudent: Student) => void;
   addStudent: (newStudentData: Omit<Student, 'id' | 'attendance' | 'fees'>) => void;
   updateStudentAttendance: (studentId: string, date: Date, status: 'present' | 'absent' | 'late') => void;
@@ -19,6 +21,8 @@ const StudentsContext = createContext<StudentsContextType | undefined>(undefined
 const STUDENTS_STORAGE_KEY = 'vva-students';
 
 export function StudentsProvider({ children }: { children: ReactNode }) {
+  const { role, studentId } = useUserRole();
+  
   const [students, setStudents] = useState<Student[]>(() => {
     if (typeof window === 'undefined') {
       return initialStudents;
@@ -40,6 +44,13 @@ export function StudentsProvider({ children }: { children: ReactNode }) {
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
+
+  const currentStudent = useMemo(() => {
+    if (role === 'parent' && studentId) {
+      return students.find(s => s.id === studentId) || null;
+    }
+    return null;
+  }, [role, studentId, students]);
 
   const updateStudent = (updatedStudent: Student) => {
     setStudents(prev => prev.map(s => s.id === updatedStudent.id ? updatedStudent : s));
@@ -136,7 +147,7 @@ export function StudentsProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <StudentsContext.Provider value={{ students, updateStudent, addStudent, updateStudentAttendance, payFee, addFee, approveFee }}>
+    <StudentsContext.Provider value={{ students, currentStudent, updateStudent, addStudent, updateStudentAttendance, payFee, addFee, approveFee }}>
       {children}
     </StudentsContext.Provider>
   );

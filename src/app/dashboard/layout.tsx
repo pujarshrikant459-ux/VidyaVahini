@@ -35,13 +35,15 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const { role } = useUserRole();
+  const { role, studentId } = useUserRole();
   const isActive = (path: string) => {
     if (path === "/dashboard") {
       return pathname === path;
     }
     return pathname.startsWith(path);
   };
+  
+  const studentProfilePath = studentId ? `/dashboard/students/${studentId}` : '/dashboard/students';
 
   return (
     <SidebarProvider>
@@ -64,7 +66,7 @@ export default function DashboardLayout({
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton asChild isActive={isActive("/dashboard/students")} tooltip={role === 'admin' ? "Students" : "My Child"}>
-                <Link href="/dashboard/students">
+                <Link href={role === 'admin' ? '/dashboard/students' : studentProfilePath}>
                   <Users />
                   <span>{role === 'admin' ? "Students" : "My Child"}</span>
                 </Link>

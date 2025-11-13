@@ -6,16 +6,23 @@ export type UserRole = 'admin' | 'parent';
 
 interface UserRoleContextType {
   role: UserRole;
-  setRole: (role: UserRole) => void;
+  studentId: string | null;
+  setLogin: (role: UserRole, studentId?: string) => void;
 }
 
 const UserRoleContext = createContext<UserRoleContextType | undefined>(undefined);
 
 export function UserRoleProvider({ children }: { children: ReactNode }) {
-  const [role, setRole] = useState<UserRole>('parent'); // Default to parent
+  const [role, setRole] = useState<UserRole>('parent');
+  const [studentId, setStudentId] = useState<string | null>(null);
+
+  const setLogin = (role: UserRole, studentId?: string) => {
+    setRole(role);
+    setStudentId(studentId || null);
+  };
 
   return (
-    <UserRoleContext.Provider value={{ role, setRole }}>
+    <UserRoleContext.Provider value={{ role, studentId, setLogin }}>
       {children}
     </UserRoleContext.Provider>
   );

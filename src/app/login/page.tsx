@@ -9,13 +9,33 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useUserRole } from '@/hooks/use-user-role';
 import { useRouter } from 'next/navigation';
+import { useStudents } from '@/hooks/use-students';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useState } from 'react';
+import { useToast } from '@/hooks/use-toast';
 
 export default function LoginPage() {
-  const { setRole } = useUserRole();
+  const { setLogin } = useUserRole();
+  const { students } = useStudents();
+  const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
   const router = useRouter();
+  const { toast } = useToast();
 
-  const handleLogin = (role: 'admin' | 'parent') => {
-    setRole(role);
+  const handleAdminLogin = () => {
+    setLogin('admin');
+    router.push('/dashboard');
+  };
+
+  const handleParentLogin = () => {
+    if (!selectedStudent) {
+      toast({
+        variant: 'destructive',
+        title: 'Please select a student',
+        description: 'You must select your child from the list to log in as a parent.',
+      });
+      return;
+    }
+    setLogin('parent', selectedStudent);
     router.push('/dashboard');
   };
 
@@ -55,7 +75,7 @@ export default function LoginPage() {
                     <Label htmlFor="admin-password">Password</Label>
                     <Input id="admin-password" type="password" defaultValue="password" />
                 </div>
-                <Button className="w-full" onClick={() => handleLogin('admin')}>
+                <Button className="w-full" onClick={handleAdminLogin}>
                   Login as Admin
                 </Button>
               </CardContent>
@@ -70,14 +90,25 @@ export default function LoginPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                    <Label htmlFor="parent-email">Email</Label>
-                    <Input id="parent-email" type="email" placeholder="parent@example.com" defaultValue="parent@example.com" />
+                    <Label htmlFor="parent-student">Select Your Child</Label>
+                    <Select onValueChange={setSelectedStudent}>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Select a student..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {students.map((student) => (
+                                <SelectItem key={student.id} value={student.id}>
+                                    {student.name} - {student.class}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
                 </div>
                  <div className="space-y-2">
                     <Label htmlFor="parent-password">Password</Label>
                     <Input id="parent-password" type="password" defaultValue="password" />
                 </div>
-                <Button className="w-full" onClick={() => handleLogin('parent')}>
+                <Button className="w-full" onClick={handleParentLogin}>
                   Login as Parent
                 </Button>
               </CardContent>
