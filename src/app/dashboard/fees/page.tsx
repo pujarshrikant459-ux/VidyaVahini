@@ -1,0 +1,77 @@
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { students } from "@/lib/data";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { FeeManagementAdmin } from "@/components/dashboard/fee-management-admin";
+
+export default function FeesPage() {
+  const parentStudent = students[0];
+
+  return (
+    <Tabs defaultValue="parent-view" className="w-full">
+      <TabsList className="grid w-full grid-cols-2">
+        <TabsTrigger value="parent-view">My Child's Fees</TabsTrigger>
+        <TabsTrigger value="admin-view">Manage Fees (Admin)</TabsTrigger>
+      </TabsList>
+      <TabsContent value="parent-view">
+        <Card>
+          <CardHeader>
+            <CardTitle>Fee Details for {parentStudent.name}</CardTitle>
+            <CardDescription>View upcoming payments and your payment history.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Fee Type</TableHead>
+                  <TableHead>Amount</TableHead>
+                  <TableHead>Due Date</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Action</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {parentStudent.fees.map((fee) => (
+                  <TableRow key={fee.id}>
+                    <TableCell className="font-medium">{fee.type}</TableCell>
+                    <TableCell>₹{fee.amount.toLocaleString('en-IN')}</TableCell>
+                    <TableCell>{fee.dueDate}</TableCell>
+                    <TableCell>
+                      <Badge
+                        variant={fee.status === 'paid' ? 'default' : (fee.status === 'overdue' ? 'destructive' : 'secondary')}
+                         className={cn(fee.status === 'paid' && 'bg-green-600 hover:bg-green-700')}
+                      >
+                        {fee.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      {fee.status !== 'paid' ? (
+                        <Button size="sm">Pay Now</Button>
+                      ) : (
+                        <Button size="sm" variant="outline" disabled>Paid</Button>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      </TabsContent>
+      <TabsContent value="admin-view">
+        <Card>
+           <CardHeader>
+            <CardTitle>Fee Management</CardTitle>
+            <CardDescription>Oversee and manage all student fee records.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <FeeManagementAdmin students={students} />
+          </CardContent>
+        </Card>
+      </TabsContent>
+    </Tabs>
+  );
+}

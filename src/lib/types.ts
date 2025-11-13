@@ -1,0 +1,63 @@
+export type UserRole = 'admin' | 'parent' | 'teacher';
+
+export interface Student {
+  id: string;
+  name: string;
+  class: string;
+  rollNumber: string;
+  photo: string;
+  contact: string;
+  attendance: AttendanceRecord[];
+  fees: FeeRecord[];
+}
+
+export interface AttendanceRecord {
+  date: string;
+  status: 'present' | 'absent' | 'late';
+}
+
+export interface FeeRecord {
+  id: string;
+  type: string;
+  amount: number;
+  dueDate: string;
+  status: 'paid' | 'pending' | 'overdue';
+  paidDate?: string;
+  description: string;
+}
+
+export interface Teacher {
+  id: string;
+  name: string;
+  role: string;
+  subject?: string;
+  photo: string;
+  contact: string;
+}
+
+export interface Homework {
+  id: string;
+  subject: string;
+  title: string;
+  assignedDate: string;
+  dueDate: string;
+  description: string;
+  teacher: string;
+}
+
+export interface TimetableEntry {
+  day: string;
+  periods: { time: string; subject: string; teacher: string }[];
+}
+
+export interface Transport {
+  id: string;
+  busNumber: string;
+  route: string;
+  driver: {
+    name: string;
+    photo: string;
+    mobile: string;
+  };
+  stops: { stop: string; pickupTime: string; dropTime: string }[];
+}
