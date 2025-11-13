@@ -79,6 +79,7 @@ export function FeeManagementAdmin({ initialStudents }: { initialStudents?: Stud
       amount: 0,
       description: "",
       dueDate: "",
+      classLevel: "",
     },
   });
 
