@@ -14,7 +14,7 @@ export default function AcademicsPage() {
         <Card>
           <CardHeader>
             <CardTitle>Homework</CardTitle>
-            <CardDescription>Daily and weekly homework updates.</CardDescription>
+            <CardDescription>Daily and weekly homework updates for your child.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {homework.map((hw) => (
@@ -32,6 +32,7 @@ export default function AcademicsPage() {
                 <p className="mt-2 text-sm">{hw.description}</p>
               </div>
             ))}
+             {homework.length === 0 && <p className="text-center text-muted-foreground">No homework assigned.</p>}
           </CardContent>
         </Card>
       </TabsContent>
@@ -39,7 +40,7 @@ export default function AcademicsPage() {
         <Card>
           <CardHeader>
             <CardTitle>Class Timetable</CardTitle>
-            <CardDescription>Weekly class schedule for 10th A.</CardDescription>
+            <CardDescription>Weekly class schedule for your child's class.</CardDescription>
           </CardHeader>
           <CardContent>
             <Table>

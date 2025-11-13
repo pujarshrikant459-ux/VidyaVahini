@@ -63,10 +63,10 @@ export default function DashboardLayout({
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild isActive={isActive("/dashboard/students")} tooltip="Students">
+              <SidebarMenuButton asChild isActive={isActive("/dashboard/students")} tooltip={role === 'admin' ? "Students" : "My Child"}>
                 <Link href="/dashboard/students">
                   <Users />
-                  <span>Students</span>
+                  <span>{role === 'admin' ? "Students" : "My Child"}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -94,14 +94,16 @@ export default function DashboardLayout({
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild isActive={isActive("/dashboard/staff")} tooltip="Staff">
-                <Link href="/dashboard/staff">
-                  <Users />
-                  <span>Staff</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
+            {role === 'admin' && (
+               <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={isActive("/dashboard/staff")} tooltip="Staff">
+                  <Link href="/dashboard/staff">
+                    <Users />
+                    <span>Staff</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            )}
             {role === 'admin' && (
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isActive("/dashboard/announcements")} tooltip="Announcements">

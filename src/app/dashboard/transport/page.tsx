@@ -13,10 +13,11 @@ import { DriverEditDialog } from "@/components/dashboard/driver-edit-dialog";
 import { useUserRole } from "@/hooks/use-user-role";
 
 export default function TransportPage() {
-  const [transportData, setTransportData] = useState<Transport[]>(initialTransport);
+  const { role } = useUserRole();
+  const transportDataForParent = role === 'parent' ? [initialTransport[0]] : initialTransport;
+  const [transportData, setTransportData] = useState<Transport[]>(transportDataForParent);
   const [editingTransport, setEditingTransport] = useState<Transport | null>(null);
   const { toast } = useToast();
-  const { role } = useUserRole();
 
   const handleEditOpen = (transport: Transport) => {
     setEditingTransport(transport);
@@ -93,6 +94,13 @@ export default function TransportPage() {
             </CardContent>
           </Card>
         ))}
+         {transportData.length === 0 && role === 'parent' && (
+            <Card>
+                <CardContent className="pt-6">
+                    <p className="text-center text-muted-foreground">Your child is not currently enrolled in school transport.</p>
+                </CardContent>
+            </Card>
+         )}
       </div>
       {editingTransport && (
         <DriverEditDialog

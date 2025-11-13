@@ -1,3 +1,5 @@
+"use client";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -7,15 +9,18 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { FeeManagementAdmin } from "@/components/dashboard/fee-management-admin";
 import { IndianRupee } from "lucide-react";
+import { useUserRole } from "@/hooks/use-user-role";
+
 
 export default function FeesPage() {
+  const { role } = useUserRole();
   const parentStudent = students[0];
 
   return (
-    <Tabs defaultValue="parent-view" className="w-full">
-      <TabsList className="grid w-full grid-cols-2">
+    <Tabs defaultValue={role === 'admin' ? 'admin-view' : 'parent-view'} className="w-full">
+      <TabsList className={cn("grid w-full", role === 'admin' ? 'grid-cols-2' : 'grid-cols-1')}>
         <TabsTrigger value="parent-view">My Child's Fees</TabsTrigger>
-        <TabsTrigger value="admin-view">Manage Fees (Admin)</TabsTrigger>
+        {role === 'admin' && <TabsTrigger value="admin-view">Manage Fees (Admin)</TabsTrigger>}
       </TabsList>
       <TabsContent value="parent-view">
         <Card>
@@ -59,22 +64,31 @@ export default function FeesPage() {
                     </TableCell>
                   </TableRow>
                 ))}
+                 {parentStudent.fees.length === 0 && (
+                    <TableRow>
+                        <TableCell colSpan={5} className="text-center text-muted-foreground h-24">
+                            No fee records found for your child.
+                        </TableCell>
+                    </TableRow>
+                )}
               </TableBody>
             </Table>
           </CardContent>
         </Card>
       </TabsContent>
-      <TabsContent value="admin-view">
-        <Card>
-           <CardHeader>
-            <CardTitle>Fee Management</CardTitle>
-            <CardDescription>Oversee and manage all student fee records.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <FeeManagementAdmin students={students} />
-          </CardContent>
-        </Card>
-      </TabsContent>
+      {role === 'admin' && (
+        <TabsContent value="admin-view">
+            <Card>
+            <CardHeader>
+                <CardTitle>Fee Management</CardTitle>
+                <CardDescription>Oversee and manage all student fee records.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <FeeManagementAdmin students={students} />
+            </CardContent>
+            </Card>
+        </TabsContent>
+      )}
     </Tabs>
   );
 }

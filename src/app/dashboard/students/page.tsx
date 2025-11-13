@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
   Table,
   TableBody,
@@ -29,6 +30,14 @@ export default function StudentsPage() {
   const [isAddDialogOpen, setAddDialogOpen] = useState(false);
   const { toast } = useToast();
   const { role } = useUserRole();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (role === 'parent') {
+      const parentStudentId = initialStudents[0].id;
+      router.replace(`/dashboard/students/${parentStudentId}`);
+    }
+  }, [role, router]);
 
   const handleEditOpen = (student: Student) => {
     setEditingStudent(student);
@@ -61,6 +70,15 @@ export default function StudentsPage() {
     });
     setAddDialogOpen(false);
   };
+
+  if (role === 'parent') {
+    // Render a loading state or null while redirecting
+    return (
+        <div className="flex items-center justify-center h-full">
+            <p>Loading your child's profile...</p>
+        </div>
+    );
+  }
 
   return (
     <>
