@@ -76,7 +76,7 @@ export default function TransportPage() {
                     <TableRow>
                       <TableHead><MapPin className="inline-block mr-1 h-4 w-4"/>Stop</TableHead>
                       <TableHead><Clock className="inline-block mr-1 h-4 w-4"/>Pickup</TableHead>
-                      <TableHead><Clock className="inline-block mr-1 h-4 w-4"/>Drop</TabelHead>
+                      <TableHead><Clock className="inline-block mr-1 h-4 w-4"/>Drop</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
