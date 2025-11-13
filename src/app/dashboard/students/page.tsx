@@ -21,12 +21,14 @@ import { StudentEditDialog } from "@/components/dashboard/student-edit-dialog";
 import { StudentAddDialog } from "@/components/dashboard/student-add-dialog";
 import type { Student } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
+import { useUserRole } from "@/hooks/use-user-role";
 
 export default function StudentsPage() {
   const [students, setStudents] = useState<Student[]>(initialStudents);
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
   const [isAddDialogOpen, setAddDialogOpen] = useState(false);
   const { toast } = useToast();
+  const { role } = useUserRole();
 
   const handleEditOpen = (student: Student) => {
     setEditingStudent(student);
@@ -68,10 +70,12 @@ export default function StudentsPage() {
             <CardTitle>Students</CardTitle>
             <CardDescription>Manage all student records in the school.</CardDescription>
           </div>
-          <Button onClick={() => setAddDialogOpen(true)}>
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Add Student
-          </Button>
+          {role === 'admin' && (
+            <Button onClick={() => setAddDialogOpen(true)}>
+              <PlusCircle className="mr-2 h-4 w-4" />
+              Add Student
+            </Button>
+          )}
         </CardHeader>
         <CardContent>
           <Table>
@@ -121,8 +125,8 @@ export default function StudentsPage() {
                       <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuItem asChild><Link href={`/dashboard/students/${student.id}`}>View Details</Link></DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleEditOpen(student)}>Edit</DropdownMenuItem>
-                        <DropdownMenuItem>Delete</DropdownMenuItem>
+                        {role === 'admin' && <DropdownMenuItem onClick={() => handleEditOpen(student)}>Edit</DropdownMenuItem>}
+                        {role === 'admin' && <DropdownMenuItem>Delete</DropdownMenuItem>}
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>

@@ -1,12 +1,24 @@
 
+"use client";
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { UserCog, Shield, GraduationCap, Home } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useUserRole } from '@/hooks/use-user-role';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
+  const { setRole } = useUserRole();
+  const router = useRouter();
+
+  const handleLogin = (role: 'admin' | 'parent') => {
+    setRole(role);
+    router.push('/dashboard');
+  };
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
        <header className="p-4 border-b">
@@ -37,14 +49,14 @@ export default function LoginPage() {
               <CardContent className="space-y-4">
                  <div className="space-y-2">
                     <Label htmlFor="admin-email">Email</Label>
-                    <Input id="admin-email" type="email" placeholder="admin@example.com" />
+                    <Input id="admin-email" type="email" placeholder="admin@example.com" defaultValue="admin@example.com" />
                 </div>
                  <div className="space-y-2">
                     <Label htmlFor="admin-password">Password</Label>
-                    <Input id="admin-password" type="password" />
+                    <Input id="admin-password" type="password" defaultValue="password" />
                 </div>
-                <Button className="w-full" asChild>
-                  <Link href="/dashboard">Login as Admin</Link>
+                <Button className="w-full" onClick={() => handleLogin('admin')}>
+                  Login as Admin
                 </Button>
               </CardContent>
             </Card>
@@ -59,14 +71,14 @@ export default function LoginPage() {
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                     <Label htmlFor="parent-email">Email</Label>
-                    <Input id="parent-email" type="email" placeholder="parent@example.com" />
+                    <Input id="parent-email" type="email" placeholder="parent@example.com" defaultValue="parent@example.com" />
                 </div>
                  <div className="space-y-2">
                     <Label htmlFor="parent-password">Password</Label>
-                    <Input id="parent-password" type="password" />
+                    <Input id="parent-password" type="password" defaultValue="password" />
                 </div>
-                <Button className="w-full" asChild>
-                  <Link href="/dashboard">Login as Parent</Link>
+                <Button className="w-full" onClick={() => handleLogin('parent')}>
+                  Login as Parent
                 </Button>
               </CardContent>
             </Card>

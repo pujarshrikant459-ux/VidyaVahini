@@ -9,11 +9,13 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Mail, Phone, PlusCircle } from "lucide-react";
 import { StaffAddDialog } from "@/components/dashboard/staff-add-dialog";
+import { useUserRole } from "@/hooks/use-user-role";
 
 export default function StaffPage() {
   const [staff, setStaff] = useState<Teacher[]>(initialTeachers);
   const [isAddDialogOpen, setAddDialogOpen] = useState(false);
   const { toast } = useToast();
+  const { role } = useUserRole();
 
   const handleAddStaff = (newStaffData: Omit<Teacher, 'id'>) => {
     const newStaff: Teacher = {
@@ -36,10 +38,12 @@ export default function StaffPage() {
             <CardTitle>Staff</CardTitle>
             <CardDescription>Manage all staff records in the school.</CardDescription>
           </div>
-          <Button onClick={() => setAddDialogOpen(true)}>
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Add Staff
-          </Button>
+          {role === 'admin' && (
+            <Button onClick={() => setAddDialogOpen(true)}>
+              <PlusCircle className="mr-2 h-4 w-4" />
+              Add Staff
+            </Button>
+          )}
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
