@@ -23,10 +23,12 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useSidebar } from "@/components/ui/sidebar";
 import { usePathname } from "next/navigation";
+import { useAnnouncements } from "@/hooks/use-announcements";
 
 export function DashboardHeader() {
   const { isMobile } = useSidebar();
   const pathname = usePathname();
+  const { notificationCount, resetNotificationCount } = useAnnouncements();
 
   const getPageTitle = () => {
     const segments = pathname.split('/').filter(Boolean);
@@ -46,10 +48,24 @@ export function DashboardHeader() {
       {isMobile && <SidebarTrigger />}
       <h1 className="text-xl font-semibold md:text-2xl font-headline">{getPageTitle()}</h1>
       <div className="ml-auto flex items-center gap-2">
-        <Button variant="ghost" size="icon" className="rounded-full">
-          <Bell className="h-5 w-5" />
-          <span className="sr-only">Toggle notifications</span>
-        </Button>
+        <DropdownMenu onOpenChange={(open) => { if(open) resetNotificationCount()}}>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="rounded-full relative">
+              <Bell className="h-5 w-5" />
+              {notificationCount > 0 && (
+                <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-destructive" />
+              )}
+              <span className="sr-only">Toggle notifications</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-80">
+            <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <div className="p-2 text-center text-sm text-muted-foreground">
+              No new notifications
+            </div>
+          </DropdownMenuContent>
+        </DropdownMenu>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-9 w-9 rounded-full">
