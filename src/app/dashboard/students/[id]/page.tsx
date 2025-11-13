@@ -23,7 +23,7 @@ import { useStudents } from "@/hooks/use-students";
 export default function StudentProfilePage({ params }: { params: { id: string } }) {
   const { role } = useUserRole();
   const { toast } = useToast();
-  const { students, updateStudentAttendance } = useStudents();
+  const { students, updateStudentAttendance, payFee } = useStudents();
   const student = students.find((s) => s.id === params.id);
 
   if (!student) {
@@ -38,6 +38,14 @@ export default function StudentProfilePage({ params }: { params: { id: string } 
     toast({
       title: "Attendance Updated",
       description: `Marked ${student.name} as ${status} on ${day.toLocaleDateString()}.`,
+    });
+  };
+  
+  const handlePayFee = (studentId: string, feeId: string, feeType: string) => {
+    payFee(studentId, feeId);
+    toast({
+      title: "Payment Successful",
+      description: `The ${feeType} has been paid.`,
     });
   };
 
@@ -218,7 +226,7 @@ export default function StudentProfilePage({ params }: { params: { id: string } 
                     </TableCell>
                     <TableCell>
                       {fee.status !== 'paid' ? (
-                        <Button size="sm">Pay Now</Button>
+                        <Button size="sm" onClick={() => handlePayFee(student.id, fee.id, fee.type)}>Pay Now</Button>
                       ) : (
                         <Button size="sm" variant="outline" disabled>Paid</Button>
                       )}

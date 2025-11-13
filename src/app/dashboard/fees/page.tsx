@@ -10,12 +10,22 @@ import { FeeManagementAdmin } from "@/components/dashboard/fee-management-admin"
 import { IndianRupee } from "lucide-react";
 import { useUserRole } from "@/hooks/use-user-role";
 import { useStudents } from "@/hooks/use-students";
+import { useToast } from "@/hooks/use-toast";
 
 
 export default function FeesPage() {
   const { role } = useUserRole();
-  const { students } = useStudents();
+  const { students, payFee } = useStudents();
+  const { toast } = useToast();
   const parentStudent = students[0];
+  
+  const handlePayFee = (studentId: string, feeId: string, feeType: string) => {
+    payFee(studentId, feeId);
+    toast({
+      title: "Payment Successful",
+      description: `The ${feeType} has been paid.`,
+    });
+  };
 
   return (
     <Tabs defaultValue={role === 'admin' ? 'admin-view' : 'parent-view'} className="w-full">
@@ -58,7 +68,7 @@ export default function FeesPage() {
                     </TableCell>
                     <TableCell>
                       {fee.status !== 'paid' ? (
-                        <Button size="sm">Pay Now</Button>
+                        <Button size="sm" onClick={() => handlePayFee(parentStudent.id, fee.id, fee.type)}>Pay Now</Button>
                       ) : (
                         <Button size="sm" variant="outline" disabled>Paid</Button>
                       )}
@@ -85,7 +95,7 @@ export default function FeesPage() {
                 <CardDescription>Oversee and manage all student fee records.</CardDescription>
             </CardHeader>
             <CardContent>
-                <FeeManagementAdmin students={students} />
+                <FeeManagementAdmin initialStudents={students} />
             </CardContent>
             </Card>
         </TabsContent>

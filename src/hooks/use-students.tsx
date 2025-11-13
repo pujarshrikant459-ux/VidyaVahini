@@ -9,6 +9,7 @@ interface StudentsContextType {
   updateStudent: (updatedStudent: Student) => void;
   addStudent: (newStudentData: Omit<Student, 'id' | 'attendance' | 'fees'>) => void;
   updateStudentAttendance: (studentId: string, date: Date, status: 'present' | 'absent' | 'late') => void;
+  payFee: (studentId: string, feeId: string) => void;
 }
 
 const StudentsContext = createContext<StudentsContextType | undefined>(undefined);
@@ -74,10 +75,29 @@ export function StudentsProvider({ children }: { children: ReactNode }) {
       })
     );
   };
+  
+  const payFee = (studentId: string, feeId: string) => {
+    setStudents(prev =>
+      prev.map(student => {
+        if (student.id === studentId) {
+          return {
+            ...student,
+            fees: student.fees.map(fee => {
+              if (fee.id === feeId) {
+                return { ...fee, status: 'paid', paidDate: new Date().toISOString().split('T')[0] };
+              }
+              return fee;
+            }),
+          };
+        }
+        return student;
+      })
+    );
+  };
 
 
   return (
-    <StudentsContext.Provider value={{ students, updateStudent, addStudent, updateStudentAttendance }}>
+    <StudentsContext.Provider value={{ students, updateStudent, addStudent, updateStudentAttendance, payFee }}>
       {children}
     </StudentsContext.Provider>
   );
