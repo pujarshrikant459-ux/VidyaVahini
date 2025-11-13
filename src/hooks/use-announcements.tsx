@@ -25,13 +25,12 @@ export function AnnouncementsProvider({ children }: { children: ReactNode }) {
     const storedAnnouncements = localStorage.getItem(ANNOUNCEMENTS_STORAGE_KEY);
     return storedAnnouncements ? JSON.parse(storedAnnouncements) : initialAnnouncements;
   });
-  const [notificationCount, setNotificationCount] = useState<number>(() => {
-    if (typeof window === 'undefined') {
-      return 0;
-    }
+  const [notificationCount, setNotificationCount] = useState<number>(0);
+
+  useEffect(() => {
     const storedCount = localStorage.getItem(NOTIFICATION_STORAGE_KEY);
-    return storedCount ? parseInt(storedCount, 10) : 0;
-  });
+    setNotificationCount(storedCount ? parseInt(storedCount, 10) : 0);
+  }, []);
 
   useEffect(() => {
     localStorage.setItem(ANNOUNCEMENTS_STORAGE_KEY, JSON.stringify(announcements));
