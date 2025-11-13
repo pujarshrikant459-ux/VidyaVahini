@@ -1,3 +1,5 @@
+"use client";
+
 import { students, announcements } from "@/lib/data";
 import { OverviewCards } from "@/components/dashboard/overview-cards";
 import { FinancialInsights } from "@/components/dashboard/financial-insights";
@@ -6,16 +8,21 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowRight, Bell } from "lucide-react";
 import { format } from "date-fns";
+import { useUserRole } from "@/hooks/use-user-role";
 
 export default function DashboardPage() {
+  const { role } = useUserRole();
+
   return (
     <div className="flex-1 space-y-4">
       <OverviewCards students={students} />
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-        <div className="lg:col-span-4">
-           <FinancialInsights />
-        </div>
-        <div className="lg:col-span-3 space-y-4">
+        {role === 'admin' && (
+          <div className="lg:col-span-4">
+            <FinancialInsights />
+          </div>
+        )}
+        <div className={role === 'admin' ? "lg:col-span-3 space-y-4" : "lg:col-span-7 space-y-4"}>
            <Card>
               <CardHeader>
                  <CardTitle>Recent Announcements</CardTitle>
