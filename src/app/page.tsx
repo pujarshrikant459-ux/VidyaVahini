@@ -19,12 +19,12 @@ export default function Home() {
           <nav className="hidden md:flex gap-6 items-center">
             <Link href="#features" className="text-sm font-medium hover:underline">Features</Link>
             <Link href="#about" className="text-sm font-medium hover:underline">About</Link>
-            <Link href="/dashboard" legacyBehavior passHref>
+            <Link href="/login" legacyBehavior passHref>
               <Button variant="secondary">Login</Button>
             </Link>
           </nav>
           <div className="md:hidden">
-            <Link href="/dashboard" legacyBehavior passHref>
+            <Link href="/login" legacyBehavior passHref>
               <Button variant="secondary">Login</Button>
             </Link>
           </div>
