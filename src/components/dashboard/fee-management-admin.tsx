@@ -44,7 +44,7 @@ import { generateFeeDescription } from '@/ai/flows/generate-fee-descriptions';
 import type { Student } from "@/lib/types";
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
-import { Sparkles, Loader2, PlusCircle } from 'lucide-react';
+import { Sparkles, Loader2, PlusCircle, IndianRupee } from 'lucide-react';
 
 const FormSchema = z.object({
   studentId: z.string({ required_error: "Please select a student." }),
@@ -178,10 +178,15 @@ export function FeeManagementAdmin({ students }: { students: Student[] }) {
                       name="amount"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Amount (₹)</FormLabel>
-                          <FormControl>
-                            <Input type="number" placeholder="e.g., 5000" {...field} />
-                          </FormControl>
+                          <FormLabel>Amount</FormLabel>
+                           <div className="relative">
+                            <FormControl>
+                              <Input type="number" placeholder="e.g., 5000" className="pl-8" {...field} />
+                            </FormControl>
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                              <IndianRupee className="h-4 w-4 text-muted-foreground" />
+                            </div>
+                           </div>
                           <FormMessage />
                         </FormItem>
                       )}

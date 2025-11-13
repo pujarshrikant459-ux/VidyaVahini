@@ -53,7 +53,7 @@ export function OverviewCards({ students }: { students: Student[] }) {
           <IndianRupee className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{totalFeesValue.toLocaleString('en-IN')}</div>
+          <div className="text-2xl font-bold">₹{totalFeesValue.toLocaleString('en-IN')}</div>
           <p className="text-xs text-muted-foreground">for this academic year</p>
         </CardContent>
       </Card>

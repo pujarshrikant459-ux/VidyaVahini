@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Calendar } from "@/components/ui/calendar";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { User, Phone, Hash, BookUser } from "lucide-react";
+import { User, Phone, Hash, BookUser, IndianRupee } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function StudentProfilePage({ params }: { params: { id: string } }) {
