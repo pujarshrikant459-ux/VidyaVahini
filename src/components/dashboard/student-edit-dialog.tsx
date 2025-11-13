@@ -29,6 +29,7 @@ const FormSchema = z.object({
   class: z.string().min(1, { message: "Class is required." }),
   rollNumber: z.string().min(1, { message: "Roll number is required." }),
   contact: z.string().min(10, { message: "A valid contact number is required." }),
+  photo: z.string().url({ message: "Please enter a valid image URL." }),
 });
 
 type FormData = z.infer<typeof FormSchema>;
@@ -48,6 +49,7 @@ export function StudentEditDialog({ student, isOpen, onClose, onSave }: StudentE
       class: student.class,
       rollNumber: student.rollNumber,
       contact: student.contact,
+      photo: student.photo,
     },
   });
 
@@ -58,6 +60,7 @@ export function StudentEditDialog({ student, isOpen, onClose, onSave }: StudentE
         class: student.class,
         rollNumber: student.rollNumber,
         contact: student.contact,
+        photo: student.photo,
       });
     }
   }, [student, form]);
@@ -124,6 +127,19 @@ export function StudentEditDialog({ student, isOpen, onClose, onSave }: StudentE
                     <FormLabel>Contact</FormLabel>
                     <FormControl>
                         <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                    </FormItem>
+                )}
+                />
+            <FormField
+                control={form.control}
+                name="photo"
+                render={({ field }) => (
+                    <FormItem>
+                    <FormLabel>Photo URL</FormLabel>
+                    <FormControl>
+                        <Input placeholder="https://example.com/photo.jpg" {...field} />
                     </FormControl>
                     <FormMessage />
                     </FormItem>
