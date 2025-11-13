@@ -1,11 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { format } from "date-fns";
-import { announcements as initialAnnouncements } from "@/lib/data";
 import type { Announcement } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
 import { useUserRole } from "@/hooks/use-user-role";
@@ -15,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { PlusCircle, Trash2 } from "lucide-react";
+import { useAnnouncements } from "@/hooks/use-announcements";
 
 const FormSchema = z.object({
   title: z.string().min(5, { message: "Title must be at least 5 characters." }),
@@ -24,7 +23,7 @@ const FormSchema = z.object({
 type FormData = z.infer<typeof FormSchema>;
 
 export default function AnnouncementsPage() {
-  const [announcements, setAnnouncements] = useState<Announcement[]>(initialAnnouncements);
+  const { announcements, addAnnouncement, deleteAnnouncement } = useAnnouncements();
   const { toast } = useToast();
   const { role } = useUserRole();
 
@@ -37,13 +36,7 @@ export default function AnnouncementsPage() {
   });
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
-    const newAnnouncement: Announcement = {
-      id: `anno-${Date.now()}`,
-      title: data.title,
-      content: data.content,
-      date: new Date().toISOString(),
-    };
-    setAnnouncements((prev) => [newAnnouncement, ...prev]);
+    addAnnouncement(data.title, data.content);
     toast({
       title: "Announcement Posted",
       description: "The new announcement has been published.",
@@ -52,7 +45,7 @@ export default function AnnouncementsPage() {
   };
   
   const handleDelete = (id: string) => {
-    setAnnouncements(prev => prev.filter(a => a.id !== id));
+    deleteAnnouncement(id);
     toast({
         title: "Announcement Deleted",
         description: "The announcement has been removed.",

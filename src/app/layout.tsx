@@ -3,6 +3,7 @@ import './globals.css';
 import { cn } from '@/lib/utils';
 import { Toaster } from "@/components/ui/toaster";
 import { UserRoleProvider } from '@/hooks/use-user-role';
+import { AnnouncementsProvider } from '@/hooks/use-announcements';
 
 export const metadata: Metadata = {
   title: 'VidyaVahini',
@@ -23,7 +24,9 @@ export default function RootLayout({
       </head>
       <body className={cn('font-body antialiased min-h-screen bg-background')}>
         <UserRoleProvider>
-          {children}
+          <AnnouncementsProvider>
+            {children}
+          </AnnouncementsProvider>
         </UserRoleProvider>
         <Toaster />
       </body>
