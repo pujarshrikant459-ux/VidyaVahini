@@ -26,6 +26,19 @@ export default function FeesPage() {
       description: `The ${feeType} has been paid.`,
     });
   };
+  
+  const statusBadge = (status: 'paid' | 'pending' | 'overdue' | 'approved') => {
+    switch (status) {
+      case 'paid':
+        return <Badge variant="default" className="bg-green-600 hover:bg-green-700">Paid</Badge>;
+      case 'overdue':
+        return <Badge variant="destructive">Overdue</Badge>;
+      case 'approved':
+        return <Badge variant="secondary">Ready to Pay</Badge>;
+      case 'pending':
+        return <Badge variant="outline">Pending Approval</Badge>;
+    }
+  };
 
   return (
     <Tabs defaultValue={role === 'admin' ? 'admin-view' : 'parent-view'} className="w-full">
@@ -59,18 +72,13 @@ export default function FeesPage() {
                     </TableCell>
                     <TableCell>{fee.dueDate}</TableCell>
                     <TableCell>
-                      <Badge
-                        variant={fee.status === 'paid' ? 'default' : (fee.status === 'overdue' ? 'destructive' : 'secondary')}
-                         className={cn(fee.status === 'paid' && 'bg-green-600 hover:bg-green-700')}
-                      >
-                        {fee.status}
-                      </Badge>
+                      {statusBadge(fee.status)}
                     </TableCell>
                     <TableCell>
-                      {fee.status !== 'paid' ? (
+                      {fee.status === 'approved' || fee.status === 'overdue' ? (
                         <Button size="sm" onClick={() => handlePayFee(parentStudent.id, fee.id, fee.type)}>Pay Now</Button>
                       ) : (
-                        <Button size="sm" variant="outline" disabled>Paid</Button>
+                        <Button size="sm" variant="outline" disabled>{fee.status === 'paid' ? 'Paid' : 'Pending'}</Button>
                       )}
                     </TableCell>
                   </TableRow>

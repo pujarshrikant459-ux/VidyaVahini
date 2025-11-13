@@ -21,7 +21,7 @@ export interface FeeRecord {
   type: string;
   amount: number;
   dueDate: string;
-  status: 'paid' | 'pending' | 'overdue';
+  status: 'paid' | 'pending' | 'overdue' | 'approved';
   paidDate?: string;
   description: string;
 }

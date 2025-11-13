@@ -44,21 +44,28 @@ import { generateFeeDescription } from '@/ai/flows/generate-fee-descriptions';
 import type { Student } from "@/lib/types";
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
-import { Sparkles, Loader2, PlusCircle, IndianRupee } from 'lucide-react';
+import { Sparkles, Loader2, PlusCircle, IndianRupee, CheckCircle2 } from 'lucide-react';
 import { useStudents } from '@/hooks/use-students';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 const FormSchema = z.object({
   studentId: z.string({ required_error: "Please select a student." }),
   feeType: z.string().min(2, { message: "Fee type is required." }),
   amount: z.coerce.number().positive(),
   classLevel: z.string().min(1, { message: "Class is required." }),
+  dueDate: z.string().min(1, { message: "Due date is required." }),
   description: z.string().min(5, { message: "Description is required." }),
 });
 
 type FormData = z.infer<typeof FormSchema>;
 
 export function FeeManagementAdmin({ initialStudents }: { initialStudents?: Student[] }) {
-  const { students } = useStudents();
+  const { students, addFee, approveFee } = useStudents();
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [generatingDesc, setGeneratingDesc] = useState(false);
   const { toast } = useToast();
@@ -71,6 +78,7 @@ export function FeeManagementAdmin({ initialStudents }: { initialStudents?: Stud
       feeType: "",
       amount: 0,
       description: "",
+      dueDate: "",
     },
   });
 
@@ -105,7 +113,8 @@ export function FeeManagementAdmin({ initialStudents }: { initialStudents?: Stud
   };
 
   const onSubmit: SubmitHandler<FormData> = async data => {
-    console.log("Submitting new fee record:", data);
+    const { studentId, ...feeData } = data;
+    addFee(studentId, feeData);
     toast({
       title: "Success!",
       description: `Fee record for ${data.feeType} has been added.`,
@@ -115,12 +124,36 @@ export function FeeManagementAdmin({ initialStudents }: { initialStudents?: Stud
   };
   
   const getFeeStatus = (student: Student) => {
-    const pending = student.fees.some(f => f.status === 'pending');
     const overdue = student.fees.some(f => f.status === 'overdue');
+    const approved = student.fees.some(f => f.status === 'approved');
+    const pending = student.fees.some(f => f.status === 'pending');
+
     if (overdue) return { text: 'Overdue', variant: 'destructive' as const };
-    if (pending) return { text: 'Pending', variant: 'secondary' as const };
+    if (approved) return { text: 'Payment Due', variant: 'secondary' as const };
+    if (pending) return { text: 'Approval Pending', variant: 'outline' as const };
     return { text: 'Paid Up', variant: 'default' as const };
-  }
+  };
+  
+  const handleApproveFee = (studentId: string, feeId: string) => {
+    approveFee(studentId, feeId);
+    toast({
+      title: "Fee Approved",
+      description: "The parent can now complete the payment.",
+    });
+  };
+
+  const statusBadge = (status: 'paid' | 'pending' | 'overdue' | 'approved') => {
+    switch (status) {
+      case 'paid':
+        return <Badge variant="default" className="bg-green-600 hover:bg-green-700">Paid</Badge>;
+      case 'overdue':
+        return <Badge variant="destructive">Overdue</Badge>;
+      case 'approved':
+        return <Badge variant="secondary">Awaiting Payment</Badge>;
+      case 'pending':
+        return <Badge variant="outline">Pending Approval</Badge>;
+    }
+  };
 
   return (
     <div>
@@ -196,6 +229,19 @@ export function FeeManagementAdmin({ initialStudents }: { initialStudents?: Stud
                       )}
                     />
                 </div>
+                <FormField
+                  control={form.control}
+                  name="dueDate"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Due Date</FormLabel>
+                      <FormControl>
+                        <Input type="date" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                  <FormField
                   control={form.control}
                   name="classLevel"
@@ -244,29 +290,61 @@ export function FeeManagementAdmin({ initialStudents }: { initialStudents?: Stud
         </Dialog>
       </div>
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Student</TableHead>
-            <TableHead>Class</TableHead>
-            <TableHead>Fee Status</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {studentList.map((student) => {
-            const status = getFeeStatus(student);
-            return (
-              <TableRow key={student.id}>
-                <TableCell className="font-medium">{student.name}</TableCell>
-                <TableCell>{student.class}</TableCell>
-                <TableCell>
-                  <Badge variant={status.variant} className={cn(status.variant === 'default' && 'bg-green-600 hover:bg-green-700')}>{status.text}</Badge>
-                </TableCell>
-              </TableRow>
-            )
-          })}
-        </TableBody>
-      </Table>
+      <Accordion type="single" collapsible className="w-full">
+        {studentList.map((student) => {
+          const status = getFeeStatus(student);
+          return (
+            <AccordionItem value={student.id} key={student.id}>
+              <AccordionTrigger>
+                  <div className="flex justify-between w-full items-center pr-4">
+                    <div className="flex flex-col items-start">
+                        <span className="font-medium">{student.name}</span>
+                        <span className="text-sm text-muted-foreground">{student.class}</span>
+                    </div>
+                    <Badge variant={status.variant} className={cn(status.variant === 'default' && 'bg-green-600 hover:bg-green-700')}>{status.text}</Badge>
+                  </div>
+              </AccordionTrigger>
+              <AccordionContent>
+                {student.fees.length > 0 ? (
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Fee Type</TableHead>
+                        <TableHead>Amount</TableHead>
+                        <TableHead>Due</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Action</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {student.fees.map(fee => (
+                        <TableRow key={fee.id}>
+                          <TableCell>{fee.type}</TableCell>
+                          <TableCell className="flex items-center gap-1">
+                            <IndianRupee className="h-4 w-4" />{fee.amount.toLocaleString('en-IN')}
+                          </TableCell>
+                          <TableCell>{fee.dueDate}</TableCell>
+                          <TableCell>{statusBadge(fee.status)}</TableCell>
+                          <TableCell>
+                            {fee.status === 'pending' && (
+                              <Button size="sm" onClick={() => handleApproveFee(student.id, fee.id)}>
+                                <CheckCircle2 className="mr-2 h-4 w-4"/>
+                                Approve
+                              </Button>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                ) : (
+                  <p className="text-center text-muted-foreground p-4">No fee records found.</p>
+                )}
+              </AccordionContent>
+            </AccordionItem>
+          )
+        })}
+      </Accordion>
     </div>
   );
 }

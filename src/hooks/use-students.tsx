@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { students as initialStudents } from "@/lib/data";
-import type { Student, AttendanceRecord } from "@/lib/types";
+import type { Student, FeeRecord } from "@/lib/types";
 
 interface StudentsContextType {
   students: Student[];
@@ -10,6 +10,8 @@ interface StudentsContextType {
   addStudent: (newStudentData: Omit<Student, 'id' | 'attendance' | 'fees'>) => void;
   updateStudentAttendance: (studentId: string, date: Date, status: 'present' | 'absent' | 'late') => void;
   payFee: (studentId: string, feeId: string) => void;
+  addFee: (studentId: string, feeData: Omit<FeeRecord, 'id' | 'status'>) => void;
+  approveFee: (studentId: string, feeId: string) => void;
 }
 
 const StudentsContext = createContext<StudentsContextType | undefined>(undefined);
@@ -95,9 +97,46 @@ export function StudentsProvider({ children }: { children: ReactNode }) {
     );
   };
 
+  const addFee = (studentId: string, feeData: Omit<FeeRecord, 'id' | 'status'>) => {
+    const newFee: FeeRecord = {
+      ...feeData,
+      id: `fee-${Date.now()}`,
+      status: 'pending',
+    };
+    setStudents(prev =>
+      prev.map(student => {
+        if (student.id === studentId) {
+          return {
+            ...student,
+            fees: [newFee, ...student.fees],
+          };
+        }
+        return student;
+      })
+    );
+  };
+  
+  const approveFee = (studentId: string, feeId: string) => {
+    setStudents(prev =>
+      prev.map(student => {
+        if (student.id === studentId) {
+          return {
+            ...student,
+            fees: student.fees.map(fee => {
+              if (fee.id === feeId) {
+                return { ...fee, status: 'approved' };
+              }
+              return fee;
+            }),
+          };
+        }
+        return student;
+      })
+    );
+  };
 
   return (
-    <StudentsContext.Provider value={{ students, updateStudent, addStudent, updateStudentAttendance, payFee }}>
+    <StudentsContext.Provider value={{ students, updateStudent, addStudent, updateStudentAttendance, payFee, addFee, approveFee }}>
       {children}
     </StudentsContext.Provider>
   );
