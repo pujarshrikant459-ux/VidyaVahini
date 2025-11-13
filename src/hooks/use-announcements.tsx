@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { announcements as initialAnnouncements } from "@/lib/data";
 import type { Announcement } from "@/lib/types";
 
@@ -14,9 +14,48 @@ interface AnnouncementsContextType {
 
 const AnnouncementsContext = createContext<AnnouncementsContextType | undefined>(undefined);
 
+const ANNOUNCEMENTS_STORAGE_KEY = 'vva-announcements';
+const NOTIFICATION_STORAGE_KEY = 'vva-notification-count';
+
 export function AnnouncementsProvider({ children }: { children: ReactNode }) {
-  const [announcements, setAnnouncements] = useState<Announcement[]>(initialAnnouncements);
-  const [notificationCount, setNotificationCount] = useState(0);
+  const [announcements, setAnnouncements] = useState<Announcement[]>(() => {
+    if (typeof window === 'undefined') {
+      return initialAnnouncements;
+    }
+    const storedAnnouncements = localStorage.getItem(ANNOUNCEMENTS_STORAGE_KEY);
+    return storedAnnouncements ? JSON.parse(storedAnnouncements) : initialAnnouncements;
+  });
+  const [notificationCount, setNotificationCount] = useState<number>(() => {
+    if (typeof window === 'undefined') {
+      return 0;
+    }
+    const storedCount = localStorage.getItem(NOTIFICATION_STORAGE_KEY);
+    return storedCount ? parseInt(storedCount, 10) : 0;
+  });
+
+  useEffect(() => {
+    localStorage.setItem(ANNOUNCEMENTS_STORAGE_KEY, JSON.stringify(announcements));
+  }, [announcements]);
+
+  useEffect(() => {
+    localStorage.setItem(NOTIFICATION_STORAGE_KEY, notificationCount.toString());
+  }, [notificationCount]);
+  
+  useEffect(() => {
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === ANNOUNCEMENTS_STORAGE_KEY && event.newValue) {
+        setAnnouncements(JSON.parse(event.newValue));
+      }
+      if (event.key === NOTIFICATION_STORAGE_KEY && event.newValue) {
+        setNotificationCount(parseInt(event.newValue, 10));
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
 
   const addAnnouncement = (title: string, content: string) => {
     const newAnnouncement: Announcement = {

@@ -24,11 +24,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useSidebar } from "@/components/ui/sidebar";
 import { usePathname } from "next/navigation";
 import { useAnnouncements } from "@/hooks/use-announcements";
+import { useUserRole } from "@/hooks/use-user-role";
 
 export function DashboardHeader() {
   const { isMobile } = useSidebar();
   const pathname = usePathname();
-  const { notificationCount, resetNotificationCount } = useAnnouncements();
+  const { announcements, notificationCount, resetNotificationCount } = useAnnouncements();
+  const { role } = useUserRole();
 
   const getPageTitle = () => {
     const segments = pathname.split('/').filter(Boolean);
@@ -36,23 +38,29 @@ export function DashboardHeader() {
       return 'Dashboard';
     }
     if (segments.length > 1) {
-      const title = segments[segments.length -1];
+      const title = segments[segments.length - 1];
       if (segments[1] === 'students' && segments.length > 2) return 'Student Profile';
       return title.charAt(0).toUpperCase() + title.slice(1);
     }
     return "VidyaVahini";
   };
   
+  const handleNotificationClick = (e: React.MouseEvent) => {
+    if (notificationCount > 0) {
+      resetNotificationCount();
+    }
+  };
+
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
       {isMobile && <SidebarTrigger />}
       <h1 className="text-xl font-semibold md:text-2xl font-headline">{getPageTitle()}</h1>
       <div className="ml-auto flex items-center gap-2">
-        <DropdownMenu onOpenChange={(open) => { if(open) resetNotificationCount()}}>
+        <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="rounded-full relative">
+            <Button variant="ghost" size="icon" className="rounded-full relative" onClick={handleNotificationClick}>
               <Bell className="h-5 w-5" />
-              {notificationCount > 0 && (
+              {role === 'parent' && notificationCount > 0 && (
                 <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-destructive" />
               )}
               <span className="sr-only">Toggle notifications</span>
@@ -61,9 +69,19 @@ export function DashboardHeader() {
           <DropdownMenuContent align="end" className="w-80">
             <DropdownMenuLabel>Notifications</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <div className="p-2 text-center text-sm text-muted-foreground">
-              No new notifications
-            </div>
+             {announcements.slice(0, 3).map(ann => (
+              <DropdownMenuItem key={ann.id} asChild>
+                <Link href="/dashboard/announcements" className="flex flex-col items-start gap-1">
+                  <p className="font-medium">{ann.title}</p>
+                  <p className="text-xs text-muted-foreground">{ann.content.substring(0, 50)}...</p>
+                </Link>
+              </DropdownMenuItem>
+             ))}
+             {announcements.length === 0 && (
+                <div className="p-2 text-center text-sm text-muted-foreground">
+                  No new notifications
+                </div>
+             )}
           </DropdownMenuContent>
         </DropdownMenu>
         <DropdownMenu>
