@@ -47,7 +47,7 @@ export default function Home() {
           <div className="relative z-20 container mx-auto flex flex-col items-center justify-center h-full text-center px-4">
             <h2 className="text-4xl md:text-6xl font-bold font-headline mb-4">Karnataka Government School</h2>
             <p className="text-lg md:text-2xl mb-8 max-w-3xl">Empowering students, teachers, and parents with seamless access to school information.</p>
-            <Link href="/dashboard">
+            <Link href="/login">
               <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
                 Access Dashboard
               </Button>
