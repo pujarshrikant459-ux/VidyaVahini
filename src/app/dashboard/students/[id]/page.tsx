@@ -86,6 +86,7 @@ export default function StudentProfilePage({ params }: { params: { id: string } 
 
   const AttendanceCalendar = () => {
     const [selectedDate, setSelectedDate] = useState<Date | undefined>();
+    const [isPopoverOpen, setPopoverOpen] = useState(false);
 
     const getStatusForDate = (date: Date) => {
         const dateString = date.toISOString().split('T')[0];
@@ -96,11 +97,17 @@ export default function StudentProfilePage({ params }: { params: { id: string } 
     const handleSelect = (day: Date | undefined) => {
         if (role === 'admin' && day) {
             setSelectedDate(day);
+            setPopoverOpen(true);
         }
     }
     
+    const handleAttendanceAndClose = (day: Date, status: 'present' | 'absent' | 'late') => {
+        handleAttendanceChange(day, status);
+        setPopoverOpen(false);
+    }
+    
     return (
-        <Popover>
+        <Popover open={isPopoverOpen} onOpenChange={setPopoverOpen}>
             <PopoverTrigger asChild disabled={role !== 'admin'}>
                 <div className="relative">
                     <Calendar
@@ -113,7 +120,10 @@ export default function StudentProfilePage({ params }: { params: { id: string } 
                         className={cn("rounded-md border", role === 'admin' && "cursor-pointer")}
                     />
                     {role === 'admin' && (
-                        <div className="absolute inset-0 bg-transparent flex items-center justify-center">
+                       <div className={cn(
+                           "absolute inset-0 bg-transparent flex items-center justify-center pointer-events-none",
+                           (attendanceDates.length > 0) && "hidden" // Hide hint if there are attendance records
+                       )}>
                             <p className="bg-background/80 px-4 py-2 rounded-md text-sm text-muted-foreground">
                                 Click on a date to update attendance
                             </p>
@@ -127,7 +137,7 @@ export default function StudentProfilePage({ params }: { params: { id: string } 
                          <h4 className="font-medium">Update Attendance for {selectedDate.toLocaleDateString()}</h4>
                         <RadioGroup
                             defaultValue={getStatusForDate(selectedDate)}
-                            onValueChange={(status: 'present' | 'absent' | 'late') => handleAttendanceChange(selectedDate, status)}
+                            onValueChange={(status: 'present' | 'absent' | 'late') => handleAttendanceAndClose(selectedDate, status)}
                             className="flex gap-4"
                         >
                             <div className="flex items-center space-x-2">
