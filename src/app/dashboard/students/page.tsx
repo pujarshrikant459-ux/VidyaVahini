@@ -23,21 +23,24 @@ import { StudentAddDialog } from "@/components/dashboard/student-add-dialog";
 import type { Student } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
 import { useUserRole } from "@/hooks/use-user-role";
+import { useStudents } from "@/hooks/use-students";
 
 export default function StudentsPage() {
-  const [students, setStudents] = useState<Student[]>(initialStudents);
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
   const [isAddDialogOpen, setAddDialogOpen] = useState(false);
   const { toast } = useToast();
   const { role } = useUserRole();
+  const { students, updateStudent, addStudent: addStudentToContext } = useStudents();
   const router = useRouter();
 
   useEffect(() => {
     if (role === 'parent') {
-      const parentStudentId = initialStudents[0].id;
-      router.replace(`/dashboard/students/${parentStudentId}`);
+      const parentStudentId = students.length > 0 ? students[0].id : null;
+      if (parentStudentId) {
+        router.replace(`/dashboard/students/${parentStudentId}`);
+      }
     }
-  }, [role, router]);
+  }, [role, router, students]);
 
   const handleEditOpen = (student: Student) => {
     setEditingStudent(student);
@@ -48,7 +51,7 @@ export default function StudentsPage() {
   };
 
   const handleUpdateStudent = (updatedStudent: Student) => {
-    setStudents(prev => prev.map(s => s.id === updatedStudent.id ? updatedStudent : s));
+    updateStudent(updatedStudent);
     toast({
       title: "Student Updated",
       description: `${updatedStudent.name}'s information has been successfully updated.`,
@@ -57,16 +60,10 @@ export default function StudentsPage() {
   };
 
   const handleAddStudent = (newStudentData: Omit<Student, 'id' | 'attendance' | 'fees'>) => {
-    const newStudent: Student = {
-      ...newStudentData,
-      id: `s-${Date.now()}`,
-      attendance: [],
-      fees: [],
-    };
-    setStudents(prev => [newStudent, ...prev]);
+    addStudentToContext(newStudentData);
     toast({
       title: "Student Added",
-      description: `${newStudent.name} has been added to the records.`,
+      description: `${newStudentData.name} has been added to the records.`,
     });
     setAddDialogOpen(false);
   };

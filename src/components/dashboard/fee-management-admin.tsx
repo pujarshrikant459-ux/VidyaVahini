@@ -45,6 +45,7 @@ import type { Student } from "@/lib/types";
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { Sparkles, Loader2, PlusCircle, IndianRupee } from 'lucide-react';
+import { useStudents } from '@/hooks/use-students';
 
 const FormSchema = z.object({
   studentId: z.string({ required_error: "Please select a student." }),
@@ -56,10 +57,13 @@ const FormSchema = z.object({
 
 type FormData = z.infer<typeof FormSchema>;
 
-export function FeeManagementAdmin({ students }: { students: Student[] }) {
+export function FeeManagementAdmin({ initialStudents }: { initialStudents?: Student[] }) {
+  const { students } = useStudents();
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [generatingDesc, setGeneratingDesc] = useState(false);
   const { toast } = useToast();
+  
+  const studentList = initialStudents || students;
 
   const form = useForm<FormData>({
     resolver: zodResolver(FormSchema),
@@ -141,7 +145,7 @@ export function FeeManagementAdmin({ students }: { students: Student[] }) {
                     <FormItem>
                       <FormLabel>Student</FormLabel>
                       <Select onValueChange={(value) => {
-                        const student = students.find(s => s.id === value);
+                        const student = studentList.find(s => s.id === value);
                         field.onChange(value);
                         if(student) form.setValue('classLevel', student.class);
                       }} defaultValue={field.value}>
@@ -151,7 +155,7 @@ export function FeeManagementAdmin({ students }: { students: Student[] }) {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {students.map(s => <SelectItem key={s.id} value={s.id}>{s.name} - {s.class}</SelectItem>)}
+                          {studentList.map(s => <SelectItem key={s.id} value={s.id}>{s.name} - {s.class}</SelectItem>)}
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -249,7 +253,7 @@ export function FeeManagementAdmin({ students }: { students: Student[] }) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {students.map((student) => {
+          {studentList.map((student) => {
             const status = getFeeStatus(student);
             return (
               <TableRow key={student.id}>

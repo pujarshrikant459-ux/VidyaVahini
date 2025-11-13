@@ -1,6 +1,5 @@
 "use client";
 
-import { students } from "@/lib/data";
 import { OverviewCards } from "@/components/dashboard/overview-cards";
 import { FinancialInsights } from "@/components/dashboard/financial-insights";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
@@ -10,10 +9,12 @@ import { ArrowRight, Bell } from "lucide-react";
 import { format } from "date-fns";
 import { useUserRole } from "@/hooks/use-user-role";
 import { useAnnouncements } from "@/hooks/use-announcements";
+import { useStudents } from "@/hooks/use-students";
 
 export default function DashboardPage() {
   const { role } = useUserRole();
   const { announcements } = useAnnouncements();
+  const { students } = useStudents();
 
   return (
     <div className="flex-1 space-y-4">

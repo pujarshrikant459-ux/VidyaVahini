@@ -3,17 +3,18 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { students } from "@/lib/data";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { FeeManagementAdmin } from "@/components/dashboard/fee-management-admin";
 import { IndianRupee } from "lucide-react";
 import { useUserRole } from "@/hooks/use-user-role";
+import { useStudents } from "@/hooks/use-students";
 
 
 export default function FeesPage() {
   const { role } = useUserRole();
+  const { students } = useStudents();
   const parentStudent = students[0];
 
   return (

@@ -18,11 +18,12 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import type { DateRange } from "react-day-picker";
+import { useStudents } from "@/hooks/use-students";
 
 export default function StudentProfilePage({ params }: { params: { id: string } }) {
   const { role } = useUserRole();
   const { toast } = useToast();
-  const [students, setStudents] = useState(initialStudents);
+  const { students, updateStudentAttendance } = useStudents();
   const student = students.find((s) => s.id === params.id);
 
   if (!student) {
@@ -33,30 +34,8 @@ export default function StudentProfilePage({ params }: { params: { id: string } 
     day: Date,
     status: 'present' | 'absent' | 'late'
   ) => {
-    const dateString = day.toISOString().split('T')[0];
-
-    setStudents((prevStudents) =>
-      prevStudents.map((s) => {
-        if (s.id === student.id) {
-          const newAttendance = [...s.attendance];
-          const existingRecordIndex = newAttendance.findIndex(
-            (a) => a.date === dateString
-          );
-
-          if (existingRecordIndex > -1) {
-            // Update existing record
-            newAttendance[existingRecordIndex] = { date: dateString, status };
-          } else {
-            // Add new record
-            newAttendance.push({ date: dateString, status });
-          }
-
-          return { ...s, attendance: newAttendance };
-        }
-        return s;
-      })
-    );
-     toast({
+    updateStudentAttendance(student.id, day, status);
+    toast({
       title: "Attendance Updated",
       description: `Marked ${student.name} as ${status} on ${day.toLocaleDateString()}.`,
     });
