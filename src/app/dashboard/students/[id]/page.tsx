@@ -1,4 +1,6 @@
-import { students } from "@/lib/data";
+"use client";
+
+import { students as initialStudents } from "@/lib/data";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -7,14 +9,59 @@ import { Calendar } from "@/components/ui/calendar";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { User, Phone, Hash, BookUser, IndianRupee } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
+import type { AttendanceRecord } from "@/lib/types";
+import { useUserRole } from "@/hooks/use-user-role";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
+import type { DateRange } from "react-day-picker";
 
 export default function StudentProfilePage({ params }: { params: { id: string } }) {
+  const { role } = useUserRole();
+  const { toast } = useToast();
+  const [students, setStudents] = useState(initialStudents);
   const student = students.find((s) => s.id === params.id);
 
   if (!student) {
     notFound();
   }
-  
+
+  const handleAttendanceChange = (
+    day: Date,
+    status: 'present' | 'absent' | 'late'
+  ) => {
+    const dateString = day.toISOString().split('T')[0];
+
+    setStudents((prevStudents) =>
+      prevStudents.map((s) => {
+        if (s.id === student.id) {
+          const newAttendance = [...s.attendance];
+          const existingRecordIndex = newAttendance.findIndex(
+            (a) => a.date === dateString
+          );
+
+          if (existingRecordIndex > -1) {
+            // Update existing record
+            newAttendance[existingRecordIndex] = { date: dateString, status };
+          } else {
+            // Add new record
+            newAttendance.push({ date: dateString, status });
+          }
+
+          return { ...s, attendance: newAttendance };
+        }
+        return s;
+      })
+    );
+     toast({
+      title: "Attendance Updated",
+      description: `Marked ${student.name} as ${status} on ${day.toLocaleDateString()}.`,
+    });
+  };
+
   const attendanceDates = student.attendance.map(a => new Date(a.date));
   const modifiers = {
     present: student.attendance.filter(a => a.status === 'present').map(a => new Date(a.date)),
@@ -37,6 +84,71 @@ export default function StudentProfilePage({ params }: { params: { id: string } 
     },
   };
 
+  const AttendanceCalendar = () => {
+    const [selectedDate, setSelectedDate] = useState<Date | undefined>();
+
+    const getStatusForDate = (date: Date) => {
+        const dateString = date.toISOString().split('T')[0];
+        const record = student.attendance.find(a => a.date === dateString);
+        return record?.status || 'present';
+    }
+
+    const handleSelect = (day: Date | undefined) => {
+        if (role === 'admin' && day) {
+            setSelectedDate(day);
+        }
+    }
+    
+    return (
+        <Popover>
+            <PopoverTrigger asChild disabled={role !== 'admin'}>
+                <div className="relative">
+                    <Calendar
+                        mode="multiple"
+                        selected={attendanceDates}
+                        onDayClick={handleSelect}
+                        defaultMonth={attendanceDates.length > 0 ? attendanceDates[0] : new Date()}
+                        modifiers={modifiers}
+                        modifiersStyles={modifiersStyles}
+                        className={cn("rounded-md border", role === 'admin' && "cursor-pointer")}
+                    />
+                    {role === 'admin' && (
+                        <div className="absolute inset-0 bg-transparent flex items-center justify-center">
+                            <p className="bg-background/80 px-4 py-2 rounded-md text-sm text-muted-foreground">
+                                Click on a date to update attendance
+                            </p>
+                        </div>
+                    )}
+                </div>
+            </PopoverTrigger>
+            {selectedDate && (
+                <PopoverContent className="w-auto p-4">
+                     <div className="space-y-4">
+                         <h4 className="font-medium">Update Attendance for {selectedDate.toLocaleDateString()}</h4>
+                        <RadioGroup
+                            defaultValue={getStatusForDate(selectedDate)}
+                            onValueChange={(status: 'present' | 'absent' | 'late') => handleAttendanceChange(selectedDate, status)}
+                            className="flex gap-4"
+                        >
+                            <div className="flex items-center space-x-2">
+                                <RadioGroupItem value="present" id="present" />
+                                <Label htmlFor="present">Present</Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <RadioGroupItem value="late" id="late" />
+                                <Label htmlFor="late">Late</Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <RadioGroupItem value="absent" id="absent" />
+                                <Label htmlFor="absent">Absent</Label>
+                            </div>
+                        </RadioGroup>
+                    </div>
+                </PopoverContent>
+            )}
+        </Popover>
+    );
+  };
 
   return (
     <div className="grid gap-4 md:grid-cols-3">
@@ -74,17 +186,12 @@ export default function StudentProfilePage({ params }: { params: { id: string } 
         <Card>
           <CardHeader>
             <CardTitle>Attendance Record</CardTitle>
-            <CardDescription>Monthly attendance overview.</CardDescription>
+            <CardDescription>
+              {role === 'admin' ? "Click a date to mark attendance." : "Monthly attendance overview."}
+            </CardDescription>
           </CardHeader>
           <CardContent className="flex justify-center">
-            <Calendar
-                mode="multiple"
-                selected={attendanceDates}
-                defaultMonth={attendanceDates.length > 0 ? attendanceDates[0] : new Date()}
-                modifiers={modifiers}
-                modifiersStyles={modifiersStyles}
-                className="rounded-md border"
-            />
+            <AttendanceCalendar />
           </CardContent>
         </Card>
 
@@ -121,6 +228,13 @@ export default function StudentProfilePage({ params }: { params: { id: string } 
                     </TableCell>
                   </TableRow>
                 ))}
+                 {student.fees.length === 0 && (
+                    <TableRow>
+                        <TableCell colSpan={4} className="text-center text-muted-foreground h-24">
+                            No fee records found.
+                        </TableCell>
+                    </TableRow>
+                )}
               </TableBody>
             </Table>
           </CardContent>
