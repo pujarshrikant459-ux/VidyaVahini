@@ -43,12 +43,25 @@ export default function FeesPage() {
     }
   };
 
+  if (role === 'admin') {
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>Fee Management</CardTitle>
+                <CardDescription>Oversee and manage all student fee records.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <FeeManagementAdmin initialStudents={students} />
+            </CardContent>
+        </Card>
+    );
+  }
+
   return (
     <Tabs defaultValue="parent-view" className="w-full">
-      <TabsList className={cn("grid w-full", role === 'admin' ? 'grid-cols-3' : 'grid-cols-2')}>
+      <TabsList className="grid w-full grid-cols-2">
         <TabsTrigger value="parent-view">My Child's Fees</TabsTrigger>
         <TabsTrigger value="fee-structure">Fee Structure</TabsTrigger>
-        {role === 'admin' && <TabsTrigger value="admin-view">Manage Fees (Admin)</TabsTrigger>}
       </TabsList>
       <TabsContent value="parent-view">
         <Card>
@@ -125,21 +138,6 @@ export default function FeesPage() {
           </CardContent>
         </Card>
       </TabsContent>
-      {role === 'admin' && (
-        <TabsContent value="admin-view">
-            <Card>
-            <CardHeader>
-                <CardTitle>Fee Management</CardTitle>
-                <CardDescription>Oversee and manage all student fee records.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <FeeManagementAdmin initialStudents={students} />
-            </CardContent>
-            </Card>
-        </TabsContent>
-      )}
     </Tabs>
   );
 }
-
-    
