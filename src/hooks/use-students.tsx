@@ -2,18 +2,19 @@
 
 import { createContext, useContext, useState, ReactNode, useEffect, useMemo } from 'react';
 import { students as initialStudents } from "@/lib/data";
-import type { Student, FeeRecord } from "@/lib/types";
+import type { Student, FeeRecord, BehavioralNote } from "@/lib/types";
 import { useUserRole } from './use-user-role';
 
 interface StudentsContextType {
   students: Student[];
   currentStudent: Student | null;
   updateStudent: (updatedStudent: Student) => void;
-  addStudent: (newStudentData: Omit<Student, 'id' | 'attendance' | 'fees'>) => void;
+  addStudent: (newStudentData: Omit<Student, 'id' | 'attendance' | 'fees' | 'behavioralNotes'>) => void;
   updateStudentAttendance: (studentId: string, date: Date, status: 'present' | 'absent' | 'late') => void;
   payFee: (studentId: string, feeId: string) => void;
   addFee: (studentId: string, feeData: Omit<FeeRecord, 'id' | 'status'>) => void;
   approveFee: (studentId: string, feeId: string) => void;
+  addBehavioralNote: (studentId: string, note: string, teacher: string) => void;
 }
 
 const StudentsContext = createContext<StudentsContextType | undefined>(undefined);
@@ -28,7 +29,16 @@ export function StudentsProvider({ children }: { children: ReactNode }) {
       return initialStudents;
     }
     const storedStudents = localStorage.getItem(STUDENTS_STORAGE_KEY);
-    return storedStudents ? JSON.parse(storedStudents) : initialStudents;
+    try {
+        if (storedStudents) {
+            const parsedStudents = JSON.parse(storedStudents);
+            // Quick validation to ensure behavioralNotes is an array
+            return parsedStudents.map((s: Student) => ({ ...s, behavioralNotes: s.behavioralNotes || []}));
+        }
+    } catch (e) {
+        console.error("Failed to parse students from localStorage", e);
+    }
+    return initialStudents;
   });
 
   useEffect(() => {
@@ -38,7 +48,12 @@ export function StudentsProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const handleStorageChange = (event: StorageEvent) => {
       if (event.key === STUDENTS_STORAGE_KEY && event.newValue) {
-        setStudents(JSON.parse(event.newValue));
+        try {
+            const parsedStudents = JSON.parse(event.newValue);
+            setStudents(parsedStudents.map((s: Student) => ({ ...s, behavioralNotes: s.behavioralNotes || []})));
+        } catch (e) {
+            console.error("Failed to parse students from storage event", e);
+        }
       }
     };
     window.addEventListener('storage', handleStorageChange);
@@ -56,12 +71,13 @@ export function StudentsProvider({ children }: { children: ReactNode }) {
     setStudents(prev => prev.map(s => s.id === updatedStudent.id ? updatedStudent : s));
   };
   
-  const addStudent = (newStudentData: Omit<Student, 'id' | 'attendance' | 'fees'>) => {
+  const addStudent = (newStudentData: Omit<Student, 'id' | 'attendance' | 'fees' | 'behavioralNotes'>) => {
      const newStudent: Student = {
       ...newStudentData,
       id: `s-${Date.now()}`,
       attendance: [],
       fees: [],
+      behavioralNotes: [],
     };
     setStudents(prev => [newStudent, ...prev]);
   };
@@ -146,8 +162,28 @@ export function StudentsProvider({ children }: { children: ReactNode }) {
     );
   };
 
+  const addBehavioralNote = (studentId: string, note: string, teacher: string) => {
+    const newNote: BehavioralNote = {
+      id: `bn-${Date.now()}`,
+      date: new Date().toISOString().split('T')[0],
+      note,
+      teacher,
+    };
+    setStudents(prev =>
+      prev.map(student => {
+        if (student.id === studentId) {
+          return {
+            ...student,
+            behavioralNotes: [newNote, ...(student.behavioralNotes || [])],
+          };
+        }
+        return student;
+      })
+    );
+  };
+
   return (
-    <StudentsContext.Provider value={{ students, currentStudent, updateStudent, addStudent, updateStudentAttendance, payFee, addFee, approveFee }}>
+    <StudentsContext.Provider value={{ students, currentStudent, updateStudent, addStudent, updateStudentAttendance, payFee, addFee, approveFee, addBehavioralNote }}>
       {children}
     </StudentsContext.Provider>
   );

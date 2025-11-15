@@ -9,6 +9,7 @@ export interface Student {
   contact: string;
   attendance: AttendanceRecord[];
   fees: FeeRecord[];
+  behavioralNotes: BehavioralNote[];
 }
 
 export interface AttendanceRecord {
@@ -67,4 +68,11 @@ export interface Announcement {
   title: string;
   content: string;
   date: string;
+}
+
+export interface BehavioralNote {
+  id: string;
+  date: string;
+  note: string;
+  teacher: string;
 }

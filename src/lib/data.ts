@@ -1,4 +1,4 @@
-import type { Student, Teacher, Homework, TimetableEntry, Transport, Announcement } from './types';
+import type { Student, Teacher, Homework, TimetableEntry, Transport, Announcement, BehavioralNote } from './types';
 import { PlaceHolderImages } from './placeholder-images';
 
 const student1Photo = PlaceHolderImages.find(p => p.id === 'student-1')?.imageUrl || '';
@@ -10,6 +10,11 @@ const teacher1Photo = PlaceHolderImages.find(p => p.id === 'staff-teacher-1')?.i
 const teacher2Photo = PlaceHolderImages.find(p => p.id === 'staff-teacher-2')?.imageUrl || '';
 
 const driver1Photo = PlaceHolderImages.find(p => p.id === 'driver-1')?.imageUrl || '';
+
+export const behavioralNotes: BehavioralNote[] = [
+    { id: 'bn-1', date: '2023-10-25', note: 'Akash was very participative in the class discussion about algebra.', teacher: 'Mr. Ramesh Gupta' },
+    { id: 'bn-2', date: '2023-10-26', note: 'Showed great leadership during the group science project.', teacher: 'Mrs. Sunita Devi' },
+];
 
 export const students: Student[] = [
   {
@@ -29,6 +34,7 @@ export const students: Student[] = [
       { id: 'fee1', type: 'Tuition Fee', amount: 5000, dueDate: '2023-11-15', status: 'paid', paidDate: '2023-11-10', description: 'Quarterly tuition fee.' },
       { id: 'fee2', type: 'Exam Fee', amount: 1000, dueDate: '2023-12-01', status: 'pending', description: 'Final term examination fee.' },
     ],
+    behavioralNotes: behavioralNotes,
   },
   {
     id: '2',
@@ -47,6 +53,7 @@ export const students: Student[] = [
       { id: 'fee3', type: 'Tuition Fee', amount: 4500, dueDate: '2023-11-15', status: 'paid', paidDate: '2023-11-05', description: 'Quarterly tuition fee.' },
       { id: 'fee4', type: 'Sports Fee', amount: 1500, dueDate: '2023-11-20', status: 'overdue', description: 'Annual sports participation fee.' },
     ],
+    behavioralNotes: [],
   },
   {
     id: '3',
@@ -57,6 +64,7 @@ export const students: Student[] = [
     contact: '9123456789',
     attendance: [],
     fees: [],
+    behavioralNotes: [],
   },
 ];
 

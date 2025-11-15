@@ -120,7 +120,7 @@ export default function StudentProfilePage({ params }: { params: Promise<{ id: s
                     {role === 'admin' && (
                        <div className={cn(
                            "absolute inset-0 bg-transparent flex items-center justify-center pointer-events-none",
-                           (attendanceDates.length > 0) && "hidden" // Hide hint if there are attendance records
+                           (student.attendance.length > 0) && "hidden" // Hide hint if there are attendance records
                        )}>
                             <p className="bg-background/80 px-4 py-2 rounded-md text-sm text-muted-foreground">
                                 Click on a date to update attendance
