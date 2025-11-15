@@ -8,11 +8,18 @@ import Image from 'next/image';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useGallery } from '@/hooks/use-gallery';
 import { useSiteContent } from '@/hooks/use-site-content';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
   const { photos, videos } = useGallery();
   const { aboutContent } = useSiteContent();
   const heroImage = photos.find(p => p.id === 'hero');
+
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -127,7 +134,7 @@ export default function Home() {
           <div className="container mx-auto px-4 text-center">
             <h3 className="text-3xl font-bold font-headline mb-4">About VidyaVahini</h3>
             <p className="max-w-3xl mx-auto text-muted-foreground">
-              {aboutContent}
+              {isClient ? aboutContent : ''}
             </p>
           </div>
         </section>
