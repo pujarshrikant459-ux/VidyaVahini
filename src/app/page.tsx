@@ -1,12 +1,16 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { GraduationCap, Bus, BookOpen, User, CreditCard, Bell } from 'lucide-react';
+import { GraduationCap, Bus, BookOpen, User, CreditCard, Bell, Camera, Video, PlayCircle } from 'lucide-react';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function Home() {
   const heroImage = PlaceHolderImages.find(p => p.id === 'hero');
+  const galleryPhotos = PlaceHolderImages.filter(p => p.id.startsWith('gallery-'));
+  const galleryVideos = PlaceHolderImages.filter(p => p.id.startsWith('video-'));
+
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -18,6 +22,7 @@ export default function Home() {
           </div>
           <nav className="hidden md:flex gap-6 items-center">
             <Link href="#features" className="text-sm font-medium hover:underline">Features</Link>
+            <Link href="#gallery" className="text-sm font-medium hover:underline">Gallery</Link>
             <Link href="#about" className="text-sm font-medium hover:underline">About</Link>
             <Link href="/login">
               <Button variant="secondary">Login</Button>
@@ -69,7 +74,54 @@ export default function Home() {
           </div>
         </section>
         
-        <section id="about" className="py-16 bg-secondary">
+        <section id="gallery" className="py-16 bg-secondary">
+          <div className="container mx-auto px-4">
+            <h3 className="text-3xl font-bold text-center mb-12 font-headline">Gallery</h3>
+            <Tabs defaultValue="photos" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 max-w-md mx-auto">
+                <TabsTrigger value="photos"><Camera className="mr-2"/>Photos</TabsTrigger>
+                <TabsTrigger value="videos"><Video className="mr-2"/>Videos</TabsTrigger>
+              </TabsList>
+              <TabsContent value="photos" className="mt-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {galleryPhotos.map((photo) => (
+                    <div key={photo.id} className="group overflow-hidden rounded-lg">
+                       <Image
+                          src={photo.imageUrl}
+                          alt={photo.description}
+                          width={600}
+                          height={400}
+                          className="object-cover w-full h-full aspect-video group-hover:scale-105 transition-transform duration-300"
+                          data-ai-hint={photo.imageHint}
+                        />
+                    </div>
+                  ))}
+                </div>
+              </TabsContent>
+              <TabsContent value="videos" className="mt-8">
+                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {galleryVideos.map((video) => (
+                      <div key={video.id} className="group relative overflow-hidden rounded-lg">
+                        <Image
+                          src={video.imageUrl}
+                          alt={video.description}
+                          width={600}
+                          height={400}
+                          className="object-cover w-full h-full aspect-video"
+                          data-ai-hint={video.imageHint}
+                        />
+                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                            <PlayCircle className="h-16 w-16 text-white/80 group-hover:text-white group-hover:scale-110 transition-all duration-300" />
+                        </div>
+                      </div>
+                    ))}
+                 </div>
+              </TabsContent>
+            </Tabs>
+          </div>
+        </section>
+
+        <section id="about" className="py-16 bg-background">
           <div className="container mx-auto px-4 text-center">
             <h3 className="text-3xl font-bold font-headline mb-4">About VidyaVahini</h3>
             <p className="max-w-3xl mx-auto text-muted-foreground">
