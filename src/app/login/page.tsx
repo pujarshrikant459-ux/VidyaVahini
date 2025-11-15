@@ -12,7 +12,8 @@ import { useRouter } from 'next/navigation';
 import { useStudents } from '@/hooks/use-students';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { Combobox } from '@/components/ui/combobox';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { FormControl } from '@/components/ui/form';
 
 export default function LoginPage() {
   const { setLogin } = useUserRole();
@@ -38,11 +39,6 @@ export default function LoginPage() {
     setLogin('parent', selectedStudent);
     router.push('/dashboard');
   };
-
-  const studentOptions = students.map(student => ({
-    value: student.id,
-    label: `${student.name} - ${student.class}`
-  }));
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -96,14 +92,20 @@ export default function LoginPage() {
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                     <Label htmlFor="parent-student">Select Your Child</Label>
-                    <Combobox
-                        options={studentOptions}
-                        value={selectedStudent}
-                        onChange={setSelectedStudent}
-                        placeholder="Select a student..."
-                        searchPlaceholder="Search for a student..."
-                        noResultsMessage="No student found."
-                    />
+                    <Select onValueChange={setSelectedStudent} value={selectedStudent}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a student..." />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {students.map((s) => (
+                          <SelectItem key={s.id} value={s.id}>
+                            {s.name} - {s.class}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                 </div>
                  <div className="space-y-2">
                     <Label htmlFor="parent-password">Password</Label>
