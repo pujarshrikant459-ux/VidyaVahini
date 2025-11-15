@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -77,7 +77,7 @@ export default function AcademicsPage() {
   const studentForNotes = role === 'parent' ? currentStudent : null;
 
   const onNoteSubmit = (values: z.infer<typeof noteSchema>) => {
-    const teacherName = teachers[1]?.name || 'A Teacher';
+    const teacherName = teachers.find(t => t.id === 't-01')?.name || 'A Teacher';
     addBehavioralNote(values.studentId, values.note, teacherName);
     toast({
       title: "Note Saved",
@@ -452,5 +452,3 @@ export default function AcademicsPage() {
     </Tabs>
   );
 }
-
-    
