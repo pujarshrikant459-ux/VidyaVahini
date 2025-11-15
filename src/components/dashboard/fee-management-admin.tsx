@@ -60,7 +60,7 @@ const FormSchema = z.object({
   amount: z.coerce.number().positive(),
   classLevel: z.string().min(1, { message: "Class is required." }),
   dueDate: z.string().min(1, { message: "Due date is required." }),
-  description: z.string().min(5, { message: "Description is required." }),
+  description: z.string().min(5, { message: "Description must be at least 5 characters." }),
 });
 
 type FormData = z.infer<typeof FormSchema>;
