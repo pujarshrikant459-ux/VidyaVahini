@@ -10,14 +10,14 @@ import { Label } from '@/components/ui/label';
 import { useUserRole } from '@/hooks/use-user-role';
 import { useRouter } from 'next/navigation';
 import { useStudents } from '@/hooks/use-students';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { Combobox } from '@/components/ui/combobox';
 
 export default function LoginPage() {
   const { setLogin } = useUserRole();
   const { students } = useStudents();
-  const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
+  const [selectedStudent, setSelectedStudent] = useState<string>('');
   const router = useRouter();
   const { toast } = useToast();
 
@@ -38,6 +38,11 @@ export default function LoginPage() {
     setLogin('parent', selectedStudent);
     router.push('/dashboard');
   };
+
+  const studentOptions = students.map(student => ({
+    value: student.id,
+    label: `${student.name} - ${student.class}`
+  }));
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -91,18 +96,14 @@ export default function LoginPage() {
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                     <Label htmlFor="parent-student">Select Your Child</Label>
-                    <Select onValueChange={setSelectedStudent}>
-                        <SelectTrigger>
-                            <SelectValue placeholder="Select a student..." />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {students.map((student) => (
-                                <SelectItem key={student.id} value={student.id}>
-                                    {student.name} - {student.class}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
+                    <Combobox
+                        options={studentOptions}
+                        value={selectedStudent}
+                        onChange={setSelectedStudent}
+                        placeholder="Select a student..."
+                        searchPlaceholder="Search for a student..."
+                        noResultsMessage="No student found."
+                    />
                 </div>
                  <div className="space-y-2">
                     <Label htmlFor="parent-password">Password</Label>
