@@ -99,7 +99,7 @@ export const teachers: Teacher[] = [
 export const homework: Homework[] = [
     { id: 'hw-1', subject: 'Mathematics', title: 'Algebra Chapter 5', assignedDate: '2023-10-25', dueDate: '2023-10-28', description: 'Solve all problems from exercise 5.3.', teacher: 'Mr. Ramesh Gupta' },
     { id: 'hw-2', subject: 'Science', title: 'Biology: Cell Structure', assignedDate: '2023-10-26', dueDate: '2023-10-29', description: 'Draw and label a plant cell and an animal cell.', teacher: 'Mrs. Sunita Devi' },
-    { id: 'hw-3', subject: 'History', title: 'The Mauryan Empire', assignedDate: '2023-10-27', dueDate: '2023-10-30', description: 'Write a short note on Ashoka\'s reign.', teacher: 'Mr. Anand Sharma'},
+    { id: 'hw-3', subject: 'History', title: 'The Mauryan Empire', assignedDate: '2023-10-27', dueDate: '203-10-30', description: 'Write a short note on Ashoka\'s reign.', teacher: 'Mr. Anand Sharma'},
 ];
 
 export const timetable: TimetableEntry[] = [
@@ -107,11 +107,41 @@ export const timetable: TimetableEntry[] = [
         { time: '09:00 - 10:00', subject: 'Mathematics', teacher: 'Mr. Ramesh Gupta'},
         { time: '10:00 - 11:00', subject: 'Science', teacher: 'Mrs. Sunita Devi'},
         { time: '11:00 - 12:00', subject: 'English', teacher: 'Mrs. Priya Kumar'},
+        { time: '12:00 - 01:00', subject: 'Lunch', teacher: ''},
+        { time: '01:00 - 02:00', subject: 'Social Science', teacher: 'Mr. Anand Sharma'},
+        { time: '02:00 - 03:00', subject: 'Kannada', teacher: 'Mr. Suresh Patil'},
     ]},
     { day: 'Tuesday', periods: [
         { time: '09:00 - 10:00', subject: 'Kannada', teacher: 'Mr. Suresh Patil'},
         { time: '10:00 - 11:00', subject: 'Mathematics', teacher: 'Mr. Ramesh Gupta'},
         { time: '11:00 - 12:00', subject: 'Social Science', teacher: 'Mr. Anand Sharma'},
+        { time: '12:00 - 01:00', subject: 'Lunch', teacher: ''},
+        { time: '01:00 - 02:00', subject: 'Science', teacher: 'Mrs. Sunita Devi'},
+        { time: '02:00 - 03:00', subject: 'English', teacher: 'Mrs. Priya Kumar'},
+    ]},
+    { day: 'Wednesday', periods: [
+        { time: '09:00 - 10:00', subject: 'Science', teacher: 'Mrs. Sunita Devi'},
+        { time: '10:00 - 11:00', subject: 'English', teacher: 'Mrs. Priya Kumar'},
+        { time: '11:00 - 12:00', subject: 'Mathematics', teacher: 'Mr. Ramesh Gupta'},
+        { time: '12:00 - 01:00', subject: 'Lunch', teacher: ''},
+        { time: '01:00 - 02:00', subject: 'Physical Education', teacher: 'Mr. Vinod Singh'},
+        { time: '02:00 - 03:00', subject: 'Social Science', teacher: 'Mr. Anand Sharma'},
+    ]},
+    { day: 'Thursday', periods: [
+        { time: '09:00 - 10:00', subject: 'Social Science', teacher: 'Mr. Anand Sharma'},
+        { time: '10:00 - 11:00', subject: 'Kannada', teacher: 'Mr. Suresh Patil'},
+        { time: '11:00 - 12:00', subject: 'Science', teacher: 'Mrs. Sunita Devi'},
+        { time: '12:00 - 01:00', subject: 'Lunch', teacher: ''},
+        { time: '01:00 - 02:00', subject: 'English', teacher: 'Mrs. Priya Kumar'},
+        { time: '02:00 - 03:00', subject: 'Mathematics', teacher: 'Mr. Ramesh Gupta'},
+    ]},
+    { day: 'Friday', periods: [
+        { time: '09:00 - 10:00', subject: 'English', teacher: 'Mrs. Priya Kumar'},
+        { time: '10:00 - 11:00', subject: 'Mathematics', teacher: 'Mr. Ramesh Gupta'},
+        { time: '11:00 - 12:00', subject: 'Kannada', teacher: 'Mr. Suresh Patil'},
+        { time: '12:00 - 01:00', subject: 'Lunch', teacher: ''},
+        { time: '01:00 - 02:00', subject: 'Science', teacher: 'Mrs. Sunita Devi'},
+        { time: '02:00 - 03:00', subject: 'Art', teacher: 'Ms. Kavita'},
     ]},
 ];
 

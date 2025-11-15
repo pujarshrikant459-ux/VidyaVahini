@@ -91,6 +91,9 @@ export default function AcademicsPage() {
                   <TableHead>09:00 - 10:00</TableHead>
                   <TableHead>10:00 - 11:00</TableHead>
                   <TableHead>11:00 - 12:00</TableHead>
+                  <TableHead>12:00 - 01:00</TableHead>
+                  <TableHead>01:00 - 02:00</TableHead>
+                  <TableHead>02:00 - 03:00</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
