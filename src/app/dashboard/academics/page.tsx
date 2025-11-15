@@ -1,5 +1,7 @@
+
 "use client";
 
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -11,10 +13,14 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import { useStudents } from "@/hooks/use-students";
 import { useUserRole } from "@/hooks/use-user-role";
 import { useToast } from "@/hooks/use-toast";
-import { homework, timetable, teachers } from "@/lib/data";
+import { homework, timetable as initialTimetable, teachers } from "@/lib/data";
+import type { TimetableEntry } from "@/lib/types";
+import { Pencil, Save } from "lucide-react";
+
 
 const noteSchema = z.object({
   studentId: z.string().nonempty({ message: "Please select a student." }),
@@ -26,6 +32,9 @@ export default function AcademicsPage() {
   const { students, currentStudent, addBehavioralNote } = useStudents();
   const { toast } = useToast();
 
+  const [timetable, setTimetable] = useState<TimetableEntry[]>(initialTimetable);
+  const [isEditingTimetable, setIsEditingTimetable] = useState(false);
+
   const form = useForm<z.infer<typeof noteSchema>>({
     resolver: zodResolver(noteSchema),
     defaultValues: { studentId: "", note: "" },
@@ -34,7 +43,6 @@ export default function AcademicsPage() {
   const studentForNotes = role === 'parent' ? currentStudent : null;
 
   const onSubmit = (values: z.infer<typeof noteSchema>) => {
-    // Assuming the teacher's name is available, e.g. from a logged-in teacher context
     const teacherName = teachers[1]?.name || 'A Teacher';
     addBehavioralNote(values.studentId, values.note, teacherName);
     toast({
@@ -42,6 +50,24 @@ export default function AcademicsPage() {
       description: `Behavioral note for the student has been recorded.`,
     });
     form.reset();
+  };
+  
+  const handleTimetableChange = (dayIndex: number, periodIndex: number, field: 'subject' | 'teacher', value: string) => {
+    const updatedTimetable = [...timetable];
+    updatedTimetable[dayIndex].periods[periodIndex] = {
+      ...updatedTimetable[dayIndex].periods[periodIndex],
+      [field]: value,
+    };
+    setTimetable(updatedTimetable);
+  };
+
+  const handleSaveTimetable = () => {
+    // In a real app, you'd save this to a backend. For now, it's just in state.
+    setIsEditingTimetable(false);
+    toast({
+      title: "Timetable Saved",
+      description: "The class timetable has been updated.",
+    });
   };
 
   return (
@@ -79,9 +105,22 @@ export default function AcademicsPage() {
       </TabsContent>
       <TabsContent value="timetable">
         <Card>
-          <CardHeader>
-            <CardTitle>Class Timetable</CardTitle>
-            <CardDescription>Weekly class schedule for your child's class.</CardDescription>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle>Class Timetable</CardTitle>
+              <CardDescription>Weekly class schedule for your child's class.</CardDescription>
+            </div>
+            {role === 'admin' && (
+              isEditingTimetable ? (
+                <Button onClick={handleSaveTimetable} size="sm">
+                  <Save className="mr-2 h-4 w-4" /> Save
+                </Button>
+              ) : (
+                <Button onClick={() => setIsEditingTimetable(true)} variant="outline" size="sm">
+                  <Pencil className="mr-2 h-4 w-4" /> Edit Timetable
+                </Button>
+              )
+            )}
           </CardHeader>
           <CardContent>
             <Table>
@@ -97,13 +136,38 @@ export default function AcademicsPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {timetable.map((dayEntry) => (
+                {timetable.map((dayEntry, dayIndex) => (
                   <TableRow key={dayEntry.day}>
                     <TableCell className="font-medium">{dayEntry.day}</TableCell>
-                    {dayEntry.periods.map((period, index) => (
-                      <TableCell key={index}>
-                        <p className="font-semibold">{period.subject}</p>
-                        <p className="text-xs text-muted-foreground">{period.teacher}</p>
+                    {dayEntry.periods.map((period, periodIndex) => (
+                      <TableCell key={periodIndex}>
+                        {isEditingTimetable ? (
+                          period.subject === 'Lunch' ? (
+                            <div>
+                              <p className="font-semibold">{period.subject}</p>
+                            </div>
+                          ) : (
+                            <div className="space-y-1">
+                              <Input
+                                value={period.subject}
+                                onChange={(e) => handleTimetableChange(dayIndex, periodIndex, 'subject', e.target.value)}
+                                placeholder="Subject"
+                                className="h-8 text-sm"
+                              />
+                              <Input
+                                value={period.teacher}
+                                onChange={(e) => handleTimetableChange(dayIndex, periodIndex, 'teacher', e.target.value)}
+                                placeholder="Teacher"
+                                className="h-8 text-xs"
+                              />
+                            </div>
+                          )
+                        ) : (
+                          <div>
+                            <p className="font-semibold">{period.subject}</p>
+                            <p className="text-xs text-muted-foreground">{period.teacher}</p>
+                          </div>
+                        )}
                       </TableCell>
                     ))}
                   </TableRow>
@@ -204,4 +268,5 @@ export default function AcademicsPage() {
       </TabsContent>
     </Tabs>
   );
-}
+
+    
