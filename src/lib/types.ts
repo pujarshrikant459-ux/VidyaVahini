@@ -32,6 +32,7 @@ export interface Teacher {
   name: string;
   role: string;
   subject?: string;
+  classAssigned?: string;
   photo: string;
   contact: string;
 }

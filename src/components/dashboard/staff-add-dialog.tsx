@@ -28,6 +28,7 @@ const FormSchema = z.object({
   name: z.string().min(2, { message: "Name is required." }),
   role: z.string().min(2, { message: "Role is required." }),
   subject: z.string().optional(),
+  classAssigned: z.string().optional(),
   contact: z.string().min(10, { message: "A valid contact number is required." }),
   photo: z.string().url({ message: "Please enter a valid image URL." }),
 });
@@ -47,6 +48,7 @@ export function StaffAddDialog({ isOpen, onClose, onSave }: StaffAddDialogProps)
       name: "",
       role: "",
       subject: "",
+      classAssigned: "",
       contact: "",
       photo: "",
     },
@@ -99,19 +101,34 @@ export function StaffAddDialog({ isOpen, onClose, onSave }: StaffAddDialogProps)
                     </FormItem>
                 )}
                 />
-            <FormField
-                control={form.control}
-                name="subject"
-                render={({ field }) => (
-                    <FormItem>
-                    <FormLabel>Subject (Optional)</FormLabel>
-                    <FormControl>
-                        <Input placeholder="e.g., Mathematics" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                    </FormItem>
-                )}
-                />
+             <div className="grid grid-cols-2 gap-4">
+                <FormField
+                    control={form.control}
+                    name="subject"
+                    render={({ field }) => (
+                        <FormItem>
+                        <FormLabel>Subject</FormLabel>
+                        <FormControl>
+                            <Input placeholder="e.g., Mathematics" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                    />
+                <FormField
+                    control={form.control}
+                    name="classAssigned"
+                    render={({ field }) => (
+                        <FormItem>
+                        <FormLabel>Class</FormLabel>
+                        <FormControl>
+                            <Input placeholder="e.g., 10th A" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                    />
+             </div>
             <FormField
                 control={form.control}
                 name="contact"

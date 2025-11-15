@@ -7,9 +7,10 @@ import type { Teacher } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Mail, Phone, PlusCircle } from "lucide-react";
+import { Mail, Phone, PlusCircle, BookUser } from "lucide-react";
 import { StaffAddDialog } from "@/components/dashboard/staff-add-dialog";
 import { useUserRole } from "@/hooks/use-user-role";
+import { Badge } from "@/components/ui/badge";
 
 export default function StaffPage() {
   const [staff, setStaff] = useState<Teacher[]>(initialTeachers);
@@ -59,11 +60,12 @@ export default function StaffPage() {
                     data-ai-hint="professional portrait"
                   />
                 </div>
-                <CardContent className="p-4">
+                <CardContent className="p-4 space-y-1">
                   <h3 className="font-bold text-lg font-headline">{member.name}</h3>
                   <p className="text-primary">{member.role}</p>
                   {member.subject && <p className="text-sm text-muted-foreground">{member.subject}</p>}
-                  <div className="mt-4 flex justify-center gap-4 text-muted-foreground">
+                  {member.classAssigned && <Badge variant="outline"><BookUser className="mr-1.5 h-3 w-3" />{member.classAssigned}</Badge>}
+                  <div className="pt-2 flex justify-center gap-4 text-muted-foreground">
                       <a href={`tel:${member.contact}`} className="hover:text-primary"><Phone className="h-5 w-5" /></a>
                       <a href={`mailto:${member.name.replace(/\s+/g, '.').toLowerCase()}@school.ac.in`} className="hover:text-primary"><Mail className="h-5 w-5" /></a>
                   </div>
