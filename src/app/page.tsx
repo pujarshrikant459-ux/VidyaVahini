@@ -1,3 +1,5 @@
+"use client";
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -5,12 +7,11 @@ import { GraduationCap, Bus, BookOpen, User, CreditCard, Bell, Camera, Video, Pl
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useGallery } from '@/hooks/use-gallery';
 
 export default function Home() {
-  const heroImage = PlaceHolderImages.find(p => p.id === 'hero');
-  const galleryPhotos = PlaceHolderImages.filter(p => p.id.startsWith('gallery-'));
-  const galleryVideos = PlaceHolderImages.filter(p => p.id.startsWith('video-'));
-
+  const { photos, videos } = useGallery();
+  const heroImage = photos.find(p => p.id === 'hero');
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -84,7 +85,7 @@ export default function Home() {
               </TabsList>
               <TabsContent value="photos" className="mt-8">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {galleryPhotos.map((photo) => (
+                  {photos.filter(p => !p.id.startsWith('video-') && p.id !== 'hero').map((photo) => (
                     <div key={photo.id} className="group overflow-hidden rounded-lg">
                        <Image
                           src={photo.imageUrl}
@@ -100,7 +101,7 @@ export default function Home() {
               </TabsContent>
               <TabsContent value="videos" className="mt-8">
                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {galleryVideos.map((video) => (
+                    {videos.map((video) => (
                       <div key={video.id} className="group relative overflow-hidden rounded-lg">
                         <Image
                           src={video.imageUrl}

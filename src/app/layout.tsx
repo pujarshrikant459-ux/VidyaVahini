@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { UserRoleProvider } from '@/hooks/use-user-role';
 import { AnnouncementsProvider } from '@/hooks/use-announcements';
 import { StudentsProvider } from '@/hooks/use-students';
+import { GalleryProvider } from '@/hooks/use-gallery';
 
 export const metadata: Metadata = {
   title: 'VidyaVahini',
@@ -27,7 +28,9 @@ export default function RootLayout({
         <UserRoleProvider>
           <AnnouncementsProvider>
             <StudentsProvider>
-              {children}
+              <GalleryProvider>
+                {children}
+              </GalleryProvider>
             </StudentsProvider>
           </AnnouncementsProvider>
         </UserRoleProvider>

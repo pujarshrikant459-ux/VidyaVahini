@@ -11,6 +11,7 @@ import {
   Megaphone,
   Settings,
   Users,
+  Image as GalleryIcon
 } from "lucide-react";
 import {
   SidebarProvider,
@@ -102,6 +103,16 @@ export default function DashboardLayout({
                   <Link href="/dashboard/staff">
                     <Users />
                     <span>Staff</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            )}
+             {role === 'admin' && (
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={isActive("/dashboard/gallery")} tooltip="Gallery">
+                  <Link href="/dashboard/gallery">
+                    <GalleryIcon />
+                    <span>Gallery</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
