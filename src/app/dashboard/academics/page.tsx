@@ -29,7 +29,7 @@ import {
   DialogDescription,
   DialogClose,
 } from "@/components/ui/dialog";
-import { Combobox } from "@/components/ui/combobox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 
 const noteSchema = z.object({
@@ -376,15 +376,22 @@ export default function AcademicsPage() {
                         control={noteForm.control}
                         name="studentId"
                         render={({ field }) => (
-                          <FormItem className="flex flex-col">
+                          <FormItem>
                             <FormLabel>Student</FormLabel>
-                             <Combobox
-                                options={students.map(s => ({ value: s.id, label: `${s.name} - ${s.class}` }))}
-                                value={field.value}
-                                onChange={field.onChange}
-                                placeholder="Select a student..."
-                                notFoundText="No student found."
-                             />
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select a student..." />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {students.map((s) => (
+                                  <SelectItem key={s.id} value={s.id}>
+                                    {s.name} - {s.class}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
                             <FormMessage />
                           </FormItem>
                         )}
