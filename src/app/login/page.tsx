@@ -13,7 +13,6 @@ import { useStudents } from '@/hooks/use-students';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { FormControl } from '@/components/ui/form';
 
 export default function LoginPage() {
   const { setLogin } = useUserRole();
@@ -93,11 +92,9 @@ export default function LoginPage() {
                 <div className="space-y-2">
                     <Label htmlFor="parent-student">Select Your Child</Label>
                     <Select onValueChange={setSelectedStudent} value={selectedStudent}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a student..." />
-                        </SelectTrigger>
-                      </FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a student..." />
+                      </SelectTrigger>
                       <SelectContent>
                         {students.map((s) => (
                           <SelectItem key={s.id} value={s.id}>
