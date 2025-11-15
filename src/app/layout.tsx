@@ -6,6 +6,7 @@ import { UserRoleProvider } from '@/hooks/use-user-role';
 import { AnnouncementsProvider } from '@/hooks/use-announcements';
 import { StudentsProvider } from '@/hooks/use-students';
 import { GalleryProvider } from '@/hooks/use-gallery';
+import { SiteContentProvider } from '@/hooks/use-site-content';
 
 export const metadata: Metadata = {
   title: 'VidyaVahini',
@@ -29,7 +30,9 @@ export default function RootLayout({
           <AnnouncementsProvider>
             <StudentsProvider>
               <GalleryProvider>
-                {children}
+                <SiteContentProvider>
+                  {children}
+                </SiteContentProvider>
               </GalleryProvider>
             </StudentsProvider>
           </AnnouncementsProvider>

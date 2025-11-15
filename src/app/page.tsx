@@ -5,12 +5,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { GraduationCap, Bus, BookOpen, User, CreditCard, Bell, Camera, Video, PlayCircle } from 'lucide-react';
 import Image from 'next/image';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useGallery } from '@/hooks/use-gallery';
+import { useSiteContent } from '@/hooks/use-site-content';
 
 export default function Home() {
   const { photos, videos } = useGallery();
+  const { aboutContent } = useSiteContent();
   const heroImage = photos.find(p => p.id === 'hero');
 
   return (
@@ -126,7 +127,7 @@ export default function Home() {
           <div className="container mx-auto px-4 text-center">
             <h3 className="text-3xl font-bold font-headline mb-4">About VidyaVahini</h3>
             <p className="max-w-3xl mx-auto text-muted-foreground">
-              VidyaVahini is a modern, professional portal for Karnataka Government Schools, designed to bridge the communication gap between parents, students, and teachers. Our mission is to provide an easy-to-use platform for all school-related information, promoting transparency and collaboration.
+              {aboutContent}
             </p>
           </div>
         </section>

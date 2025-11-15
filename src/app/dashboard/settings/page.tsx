@@ -1,3 +1,8 @@
+"use client";
+
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,8 +15,35 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { useSiteContent } from "@/hooks/use-site-content";
+import { useToast } from "@/hooks/use-toast";
+import { useUserRole } from "@/hooks/use-user-role";
+
+const aboutSchema = z.object({
+  about: z.string().min(20, "About text must be at least 20 characters."),
+});
 
 export default function SettingsPage() {
+  const { role } = useUserRole();
+  const { aboutContent, setAboutContent } = useSiteContent();
+  const { toast } = useToast();
+
+  const { control, handleSubmit, formState: { errors } } = useForm({
+    resolver: zodResolver(aboutSchema),
+    defaultValues: {
+      about: aboutContent,
+    },
+  });
+
+  const onAboutSubmit = (data: { about: string }) => {
+    setAboutContent(data.about);
+    toast({
+      title: "Success!",
+      description: "The About Us section has been updated.",
+    });
+  };
+
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <Card>
@@ -31,6 +63,35 @@ export default function SettingsPage() {
            <Button>Save Changes</Button>
         </CardContent>
       </Card>
+
+      {role === 'admin' && (
+        <Card>
+          <CardHeader>
+            <CardTitle>School Information</CardTitle>
+            <CardDescription>Edit the "About Us" section on the homepage.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit(onAboutSubmit)} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="about">About Section Content</Label>
+                <Controller
+                  name="about"
+                  control={control}
+                  render={({ field }) => (
+                    <Textarea
+                      id="about"
+                      rows={5}
+                      {...field}
+                    />
+                  )}
+                />
+                {errors.about && <p className="text-sm font-medium text-destructive">{errors.about.message}</p>}
+              </div>
+              <Button type="submit">Save About Section</Button>
+            </form>
+          </CardContent>
+        </Card>
+      )}
 
        <Card>
         <CardHeader>
