@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -18,6 +19,22 @@ export default function FeesPage() {
   const { students, currentStudent, payFee } = useStudents();
   const { toast } = useToast();
   const parentStudent = currentStudent;
+
+  const feeStructure = [
+    { name: "Tuition Fee", description: "Core fee for academic instruction." },
+    { name: "Admission Fee", description: "One-time fee for new student enrollment." },
+    { name: "Term Fee / Semester Fee", description: "Fee charged per academic term or semester." },
+    { name: "Examination Fee", description: "Fee for conducting internal and external exams." },
+    { name: "Computer / Laboratory Fee", description: "For maintenance of computer and science labs." },
+    { name: "Sports Fee", description: "For sports equipment, facilities, and coaching." },
+    { name: "Transport / School Bus Fee", description: "Fee for using the school transport service." },
+    { name: "Library Fee", description: "For access to library books and resources." },
+    { name: "Uniform Fee", description: "Cost of the school-prescribed uniform set." },
+    { name: "Books & Stationery Fee", description: "Cost for textbooks, notebooks, and other stationery." },
+    { name: "Activity / Events Fee", description: "Fee for special activities, field trips, and events." },
+    { name: "Development / Maintenance Fee", description: "Contribution towards school infrastructure and upkeep." },
+    { name: "Hostel Fee (if applicable)", description: "For students availing the hostel facility." },
+  ];
   
   const handlePayFee = (studentId: string, feeId: string, feeType: string) => {
     payFee(studentId, feeId);
@@ -41,9 +58,10 @@ export default function FeesPage() {
   };
 
   return (
-    <Tabs defaultValue={role === 'admin' ? 'admin-view' : 'parent-view'} className="w-full">
-      <TabsList className={cn("grid w-full", role === 'admin' ? 'grid-cols-2' : 'grid-cols-1')}>
+    <Tabs defaultValue="parent-view" className="w-full">
+      <TabsList className={cn("grid w-full", role === 'admin' ? 'grid-cols-3' : 'grid-cols-2')}>
         <TabsTrigger value="parent-view">My Child's Fees</TabsTrigger>
+        <TabsTrigger value="fee-structure">Fee Structure</TabsTrigger>
         {role === 'admin' && <TabsTrigger value="admin-view">Manage Fees (Admin)</TabsTrigger>}
       </TabsList>
       <TabsContent value="parent-view">
@@ -90,6 +108,32 @@ export default function FeesPage() {
                         </TableCell>
                     </TableRow>
                 )}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      </TabsContent>
+      <TabsContent value="fee-structure">
+        <Card>
+          <CardHeader>
+            <CardTitle>School Fee Structure</CardTitle>
+            <CardDescription>An overview of the different types of fees applicable.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Fee Type</TableHead>
+                  <TableHead>Description</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {feeStructure.map((fee, index) => (
+                  <TableRow key={index}>
+                    <TableCell className="font-medium">{fee.name}</TableCell>
+                    <TableCell>{fee.description}</TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </CardContent>
