@@ -147,3 +147,21 @@ export const announcements: Announcement[] = [
       date: '2023-11-05',
     },
 ];
+
+export const feeStructure = [
+  { name: "Tuition Fee", description: "Core fee for academic instruction." },
+  { name: "Admission Fee", description: "One-time fee for new student enrollment." },
+  { name: "Term Fee / Semester Fee", description: "Fee charged per academic term or semester." },
+  { name: "Examination Fee", description: "Fee for conducting internal and external exams." },
+  { name: "Computer / Laboratory Fee", description: "For maintenance of computer and science labs." },
+  { name: "Sports Fee", description: "For sports equipment, facilities, and coaching." },
+  { name: "Transport / School Bus Fee", description: "Fee for using the school transport service." },
+  { name: "Library Fee", description: "For access to library books and resources." },
+  { name: "Uniform Fee", description: "Cost of the school-prescribed uniform set." },
+  { name: "Books & Stationery Fee", description: "Cost for textbooks, notebooks, and other stationery." },
+  { name: "Activity / Events Fee", description: "Fee for special activities, field trips, and events." },
+  { name: "Development / Maintenance Fee", description: "Contribution towards school infrastructure and upkeep." },
+  { name: "Hostel Fee (if applicable)", description: "For students availing the hostel facility." },
+];
+
+    

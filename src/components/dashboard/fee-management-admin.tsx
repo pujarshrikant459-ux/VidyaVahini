@@ -52,6 +52,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { feeStructure } from '@/lib/data';
 
 const FormSchema = z.object({
   studentId: z.string({ required_error: "Please select a student." }),
@@ -204,9 +205,20 @@ export function FeeManagementAdmin({ initialStudents }: { initialStudents?: Stud
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Fee Type</FormLabel>
-                          <FormControl>
-                            <Input placeholder="e.g., Tuition Fee" {...field} />
-                          </FormControl>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select a fee type" />
+                                </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    {feeStructure.map((fee, index) => (
+                                        <SelectItem key={index} value={fee.name}>
+                                            {fee.name}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -349,3 +361,5 @@ export function FeeManagementAdmin({ initialStudents }: { initialStudents?: Stud
     </div>
   );
 }
+
+    
