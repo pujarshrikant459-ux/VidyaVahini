@@ -17,15 +17,35 @@ import { Input } from "@/components/ui/input";
 import { useStudents } from "@/hooks/use-students";
 import { useUserRole } from "@/hooks/use-user-role";
 import { useToast } from "@/hooks/use-toast";
-import { homework, timetable as initialTimetable, teachers } from "@/lib/data";
-import type { TimetableEntry } from "@/lib/types";
-import { Pencil, Save } from "lucide-react";
+import { homework as initialHomework, timetable as initialTimetable, teachers } from "@/lib/data";
+import type { TimetableEntry, Homework } from "@/lib/types";
+import { Pencil, Save, PlusCircle, Trash2 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+  DialogDescription,
+  DialogClose,
+} from "@/components/ui/dialog";
 
 
 const noteSchema = z.object({
   studentId: z.string().nonempty({ message: "Please select a student." }),
   note: z.string().min(10, { message: "Note must be at least 10 characters." }),
 });
+
+const homeworkSchema = z.object({
+    id: z.string(),
+    title: z.string().min(5, "Title must be at least 5 characters."),
+    subject: z.string().min(3, "Subject is required."),
+    teacher: z.string().min(3, "Teacher is required."),
+    description: z.string().min(10, "Description is required."),
+    dueDate: z.string().min(1, "Due date is required."),
+    assignedDate: z.string().min(1, "Assigned date is required."),
+})
 
 export default function AcademicsPage() {
   const { role } = useUserRole();
@@ -34,22 +54,36 @@ export default function AcademicsPage() {
 
   const [timetable, setTimetable] = useState<TimetableEntry[]>(initialTimetable);
   const [isEditingTimetable, setIsEditingTimetable] = useState(false);
+  const [homeworkList, setHomeworkList] = useState<Homework[]>(initialHomework);
+  const [editingHomework, setEditingHomework] = useState<Homework | null>(null);
+  const [isAddHomeworkOpen, setAddHomeworkOpen] = useState(false);
 
-  const form = useForm<z.infer<typeof noteSchema>>({
+
+  const noteForm = useForm<z.infer<typeof noteSchema>>({
     resolver: zodResolver(noteSchema),
     defaultValues: { studentId: "", note: "" },
   });
+
+  const homeworkForm = useForm<z.infer<typeof homeworkSchema>>({
+    resolver: zodResolver(homeworkSchema),
+  });
+
+  useEffect(() => {
+    if (editingHomework) {
+        homeworkForm.reset(editingHomework);
+    }
+  }, [editingHomework, homeworkForm]);
   
   const studentForNotes = role === 'parent' ? currentStudent : null;
 
-  const onSubmit = (values: z.infer<typeof noteSchema>) => {
+  const onNoteSubmit = (values: z.infer<typeof noteSchema>) => {
     const teacherName = teachers[1]?.name || 'A Teacher';
     addBehavioralNote(values.studentId, values.note, teacherName);
     toast({
       title: "Note Saved",
       description: `Behavioral note for the student has been recorded.`,
     });
-    form.reset();
+    noteForm.reset();
   };
   
   const handleTimetableChange = (dayIndex: number, periodIndex: number, field: 'subject' | 'teacher', value: string) => {
@@ -62,13 +96,114 @@ export default function AcademicsPage() {
   };
 
   const handleSaveTimetable = () => {
-    // In a real app, you'd save this to a backend. For now, it's just in state.
+    // In a real app, you'd save this to a backend.
     setIsEditingTimetable(false);
     toast({
       title: "Timetable Saved",
       description: "The class timetable has been updated.",
     });
   };
+  
+  const handleEditHomework = (homework: Homework) => {
+    setEditingHomework(homework);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingHomework(null);
+  };
+
+  const handleUpdateHomework = (data: z.infer<typeof homeworkSchema>) => {
+    setHomeworkList(homeworkList.map(hw => hw.id === data.id ? data : hw));
+    setEditingHomework(null);
+    toast({
+      title: "Homework Updated",
+      description: `The assignment "${data.title}" has been updated.`,
+    });
+  };
+
+  const handleAddHomework = (data: Omit<z.infer<typeof homeworkSchema>, 'id' | 'assignedDate'>) => {
+    const newHomework: Homework = {
+        ...data,
+        id: `hw-${Date.now()}`,
+        assignedDate: new Date().toISOString().split('T')[0],
+    };
+    setHomeworkList([newHomework, ...homeworkList]);
+    setAddHomeworkOpen(false);
+    toast({
+      title: "Homework Added",
+      description: `The assignment "${data.title}" has been created.`,
+    });
+  };
+
+  const handleDeleteHomework = (id: string) => {
+    setHomeworkList(homeworkList.filter(hw => hw.id !== id));
+    toast({
+      title: "Homework Deleted",
+      description: "The assignment has been removed.",
+    });
+  };
+
+  const HomeworkFormFields = ({ form, isEdit = false }: { form: any, isEdit?: boolean }) => (
+    <div className="space-y-4">
+      <FormField
+        control={form.control}
+        name="title"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Title</FormLabel>
+            <FormControl><Input {...field} /></FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+       <div className="grid grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="subject"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Subject</FormLabel>
+                <FormControl><Input {...field} /></FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="teacher"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Teacher</FormLabel>
+                <FormControl><Input {...field} /></FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+       </div>
+      <FormField
+        control={form.control}
+        name="description"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Description</FormLabel>
+            <FormControl><Textarea {...field} /></FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="dueDate"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Due Date</FormLabel>
+            <FormControl><Input type="date" {...field} /></FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    </div>
+  );
 
   return (
     <Tabs defaultValue="homework" className="w-full">
@@ -79,27 +214,75 @@ export default function AcademicsPage() {
       </TabsList>
       <TabsContent value="homework">
         <Card>
-          <CardHeader>
-            <CardTitle>Homework</CardTitle>
-            <CardDescription>Daily and weekly homework updates for your child.</CardDescription>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle>Homework</CardTitle>
+              <CardDescription>Daily and weekly homework updates.</CardDescription>
+            </div>
+             {role === 'admin' && (
+               <Dialog open={isAddHomeworkOpen} onOpenChange={setAddHomeworkOpen}>
+                  <DialogTrigger asChild>
+                     <Button size="sm"><PlusCircle className="mr-2 h-4 w-4" /> Add Homework</Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                     <DialogHeader>
+                        <DialogTitle>Add New Homework</DialogTitle>
+                        <DialogDescription>Create a new assignment for students.</DialogDescription>
+                     </DialogHeader>
+                      <Form {...homeworkForm}>
+                        <form onSubmit={homeworkForm.handleSubmit(handleAddHomework)}>
+                           <HomeworkFormFields form={homeworkForm} />
+                           <DialogFooter className="mt-4">
+                              <DialogClose asChild><Button type="button" variant="outline">Cancel</Button></DialogClose>
+                              <Button type="submit">Add Homework</Button>
+                           </DialogFooter>
+                        </form>
+                      </Form>
+                  </DialogContent>
+               </Dialog>
+             )}
           </CardHeader>
           <CardContent className="space-y-4">
-            {homework.map((hw) => (
-              <div key={hw.id} className="p-4 border rounded-lg">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="font-semibold">{hw.title}</h3>
-                    <p className="text-sm text-muted-foreground">Subject: {hw.subject} | Teacher: {hw.teacher}</p>
+            {homeworkList.map((hw) => (
+                <div key={hw.id}>
+                {editingHomework?.id === hw.id ? (
+                  <Form {...homeworkForm}>
+                    <form onSubmit={homeworkForm.handleSubmit(handleUpdateHomework)} className="p-4 border rounded-lg bg-secondary/50 space-y-4">
+                      <HomeworkFormFields form={homeworkForm} isEdit={true} />
+                      <div className="flex justify-end gap-2">
+                        <Button type="button" variant="ghost" onClick={handleCancelEdit}>Cancel</Button>
+                        <Button type="submit">Save Changes</Button>
+                      </div>
+                    </form>
+                  </Form>
+                ) : (
+                  <div className="p-4 border rounded-lg relative group">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="font-semibold">{hw.title}</h3>
+                        <p className="text-sm text-muted-foreground">Subject: {hw.subject} | Teacher: {hw.teacher}</p>
+                      </div>
+                      <div className="text-sm text-right">
+                        <p>Due: {hw.dueDate}</p>
+                        <p className="text-muted-foreground">Assigned: {hw.assignedDate}</p>
+                      </div>
+                    </div>
+                    <p className="mt-2 text-sm">{hw.description}</p>
+                     {role === 'admin' && (
+                        <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                             <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => handleEditHomework(hw)}>
+                                <Pencil className="h-4 w-4" />
+                            </Button>
+                            <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => handleDeleteHomework(hw.id)}>
+                                <Trash2 className="h-4 w-4 text-destructive" />
+                            </Button>
+                        </div>
+                     )}
                   </div>
-                  <div className="text-sm text-right">
-                    <p>Due: {hw.dueDate}</p>
-                    <p className="text-muted-foreground">Assigned: {hw.assignedDate}</p>
-                  </div>
-                </div>
-                <p className="mt-2 text-sm">{hw.description}</p>
+                )}
               </div>
             ))}
-             {homework.length === 0 && <p className="text-center text-muted-foreground">No homework assigned.</p>}
+             {homeworkList.length === 0 && <p className="text-center text-muted-foreground">No homework assigned.</p>}
           </CardContent>
         </Card>
       </TabsContent>
@@ -187,10 +370,10 @@ export default function AcademicsPage() {
                   <CardDescription>Record an observation for a student.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                  <Form {...noteForm}>
+                    <form onSubmit={noteForm.handleSubmit(onNoteSubmit)} className="space-y-6">
                       <FormField
-                        control={form.control}
+                        control={noteForm.control}
                         name="studentId"
                         render={({ field }) => (
                           <FormItem>
@@ -214,7 +397,7 @@ export default function AcademicsPage() {
                         )}
                       />
                       <FormField
-                        control={form.control}
+                        control={noteForm.control}
                         name="note"
                         render={({ field }) => (
                           <FormItem>
@@ -268,5 +451,6 @@ export default function AcademicsPage() {
       </TabsContent>
     </Tabs>
   );
+}
 
     
