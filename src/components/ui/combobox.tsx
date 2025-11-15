@@ -30,23 +30,7 @@ type ComboboxProps = {
 
 export function Combobox({ options, value, onChange, placeholder, notFoundText, className }: ComboboxProps) {
   const [open, setOpen] = React.useState(false)
-  const [search, setSearch] = React.useState('');
-
   const selectedOption = options.find((option) => option.value === value);
-
-  React.useEffect(() => {
-    if (selectedOption) {
-      setSearch(selectedOption.label);
-    } else {
-      setSearch('');
-    }
-  }, [selectedOption]);
-
-  const filteredOptions = search
-    ? options.filter(option =>
-        option.label.toLowerCase().includes(search.toLowerCase())
-      )
-    : options;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -64,14 +48,12 @@ export function Combobox({ options, value, onChange, placeholder, notFoundText, 
       <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
         <Command>
           <CommandInput 
-            placeholder={placeholder} 
-            value={search}
-            onValueChange={setSearch}
+            placeholder={placeholder}
           />
           <CommandList>
             <CommandEmpty>{notFoundText}</CommandEmpty>
             <CommandGroup>
-              {filteredOptions.map((option) => (
+              {options.map((option) => (
                 <CommandItem
                   key={option.value}
                   value={option.value}
