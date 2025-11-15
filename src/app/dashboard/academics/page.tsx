@@ -11,7 +11,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { useStudents } from "@/hooks/use-students";
@@ -30,6 +29,7 @@ import {
   DialogDescription,
   DialogClose,
 } from "@/components/ui/dialog";
+import { Combobox } from "@/components/ui/combobox";
 
 
 const noteSchema = z.object({
@@ -376,22 +376,15 @@ export default function AcademicsPage() {
                         control={noteForm.control}
                         name="studentId"
                         render={({ field }) => (
-                          <FormItem>
+                          <FormItem className="flex flex-col">
                             <FormLabel>Student</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
-                              <FormControl>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Select a student" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                {students.map((s) => (
-                                  <SelectItem key={s.id} value={s.id}>
-                                    {s.name} - {s.class}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
+                             <Combobox
+                                options={students.map(s => ({ value: s.id, label: `${s.name} - ${s.class}` }))}
+                                value={field.value}
+                                onChange={field.onChange}
+                                placeholder="Select a student..."
+                                notFoundText="No student found."
+                             />
                             <FormMessage />
                           </FormItem>
                         )}
