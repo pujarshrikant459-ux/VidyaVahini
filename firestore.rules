@@ -1,0 +1,206 @@
+/**
+ * @file Firebase Security Rules for a School Management Portal.
+ *
+ * Core Philosophy:
+ * This ruleset enforces a strict user-ownership model for parent data,
+ * and school-based access control for school-related data.
+ *
+ * Data Structure:
+ * - /schools/{schoolId}: Stores school information.
+ * - /schools/{schoolId}/headmasters/{headmasterId}: Stores headmaster details for a school.
+ * - /schools/{schoolId}/staff/{staffId}: Stores staff details for a school.
+ * - /schools/{schoolId}/students/{studentId}: Stores student details for a school, including a parentId field.
+ * - /schools/{schoolId}/students/{studentId}/attendance/{attendanceId}: Stores attendance records for a student.
+ * - /schools/{schoolId}/homework/{homeworkId}: Stores homework assignments for a school.
+ * - /schools/{schoolId}/timetables/{timetableId}: Stores timetables for a school.
+ * - /schools/{schoolId}/transport/{transportId}: Stores transport details for a school.
+ * - /schools/{schoolId}/fees/{feeId}: Stores fee records for a school.
+ * - /parents/{parentId}: Stores parent information, including a denormalized studentIds array.
+ *
+ * Key Security Decisions:
+ * - Parents can only read and write their own data.
+ * - School-related data is not directly secured in this prototype.
+ * - Data validation is minimal in this prototype to allow for rapid iteration.
+ * - Listing of parent documents is disallowed.
+ *
+ * Denormalization for Authorization:
+ * The `Parent` document includes a `studentIds` array, denormalized from the `Student` documents,
+ * to enable authorization rules that do not require reading `Student` documents.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * @description Allows access to school documents.  For now, all access is open.  In a
+     * production environment, access should be restricted to authenticated users with specific
+     * roles (e.g., school admins).
+     * @path /schools/{schoolId}
+     * @allow (get, list): Any user can read school information.
+     * @allow (create, update, delete): No one can modify school information.
+     * @principle Open read access for school information; writes are disallowed for now.
+     */
+    match /schools/{schoolId} {
+      allow get, list: if true;
+      allow create, update, delete: if false;
+    }
+
+    /**
+     * @description Allows access to headmaster documents.  For now, all access is open.  In a
+     * production environment, access should be restricted to authenticated users with specific
+     * roles (e.g., school admins).
+     * @path /schools/{schoolId}/headmasters/{headmasterId}
+     * @allow (get, list): Any user can read headmaster information.
+     * @allow (create, update, delete): No one can modify headmaster information.
+     * @principle Open read access for headmaster information; writes are disallowed for now.
+     */
+    match /schools/{schoolId}/headmasters/{headmasterId} {
+      allow get, list: if true;
+      allow create, update, delete: if false;
+    }
+
+    /**
+     * @description Allows access to staff documents.  For now, all access is open.  In a
+     * production environment, access should be restricted to authenticated users with specific
+     * roles (e.g., school admins).
+     * @path /schools/{schoolId}/staff/{staffId}
+     * @allow (get, list): Any user can read staff information.
+     * @allow (create, update, delete): No one can modify staff information.
+     * @principle Open read access for staff information; writes are disallowed for now.
+     */
+    match /schools/{schoolId}/staff/{staffId} {
+      allow get, list: if true;
+      allow create, update, delete: if false;
+    }
+
+    /**
+     * @description Allows access to student documents.  For now, all access is open.  In a
+     * production environment, access should be restricted to authenticated users with specific
+     * roles (e.g., school admins, teachers, or the student's parent).
+     * @path /schools/{schoolId}/students/{studentId}
+     * @allow (get, list): Any user can read student information.
+     * @allow (create, update, delete): No one can modify student information.
+     * @principle Open read access for student information; writes are disallowed for now.
+     */
+    match /schools/{schoolId}/students/{studentId} {
+      allow get, list: if true;
+      allow create, update, delete: if false;
+    }
+
+    /**
+     * @description Allows access to attendance documents.  For now, all access is open.  In a
+     * production environment, access should be restricted to authenticated users with specific
+     * roles (e.g., school admins, teachers, or the student's parent).
+     * @path /schools/{schoolId}/students/{studentId}/attendance/{attendanceId}
+     * @allow (get, list): Any user can read attendance information.
+     * @allow (create, update, delete): No one can modify attendance information.
+     * @principle Open read access for attendance information; writes are disallowed for now.
+     */
+    match /schools/{schoolId}/students/{studentId}/attendance/{attendanceId} {
+      allow get, list: if true;
+      allow create, update, delete: if false;
+    }
+
+    /**
+     * @description Allows access to homework documents.  For now, all access is open.  In a
+     * production environment, access should be restricted to authenticated users with specific
+     * roles (e.g., teachers or students).
+     * @path /schools/{schoolId}/homework/{homeworkId}
+     * @allow (get, list): Any user can read homework information.
+     * @allow (create, update, delete): No one can modify homework information.
+     * @principle Open read access for homework information; writes are disallowed for now.
+     */
+    match /schools/{schoolId}/homework/{homeworkId} {
+      allow get, list: if true;
+      allow create, update, delete: if false;
+    }
+
+    /**
+     * @description Allows access to timetable documents.  For now, all access is open.  In a
+     * production environment, access should be restricted to authenticated users with specific
+     * roles (e.g., school admins, teachers, or students).
+     * @path /schools/{schoolId}/timetables/{timetableId}
+     * @allow (get, list): Any user can read timetable information.
+     * @allow (create, update, delete): No one can modify timetable information.
+     * @principle Open read access for timetable information; writes are disallowed for now.
+     */
+    match /schools/{schoolId}/timetables/{timetableId} {
+      allow get, list: if true;
+      allow create, update, delete: if false;
+    }
+
+    /**
+     * @description Allows access to transport documents.  For now, all access is open.  In a
+     * production environment, access should be restricted to authenticated users with specific
+     * roles (e.g., school admins).
+     * @path /schools/{schoolId}/transport/{transportId}
+     * @allow (get, list): Any user can read transport information.
+     * @allow (create, update, delete): No one can modify transport information.
+     * @principle Open read access for transport information; writes are disallowed for now.
+     */
+    match /schools/{schoolId}/transport/{transportId} {
+      allow get, list: if true;
+      allow create, update, delete: if false;
+    }
+
+    /**
+     * @description Allows access to fee documents.  For now, all access is open.  In a
+     * production environment, access should be restricted to authenticated users with specific
+     * roles (e.g., school admins or the student's parent).
+     * @path /schools/{schoolId}/fees/{feeId}
+     * @allow (get, list): Any user can read fee information.
+     * @allow (create, update, delete): No one can modify fee information.
+     * @principle Open read access for fee information; writes are disallowed for now.
+     */
+    match /schools/{schoolId}/fees/{feeId} {
+      allow get, list: if true;
+      allow create, update, delete: if false;
+    }
+
+    /**
+     * @description Manages access to parent documents, enforcing owner-only access.
+     * @path /parents/{parentId}
+     * @allow (get): A parent can read their own document.
+     * @allow (create): A parent can create their own document, if the document ID matches their auth UID.
+     * @allow (update): A parent can update their own document, if the document exists and they own it.
+     * @allow (delete): A parent can delete their own document, if the document exists and they own it.
+     * @deny (list): Listing parent documents is not allowed.
+     * @principle Enforces document ownership for writes; restricts listing to prevent data exposure.
+     */
+    match /parents/{parentId} {
+      allow get: if isSignedIn() && isOwner(parentId);
+      allow list: if false;
+      allow create: if isSignedIn() && isOwner(parentId);
+      allow update: if isSignedIn() && isExistingOwner(parentId);
+      allow delete: if isSignedIn() && isExistingOwner(parentId);
+    }
+
+    // --- Helper Functions ---
+
+    /**
+     * @description Checks if the user is signed in.
+     * @return {boolean} True if the user is signed in, false otherwise.
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /**
+     * @description Checks if the user is the owner of the document.
+     * @param {string} userId The user ID to check against the request's auth UID.
+     * @return {boolean} True if the user is the owner, false otherwise.
+     */
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+
+    /**
+     * @description Checks if the user is the owner of the document and the document exists.
+     * @param {string} userId The user ID to check against the request's auth UID.
+     * @return {boolean} True if the user is the owner and the document exists, false otherwise.
+     */
+    function isExistingOwner(userId) {
+      return isOwner(userId) && resource != null;
+    }
+  }
+}

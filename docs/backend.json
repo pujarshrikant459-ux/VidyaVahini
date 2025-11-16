@@ -1,0 +1,565 @@
+{
+  "entities": {
+    "School": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "School",
+      "type": "object",
+      "description": "Represents a school entity with its basic details.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the School entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the school."
+        },
+        "logoUrl": {
+          "type": "string",
+          "description": "URL of the school's logo.",
+          "format": "uri"
+        },
+        "motto": {
+          "type": "string",
+          "description": "School's motto or slogan."
+        },
+        "headMasterId": {
+          "type": "string",
+          "description": "Reference to the HeadMaster. (Relationship: School 1:1 HeadMaster)"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    },
+    "HeadMaster": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "HeadMaster",
+      "type": "object",
+      "description": "Represents the headmaster of a school.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the HeadMaster entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the headmaster."
+        },
+        "contactInfo": {
+          "type": "string",
+          "description": "Contact information of the headmaster (e.g., phone, email)."
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    },
+    "Staff": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Staff",
+      "type": "object",
+      "description": "Represents a staff member (teacher or non-teaching staff).",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Staff entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the staff member."
+        },
+        "role": {
+          "type": "string",
+          "description": "Role of the staff member (e.g., teacher, admin)."
+        },
+        "contactInfo": {
+          "type": "string",
+          "description": "Contact information of the staff member."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "role"
+      ]
+    },
+    "Student": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Student",
+      "type": "object",
+      "description": "Represents a student in the school.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Student entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the student."
+        },
+        "class": {
+          "type": "string",
+          "description": "Class or grade of the student."
+        },
+        "rollNumber": {
+          "type": "string",
+          "description": "Roll number of the student."
+        },
+        "photoUrl": {
+          "type": "string",
+          "description": "URL of the student's photo.",
+          "format": "uri"
+        },
+        "parentId": {
+          "type": "string",
+          "description": "Reference to Parent. (Relationship: Parent 1:N Student)"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "class",
+        "rollNumber"
+      ]
+    },
+    "Attendance": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Attendance",
+      "type": "object",
+      "description": "Represents a student's attendance record.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Attendance entity."
+        },
+        "studentId": {
+          "type": "string",
+          "description": "Reference to Student. (Relationship: Student 1:N Attendance)"
+        },
+        "date": {
+          "type": "string",
+          "description": "Date of the attendance record.",
+          "format": "date-time"
+        },
+        "isPresent": {
+          "type": "boolean",
+          "description": "Indicates whether the student was present or absent."
+        }
+      },
+      "required": [
+        "id",
+        "studentId",
+        "date",
+        "isPresent"
+      ]
+    },
+    "Homework": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Homework",
+      "type": "object",
+      "description": "Represents a homework assignment.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Homework entity."
+        },
+        "class": {
+          "type": "string",
+          "description": "Class or grade for which the homework is assigned."
+        },
+        "subject": {
+          "type": "string",
+          "description": "Subject of the homework."
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the homework assignment."
+        },
+        "dueDate": {
+          "type": "string",
+          "description": "Due date for the homework assignment.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "class",
+        "subject",
+        "description",
+        "dueDate"
+      ]
+    },
+    "Timetable": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Timetable",
+      "type": "object",
+      "description": "Represents the class timetable.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Timetable entity."
+        },
+        "class": {
+          "type": "string",
+          "description": "Class or grade for the timetable."
+        },
+        "dayOfWeek": {
+          "type": "string",
+          "description": "Day of the week for the timetable entry."
+        },
+        "startTime": {
+          "type": "string",
+          "description": "Start time of the class.",
+          "format": "date-time"
+        },
+        "endTime": {
+          "type": "string",
+          "description": "End time of the class.",
+          "format": "date-time"
+        },
+        "subject": {
+          "type": "string",
+          "description": "End time of the class."
+        },
+        "teacherId": {
+          "type": "string",
+          "description": "Reference to Staff. (Relationship: Staff 1:N Timetable)"
+        }
+      },
+      "required": [
+        "id",
+        "class",
+        "dayOfWeek",
+        "startTime",
+        "endTime"
+      ]
+    },
+    "Transport": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Transport",
+      "type": "object",
+      "description": "Represents transport details such as bus routes and driver information.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Transport entity."
+        },
+        "busNumber": {
+          "type": "string",
+          "description": "School bus number."
+        },
+        "routeInfo": {
+          "type": "string",
+          "description": "Details about the bus route."
+        },
+        "driverName": {
+          "type": "string",
+          "description": "Name of the bus driver."
+        },
+        "driverPhotoUrl": {
+          "type": "string",
+          "description": "URL of the driver's photo.",
+          "format": "uri"
+        },
+        "driverContact": {
+          "type": "string",
+          "description": "Contact information of the driver."
+        },
+        "pickupDropTiming": {
+          "type": "string",
+          "description": "Pickup and drop timings for each stop."
+        }
+      },
+      "required": [
+        "id",
+        "busNumber",
+        "routeInfo",
+        "driverName"
+      ]
+    },
+    "Fee": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Fee",
+      "type": "object",
+      "description": "Represents fee details and payment information.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Fee entity."
+        },
+        "studentId": {
+          "type": "string",
+          "description": "Reference to Student. (Relationship: Student 1:N Fee)"
+        },
+        "class": {
+          "type": "string",
+          "description": "Class or grade for the fee."
+        },
+        "amount": {
+          "type": "number",
+          "description": "Amount of the fee."
+        },
+        "paymentDate": {
+          "type": "string",
+          "description": "Date of the fee payment.",
+          "format": "date-time"
+        },
+        "paymentMethod": {
+          "type": "string",
+          "description": "Method of payment (e.g., UPI, card)."
+        },
+        "receiptNumber": {
+          "type": "string",
+          "description": "Receipt number for the fee payment."
+        }
+      },
+      "required": [
+        "id",
+        "studentId",
+        "class",
+        "amount"
+      ]
+    },
+    "Parent": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Parent",
+      "type": "object",
+      "description": "Represents a parent user with login information.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Parent entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the parent."
+        },
+        "contactInfo": {
+          "type": "string",
+          "description": "Contact information of the parent."
+        },
+        "studentIds": {
+          "type": "array",
+          "description": "List of student ids associated with the parent.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/schools/{schoolId}",
+        "definition": {
+          "entityName": "School",
+          "schema": {
+            "$ref": "#/backend/entities/School"
+          },
+          "description": "Collection for schools.",
+          "params": [
+            {
+              "name": "schoolId",
+              "description": "Unique identifier for the school."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/schools/{schoolId}/headmasters/{headmasterId}",
+        "definition": {
+          "entityName": "HeadMaster",
+          "schema": {
+            "$ref": "#/backend/entities/HeadMaster"
+          },
+          "description": "Subcollection for headmasters, linked to a specific school.",
+          "params": [
+            {
+              "name": "schoolId",
+              "description": "Unique identifier for the school."
+            },
+            {
+              "name": "headmasterId",
+              "description": "Unique identifier for the headmaster."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/schools/{schoolId}/staff/{staffId}",
+        "definition": {
+          "entityName": "Staff",
+          "schema": {
+            "$ref": "#/backend/entities/Staff"
+          },
+          "description": "Subcollection for staff members, linked to a specific school.",
+          "params": [
+            {
+              "name": "schoolId",
+              "description": "Unique identifier for the school."
+            },
+            {
+              "name": "staffId",
+              "description": "Unique identifier for the staff member."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/schools/{schoolId}/students/{studentId}",
+        "definition": {
+          "entityName": "Student",
+          "schema": {
+            "$ref": "#/backend/entities/Student"
+          },
+          "description": "Subcollection for students, linked to a specific school.",
+          "params": [
+            {
+              "name": "schoolId",
+              "description": "Unique identifier for the school."
+            },
+            {
+              "name": "studentId",
+              "description": "Unique identifier for the student."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/schools/{schoolId}/students/{studentId}/attendance/{attendanceId}",
+        "definition": {
+          "entityName": "Attendance",
+          "schema": {
+            "$ref": "#/backend/entities/Attendance"
+          },
+          "description": "Subcollection for attendance records, linked to a specific student.",
+          "params": [
+            {
+              "name": "schoolId",
+              "description": "Unique identifier for the school."
+            },
+            {
+              "name": "studentId",
+              "description": "Unique identifier for the student."
+            },
+            {
+              "name": "attendanceId",
+              "description": "Unique identifier for the attendance record."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/schools/{schoolId}/homework/{homeworkId}",
+        "definition": {
+          "entityName": "Homework",
+          "schema": {
+            "$ref": "#/backend/entities/Homework"
+          },
+          "description": "Collection for homework assignments, linked to a specific school.",
+          "params": [
+            {
+              "name": "schoolId",
+              "description": "Unique identifier for the school."
+            },
+            {
+              "name": "homeworkId",
+              "description": "Unique identifier for the homework assignment."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/schools/{schoolId}/timetables/{timetableId}",
+        "definition": {
+          "entityName": "Timetable",
+          "schema": {
+            "$ref": "#/backend/entities/Timetable"
+          },
+          "description": "Collection for timetables, linked to a specific school.",
+          "params": [
+            {
+              "name": "schoolId",
+              "description": "Unique identifier for the school."
+            },
+            {
+              "name": "timetableId",
+              "description": "Unique identifier for the timetable."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/schools/{schoolId}/transport/{transportId}",
+        "definition": {
+          "entityName": "Transport",
+          "schema": {
+            "$ref": "#/backend/entities/Transport"
+          },
+          "description": "Collection for transport details, linked to a specific school.",
+          "params": [
+            {
+              "name": "schoolId",
+              "description": "Unique identifier for the school."
+            },
+            {
+              "name": "transportId",
+              "description": "Unique identifier for the transport detail."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/schools/{schoolId}/fees/{feeId}",
+        "definition": {
+          "entityName": "Fee",
+          "schema": {
+            "$ref": "#/backend/entities/Fee"
+          },
+          "description": "Collection for fee records, linked to a specific school.",
+          "params": [
+            {
+              "name": "schoolId",
+              "description": "Unique identifier for the school."
+            },
+            {
+              "name": "feeId",
+              "description": "Unique identifier for the fee record."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/parents/{parentId}",
+        "definition": {
+          "entityName": "Parent",
+          "schema": {
+            "$ref": "#/backend/entities/Parent"
+          },
+          "description": "Collection for parents, including denormalized 'studentIds' array for authorization independence.",
+          "params": [
+            {
+              "name": "parentId",
+              "description": "Unique identifier for the parent."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore structure is designed to support a school management portal with distinct sections for schools, headmasters, staff, students, attendance, homework, timetables, transport, fees, and parents. A key requirement is to create a secure parent portal, hence the emphasis on secure parent-student relationships. To ensure Authorization Independence, the `studentIds` array is denormalized from the `Student` document into the `Parent` document. This eliminates the need for security rules to read the `Student` document to determine parent authorization. Additionally, data segregation is implemented by storing different types of data (e.g., public vs. private) in separate collections. Access modeling is achieved through path-based ownership for private user data (parents and students) and membership maps where applicable. This structure supports secure `list` operations (QAPs) by avoiding rules that act as filters; each collection has a homogeneous security posture.\n\nSpecifically, the structure uses the following:\n\n*   `/schools`: Top-level collection for school-specific information.\n*   `/schools/{schoolId}/headmasters`: Subcollection for headmaster details, linked to the school.\n*   `/schools/{schoolId}/staff`: Subcollection for staff members, including teachers.\n*   `/schools/{schoolId}/students`: Subcollection for student information. The student document will contain parent ID.\n*   `/schools/{schoolId}/students/{studentId}/attendance`: Subcollection of attendance records for each student.\n*   `/schools/{schoolId}/homework`: Collection of homework assignments, shared across the school.\n*   `/schools/{schoolId}/timetables`: Collection of timetables, shared across the school.\n*   `/schools/{schoolId}/transport`: Collection of transport details for the school.\n*   `/schools/{schoolId}/fees`: Collection of fee records for each student.\n*   `/parents/{parentId}`: Top level collection for parent information, with denormalized `studentIds` for authorization."
+  }
+}
