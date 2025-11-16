@@ -7,6 +7,7 @@ import { AnnouncementsProvider } from '@/hooks/use-announcements';
 import { StudentsProvider } from '@/hooks/use-students';
 import { GalleryProvider } from '@/hooks/use-gallery';
 import { SiteContentProvider } from '@/hooks/use-site-content';
+import { FirebaseClientProvider } from '@/firebase';
 
 export const metadata: Metadata = {
   title: 'VidyaVahini',
@@ -26,19 +27,23 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
       </head>
       <body className={cn('font-body antialiased min-h-screen bg-background')}>
-        <UserRoleProvider>
-          <AnnouncementsProvider>
-            <StudentsProvider>
-              <GalleryProvider>
-                <SiteContentProvider>
-                  {children}
-                </SiteContentProvider>
-              </GalleryProvider>
-            </StudentsProvider>
-          </AnnouncementsProvider>
-        </UserRoleProvider>
+        <FirebaseClientProvider>
+          <UserRoleProvider>
+            <AnnouncementsProvider>
+              <StudentsProvider>
+                <GalleryProvider>
+                  <SiteContentProvider>
+                    {children}
+                  </SiteContentProvider>
+                </GalleryProvider>
+              </StudentsProvider>
+            </AnnouncementsProvider>
+          </UserRoleProvider>
+        </FirebaseClientProvider>
         <Toaster />
       </body>
     </html>
   );
 }
+
+    

@@ -19,6 +19,7 @@
  *
  * Key Security Decisions:
  * - Parents can only read and write their own data.
+ * - Parents can read data of the students linked in their `studentIds` array.
  * - School-related data is not directly secured in this prototype.
  * - Data validation is minimal in this prototype to allow for rapid iteration.
  * - Listing of parent documents is disallowed.
@@ -74,21 +75,22 @@ service cloud.firestore {
     }
 
     /**
-     * @description Allows access to student documents.  For now, all access is open.  In a
-     * production environment, access should be restricted to authenticated users with specific
-     * roles (e.g., school admins, teachers, or the student's parent).
+     * @description Allows access to student documents. Parents can read the documents of their
+     * children. In a production environment, access should be restricted to authenticated users
+     * with specific roles (e.g., school admins, teachers, or the student's parent).
      * @path /schools/{schoolId}/students/{studentId}
-     * @allow (get, list): Any user can read student information.
+     * @allow (get, list): Any user can read student information for now. A parent can read their own child's info.
      * @allow (create, update, delete): No one can modify student information.
      * @principle Open read access for student information; writes are disallowed for now.
      */
     match /schools/{schoolId}/students/{studentId} {
-      allow get, list: if true;
+      allow get, list: if true; // For admin/public access.
+      allow get: if isSignedIn() && isParentOf(studentId);
       allow create, update, delete: if false;
     }
 
     /**
-     * @description Allows access to attendance documents.  For now, all access is open.  In a
+     * @description Allows access to attendance documents. For now, all access is open. In a
      * production environment, access should be restricted to authenticated users with specific
      * roles (e.g., school admins, teachers, or the student's parent).
      * @path /schools/{schoolId}/students/{studentId}/attendance/{attendanceId}
@@ -97,12 +99,13 @@ service cloud.firestore {
      * @principle Open read access for attendance information; writes are disallowed for now.
      */
     match /schools/{schoolId}/students/{studentId}/attendance/{attendanceId} {
-      allow get, list: if true;
+      allow get, list: if true; // Public access for now
+      allow get, list: if isSignedIn() && isParentOf(studentId);
       allow create, update, delete: if false;
     }
 
     /**
-     * @description Allows access to homework documents.  For now, all access is open.  In a
+     * @description Allows access to homework documents. For now, all access is open. In a
      * production environment, access should be restricted to authenticated users with specific
      * roles (e.g., teachers or students).
      * @path /schools/{schoolId}/homework/{homeworkId}
@@ -116,7 +119,7 @@ service cloud.firestore {
     }
 
     /**
-     * @description Allows access to timetable documents.  For now, all access is open.  In a
+     * @description Allows access to timetable documents. For now, all access is open. In a
      * production environment, access should be restricted to authenticated users with specific
      * roles (e.g., school admins, teachers, or students).
      * @path /schools/{schoolId}/timetables/{timetableId}
@@ -130,7 +133,7 @@ service cloud.firestore {
     }
 
     /**
-     * @description Allows access to transport documents.  For now, all access is open.  In a
+     * @description Allows access to transport documents. For now, all access is open. In a
      * production environment, access should be restricted to authenticated users with specific
      * roles (e.g., school admins).
      * @path /schools/{schoolId}/transport/{transportId}
@@ -144,7 +147,7 @@ service cloud.firestore {
     }
 
     /**
-     * @description Allows access to fee documents.  For now, all access is open.  In a
+     * @description Allows access to fee documents. For now, all access is open. In a
      * production environment, access should be restricted to authenticated users with specific
      * roles (e.g., school admins or the student's parent).
      * @path /schools/{schoolId}/fees/{feeId}
@@ -153,7 +156,7 @@ service cloud.firestore {
      * @principle Open read access for fee information; writes are disallowed for now.
      */
     match /schools/{schoolId}/fees/{feeId} {
-      allow get, list: if true;
+      allow get, list: if true; // Public access for now
       allow create, update, delete: if false;
     }
 
@@ -193,6 +196,16 @@ service cloud.firestore {
     function isOwner(userId) {
       return request.auth.uid == userId;
     }
+    
+    /**
+     * @description Checks if the signed-in user is the parent of the student.
+     * It relies on the denormalized `studentIds` array in the parent's document.
+     * @param {string} studentId The ID of the student document.
+     * @return {boolean} True if the user is the parent, false otherwise.
+     */
+    function isParentOf(studentId) {
+      return isSignedIn() && studentId in get(/databases/$(database)/documents/parents/$(request.auth.uid)).data.studentIds;
+    }
 
     /**
      * @description Checks if the user is the owner of the document and the document exists.
@@ -200,7 +213,9 @@ service cloud.firestore {
      * @return {boolean} True if the user is the owner and the document exists, false otherwise.
      */
     function isExistingOwner(userId) {
-      return isOwner(userId) && resource != null;
+      return isOwner(userId) && exists(/databases/$(database)/documents/parents/$(userId));
     }
   }
 }
+
+    

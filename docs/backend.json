@@ -353,12 +353,66 @@
         "id",
         "name"
       ]
+    },
+    "UserProfile": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User Profile",
+      "description": "Represents a user profile with basic information.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "The user's unique ID."
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "The user's email address."
+        },
+        "displayName": {
+          "type": "string",
+          "description": "The user's display name."
+        },
+        "photoURL": {
+          "type": "string",
+          "format": "uri",
+          "description": "The URL of the user's profile photo."
+        }
+      },
+      "required": [
+        "uid",
+        "email"
+      ]
+    },
+    "ParentProfile": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Parent Profile",
+      "description": "Extends the UserProfile with parent-specific information, including an array of their children's student IDs.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/entities/UserProfile"
+        },
+        {
+          "properties": {
+            "studentIds": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "An array of student IDs associated with this parent."
+            }
+          },
+          "required": [
+            "studentIds"
+          ]
+        }
+      ]
     }
   },
   "auth": {
     "providers": [
-      "password",
-      "anonymous"
+      "password"
     ]
   },
   "firestore": {
@@ -563,3 +617,4 @@
     "reasoning": "The Firestore structure is designed to support a school management portal with distinct sections for schools, headmasters, staff, students, attendance, homework, timetables, transport, fees, and parents. A key requirement is to create a secure parent portal, hence the emphasis on secure parent-student relationships. To ensure Authorization Independence, the `studentIds` array is denormalized from the `Student` document into the `Parent` document. This eliminates the need for security rules to read the `Student` document to determine parent authorization. Additionally, data segregation is implemented by storing different types of data (e.g., public vs. private) in separate collections. Access modeling is achieved through path-based ownership for private user data (parents and students) and membership maps where applicable. This structure supports secure `list` operations (QAPs) by avoiding rules that act as filters; each collection has a homogeneous security posture.\n\nSpecifically, the structure uses the following:\n\n*   `/schools`: Top-level collection for school-specific information.\n*   `/schools/{schoolId}/headmasters`: Subcollection for headmaster details, linked to the school.\n*   `/schools/{schoolId}/staff`: Subcollection for staff members, including teachers.\n*   `/schools/{schoolId}/students`: Subcollection for student information. The student document will contain parent ID.\n*   `/schools/{schoolId}/students/{studentId}/attendance`: Subcollection of attendance records for each student.\n*   `/schools/{schoolId}/homework`: Collection of homework assignments, shared across the school.\n*   `/schools/{schoolId}/timetables`: Collection of timetables, shared across the school.\n*   `/schools/{schoolId}/transport`: Collection of transport details for the school.\n*   `/schools/{schoolId}/fees`: Collection of fee records for each student.\n*   `/parents/{parentId}`: Top level collection for parent information, with denormalized `studentIds` for authorization."
   }
 }
+    
