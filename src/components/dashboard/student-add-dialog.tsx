@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect } from 'react';
@@ -23,6 +24,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import type { Student } from "@/lib/types";
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const FormSchema = z.object({
   name: z.string().min(2, { message: "Name is required." }),
@@ -64,86 +66,88 @@ export function StudentAddDialog({ isOpen, onClose, onSave }: StudentAddDialogPr
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
+      <DialogContent className="sm:max-w-[425px] grid-rows-[auto_minmax(0,1fr)_auto] p-0 max-h-[90vh]">
+        <DialogHeader className="p-6">
           <DialogTitle>Add New Student</DialogTitle>
           <DialogDescription>
             Enter the details for the new student. Click save when you're done.
           </DialogDescription>
         </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-             <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                    <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl>
-                        <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                    </FormItem>
-                )}
-                />
-            <FormField
-                control={form.control}
-                name="class"
-                render={({ field }) => (
-                    <FormItem>
-                    <FormLabel>Class</FormLabel>
-                    <FormControl>
-                        <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                    </FormItem>
-                )}
-                />
-            <FormField
-                control={form.control}
-                name="rollNumber"
-                render={({ field }) => (
-                    <FormItem>
-                    <FormLabel>Roll Number</FormLabel>
-                    <FormControl>
-                        <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                    </FormItem>
-                )}
-                />
-            <FormField
-                control={form.control}
-                name="contact"
-                render={({ field }) => (
-                    <FormItem>
-                    <FormLabel>Contact</FormLabel>
-                    <FormControl>
-                        <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                    </FormItem>
-                )}
-                />
-            <FormField
-                control={form.control}
-                name="photo"
-                render={({ field }) => (
-                    <FormItem>
-                    <FormLabel>Photo URL</FormLabel>
-                    <FormControl>
-                        <Input placeholder="https://example.com/photo.jpg" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                    </FormItem>
-                )}
-                />
-            <DialogFooter>
-              <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
-              <Button type="submit">Save Student</Button>
-            </DialogFooter>
-          </form>
-        </Form>
+        <ScrollArea className="overflow-y-auto px-6">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+               <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                      <FormItem>
+                      <FormLabel>Name</FormLabel>
+                      <FormControl>
+                          <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                      </FormItem>
+                  )}
+                  />
+              <FormField
+                  control={form.control}
+                  name="class"
+                  render={({ field }) => (
+                      <FormItem>
+                      <FormLabel>Class</FormLabel>
+                      <FormControl>
+                          <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                      </FormItem>
+                  )}
+                  />
+              <FormField
+                  control={form.control}
+                  name="rollNumber"
+                  render={({ field }) => (
+                      <FormItem>
+                      <FormLabel>Roll Number</FormLabel>
+                      <FormControl>
+                          <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                      </FormItem>
+                  )}
+                  />
+              <FormField
+                  control={form.control}
+                  name="contact"
+                  render={({ field }) => (
+                      <FormItem>
+                      <FormLabel>Contact</FormLabel>
+                      <FormControl>
+                          <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                      </FormItem>
+                  )}
+                  />
+              <FormField
+                  control={form.control}
+                  name="photo"
+                  render={({ field }) => (
+                      <FormItem>
+                      <FormLabel>Photo URL</FormLabel>
+                      <FormControl>
+                          <Input placeholder="https://example.com/photo.jpg" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                      </FormItem>
+                  )}
+                  />
+            </form>
+          </Form>
+        </ScrollArea>
+        <DialogFooter className="p-6 pt-4">
+          <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
+          <Button type="submit" onClick={form.handleSubmit(onSubmit)}>Save Student</Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
