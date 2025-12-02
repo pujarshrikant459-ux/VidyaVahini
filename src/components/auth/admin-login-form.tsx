@@ -9,31 +9,73 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useUserRole } from '@/hooks/use-user-role';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth, useFirestore } from '@/firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 
 export function AdminLoginForm() {
   const { setLogin } = useUserRole();
   const router = useRouter();
   const { toast } = useToast();
+  const auth = useAuth();
+  const firestore = useFirestore();
   
   const [schoolId, setSchoolId] = useState('');
-  const [adminEmail, setAdminEmail] = useState('admin@example.com');
-  const [adminPassword, setAdminPassword] = useState('password');
+  const [adminEmail, setAdminEmail] = useState('');
+  const [adminPassword, setAdminPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleAdminLogin = async () => {
-    setLoading(true);
-    // Add validation for schoolId if needed
-    if (schoolId && adminEmail === 'admin@example.com' && adminPassword === 'password') {
-        setLogin('admin');
-        router.push('/dashboard');
-    } else {
-         toast({
-            variant: 'destructive',
-            title: 'Invalid Credentials',
-            description: 'Please check your School ID, admin email, and password.',
-        });
+    if (!schoolId || !adminEmail || !adminPassword) {
+      toast({
+        variant: 'destructive',
+        title: 'Missing Fields',
+        description: 'Please enter School ID, email, and password.',
+      });
+      return;
     }
-    setLoading(false);
+    
+    setLoading(true);
+    
+    try {
+      // 1. Sign in the user with email and password
+      const userCredential = await signInWithEmailAndPassword(auth, adminEmail, adminPassword);
+      const user = userCredential.user;
+
+      // 2. Verify the user is an admin for the given school ID
+      const schoolDocRef = doc(firestore, `schools/${schoolId}`);
+      const schoolDocSnap = await getDoc(schoolDocRef);
+
+      if (!schoolDocSnap.exists()) {
+        throw new Error("Invalid School ID.");
+      }
+
+      const schoolData = schoolDocSnap.data();
+      const adminUids = schoolData.adminUids || [];
+
+      if (!adminUids.includes(user.uid)) {
+        throw new Error("You are not an authorized administrator for this school.");
+      }
+      
+      // 3. If everything is valid, set login state and redirect
+      setLogin('admin');
+      router.push('/dashboard');
+
+    } catch (error: any) {
+      let description = "An unknown error occurred.";
+      if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+        description = 'Invalid email or password. Please try again.';
+      } else {
+        description = error.message;
+      }
+       toast({
+          variant: 'destructive',
+          title: 'Login Failed',
+          description: description,
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
