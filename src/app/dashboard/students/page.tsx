@@ -109,6 +109,9 @@ export default function StudentsPage() {
                 <TableHead>Name</TableHead>
                 <TableHead>Class</TableHead>
                 <TableHead className="hidden md:table-cell">Roll Number</TableHead>
+                <TableHead className="hidden lg:table-cell">
+                  Parent Access
+                </TableHead>
                 <TableHead>
                   <span className="sr-only">Actions</span>
                 </TableHead>
@@ -136,6 +139,12 @@ export default function StudentsPage() {
                     <Badge variant="outline">{student.class}</Badge>
                   </TableCell>
                   <TableCell className="hidden md:table-cell">{student.rollNumber}</TableCell>
+                   <TableCell className="hidden lg:table-cell">
+                     <Button variant="outline" size="sm" onClick={() => handleRegisterParentOpen(student)}>
+                      <UserPlus className="mr-2 h-4 w-4" />
+                      Register Parent
+                    </Button>
+                  </TableCell>
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -150,7 +159,7 @@ export default function StudentsPage() {
                         {role === 'admin' && (
                           <>
                             <DropdownMenuItem onClick={() => handleEditOpen(student)}>Edit Student</DropdownMenuItem>
-                             <DropdownMenuItem onClick={() => handleRegisterParentOpen(student)}>
+                             <DropdownMenuItem onClick={() => handleRegisterParentOpen(student)} className="lg:hidden">
                               <UserPlus className="mr-2 h-4 w-4" />
                               Register Parent
                             </DropdownMenuItem>
