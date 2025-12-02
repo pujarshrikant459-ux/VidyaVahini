@@ -15,20 +15,22 @@ export function AdminLoginForm() {
   const router = useRouter();
   const { toast } = useToast();
   
+  const [schoolId, setSchoolId] = useState('');
   const [adminEmail, setAdminEmail] = useState('admin@example.com');
   const [adminPassword, setAdminPassword] = useState('password');
   const [loading, setLoading] = useState(false);
 
   const handleAdminLogin = async () => {
     setLoading(true);
-    if (adminEmail === 'admin@example.com' && adminPassword === 'password') {
+    // Add validation for schoolId if needed
+    if (schoolId && adminEmail === 'admin@example.com' && adminPassword === 'password') {
         setLogin('admin');
         router.push('/dashboard');
     } else {
          toast({
             variant: 'destructive',
             title: 'Invalid Credentials',
-            description: 'Please check your admin email and password.',
+            description: 'Please check your School ID, admin email, and password.',
         });
     }
     setLoading(false);
@@ -36,6 +38,10 @@ export function AdminLoginForm() {
 
   return (
     <CardContent className="space-y-4">
+        <div className="space-y-2">
+            <Label htmlFor="school-id">School ID</Label>
+            <Input id="school-id" type="text" placeholder="Enter your school's unique ID" value={schoolId} onChange={(e) => setSchoolId(e.target.value)} />
+        </div>
         <div className="space-y-2">
             <Label htmlFor="admin-email">Email</Label>
             <Input id="admin-email" type="email" placeholder="admin@example.com" value={adminEmail} onChange={(e) => setAdminEmail(e.target.value)} />
