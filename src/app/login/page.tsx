@@ -7,8 +7,15 @@ import { UserCog, Shield, GraduationCap, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AdminLoginForm } from '@/components/auth/admin-login-form';
 import { ParentLoginForm } from '@/components/auth/parent-login-form';
+import { useEffect, useState } from 'react';
 
 export default function LoginPage() {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -30,6 +37,7 @@ export default function LoginPage() {
       </header>
       <div className="flex-1 flex items-center justify-center p-4">
         <div className="container max-w-4xl mx-auto">
+         {isClient && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <Card>
               <CardHeader className="text-center">
@@ -52,6 +60,7 @@ export default function LoginPage() {
               <ParentLoginForm />
             </Card>
           </div>
+         )}
         </div>
       </div>
     </div>
