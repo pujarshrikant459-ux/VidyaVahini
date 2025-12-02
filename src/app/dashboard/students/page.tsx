@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -15,10 +16,11 @@ import {
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { MoreHorizontal, PlusCircle } from "lucide-react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { MoreHorizontal, PlusCircle, UserPlus } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { StudentEditDialog } from "@/components/dashboard/student-edit-dialog";
 import { StudentAddDialog } from "@/components/dashboard/student-add-dialog";
+import { ParentRegisterDialog } from "@/components/dashboard/parent-register-dialog";
 import type { Student } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
 import { useUserRole } from "@/hooks/use-user-role";
@@ -26,6 +28,7 @@ import { useStudents } from "@/hooks/use-students";
 
 export default function StudentsPage() {
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
+  const [registeringParentForStudent, setRegisteringParentForStudent] = useState<Student | null>(null);
   const [isAddDialogOpen, setAddDialogOpen] = useState(false);
   const { toast } = useToast();
   const { role, studentId } = useUserRole();
@@ -45,6 +48,14 @@ export default function StudentsPage() {
   const handleEditClose = () => {
     setEditingStudent(null);
   };
+  
+  const handleRegisterParentOpen = (student: Student) => {
+    setRegisteringParentForStudent(student);
+  };
+  
+  const handleRegisterParentClose = () => {
+    setRegisteringParentForStudent(null);
+  };
 
   const handleUpdateStudent = (updatedStudent: Student) => {
     updateStudent(updatedStudent);
@@ -55,7 +66,7 @@ export default function StudentsPage() {
     handleEditClose();
   };
 
-  const handleAddStudent = (newStudentData: Omit<Student, 'id' | 'attendance' | 'fees'>) => {
+  const handleAddStudent = (newStudentData: Omit<Student, 'id' | 'attendance' | 'fees' | 'behavioralNotes'>) => {
     addStudentToContext(newStudentData);
     toast({
       title: "Student Added",
@@ -136,8 +147,17 @@ export default function StudentsPage() {
                       <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuItem asChild><Link href={`/dashboard/students/${student.id}`}>View Details</Link></DropdownMenuItem>
-                        {role === 'admin' && <DropdownMenuItem onClick={() => handleEditOpen(student)}>Edit</DropdownMenuItem>}
-                        {role === 'admin' && <DropdownMenuItem>Delete</DropdownMenuItem>}
+                        {role === 'admin' && (
+                          <>
+                            <DropdownMenuItem onClick={() => handleEditOpen(student)}>Edit Student</DropdownMenuItem>
+                             <DropdownMenuItem onClick={() => handleRegisterParentOpen(student)}>
+                              <UserPlus className="mr-2 h-4 w-4" />
+                              Register Parent
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem className="text-destructive">Delete Student</DropdownMenuItem>
+                          </>
+                        )}
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
@@ -160,6 +180,13 @@ export default function StudentsPage() {
         onClose={() => setAddDialogOpen(false)}
         onSave={handleAddStudent}
       />
+       {registeringParentForStudent && (
+        <ParentRegisterDialog
+          student={registeringParentForStudent}
+          isOpen={!!registeringParentForStudent}
+          onClose={handleRegisterParentClose}
+        />
+      )}
     </>
   );
 }

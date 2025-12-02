@@ -11,8 +11,9 @@ import { useUserRole } from '@/hooks/use-user-role';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/firebase';
+import { useAuth, useFirestore } from '@/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 
 
 export default function LoginPage() {
@@ -20,6 +21,7 @@ export default function LoginPage() {
   const router = useRouter();
   const { toast } = useToast();
   const auth = useAuth();
+  const firestore = useFirestore();
   
   const [adminEmail, setAdminEmail] = useState('admin@example.com');
   const [adminPassword, setAdminPassword] = useState('password');
@@ -49,15 +51,31 @@ export default function LoginPage() {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, parentEmail, parentPassword);
       const user = userCredential.user;
-      // The studentId would be fetched from Firestore based on the user's profile
-      // For now, we'll keep the mock logic but use Firebase for auth.
-      setLogin('parent', '1');
+      
+      const parentDocRef = doc(firestore, "parents", user.uid);
+      const parentDocSnap = await getDoc(parentDocRef);
+
+      let studentId = '1'; // Fallback to mock studentId
+      if (parentDocSnap.exists()) {
+        const parentData = parentDocSnap.data();
+        if (parentData && parentData.studentIds && parentData.studentIds.length > 0) {
+          studentId = parentData.studentIds[0];
+        }
+      }
+      
+      setLogin('parent', studentId);
       router.push('/dashboard');
     } catch (error: any) {
+      let description = 'An unknown error occurred.';
+      if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+        description = 'Invalid email or password. Please try again.';
+      } else {
+        description = error.message;
+      }
       toast({
         variant: 'destructive',
         title: 'Login Failed',
-        description: error.message || 'An unknown error occurred.',
+        description: description,
       });
     }
     setLoading(false);
@@ -72,11 +90,6 @@ export default function LoginPage() {
             <h1 className="text-2xl font-bold font-headline">VidyaVahini</h1>
           </Link>
            <div className="flex items-center gap-4">
-              <Button variant="ghost" asChild>
-                <Link href="/register">
-                  Register
-                </Link>
-              </Button>
                <Button variant="outline" asChild>
                     <Link href="/">
                       <Home className="mr-2" />
@@ -139,5 +152,3 @@ export default function LoginPage() {
     </div>
   );
 }
-
-    
