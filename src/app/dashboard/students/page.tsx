@@ -109,7 +109,7 @@ export default function StudentsPage() {
                 <TableHead>Name</TableHead>
                 <TableHead>Class</TableHead>
                 <TableHead className="hidden md:table-cell">Roll Number</TableHead>
-                <TableHead className="hidden lg:table-cell">
+                <TableHead>
                   Parent Access
                 </TableHead>
                 <TableHead>
@@ -139,7 +139,7 @@ export default function StudentsPage() {
                     <Badge variant="outline">{student.class}</Badge>
                   </TableCell>
                   <TableCell className="hidden md:table-cell">{student.rollNumber}</TableCell>
-                   <TableCell className="hidden lg:table-cell">
+                   <TableCell>
                      <Button variant="outline" size="sm" onClick={() => handleRegisterParentOpen(student)}>
                       <UserPlus className="mr-2 h-4 w-4" />
                       Register Parent
