@@ -2,84 +2,13 @@
 "use client";
 
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { UserCog, Shield, GraduationCap, Home } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { useUserRole } from '@/hooks/use-user-role';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { useToast } from '@/hooks/use-toast';
-import { useAuth, useFirestore } from '@/firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
-
+import { Button } from '@/components/ui/button';
+import { AdminLoginForm } from '@/components/auth/admin-login-form';
+import { ParentLoginForm } from '@/components/auth/parent-login-form';
 
 export default function LoginPage() {
-  const { setLogin } = useUserRole();
-  const router = useRouter();
-  const { toast } = useToast();
-  const auth = useAuth();
-  const firestore = useFirestore();
-  
-  const [adminEmail, setAdminEmail] = useState('admin@example.com');
-  const [adminPassword, setAdminPassword] = useState('password');
-  const [parentEmail, setParentEmail] = useState('parent@example.com');
-  const [parentPassword, setParentPassword] = useState('password');
-  const [loading, setLoading] = useState(false);
-
-  const handleAdminLogin = async () => {
-    // This is a mock login for admin role for now.
-    // In a real app, you would have a separate admin authentication system.
-    setLoading(true);
-    if (adminEmail === 'admin@example.com' && adminPassword === 'password') {
-        setLogin('admin');
-        router.push('/dashboard');
-    } else {
-         toast({
-            variant: 'destructive',
-            title: 'Invalid Credentials',
-            description: 'Please check your admin email and password.',
-        });
-    }
-    setLoading(false);
-  };
-
-  const handleParentLogin = async () => {
-    setLoading(true);
-    try {
-      const userCredential = await signInWithEmailAndPassword(auth, parentEmail, parentPassword);
-      const user = userCredential.user;
-      
-      const parentDocRef = doc(firestore, "parents", user.uid);
-      const parentDocSnap = await getDoc(parentDocRef);
-
-      let studentId = '1'; // Fallback to mock studentId
-      if (parentDocSnap.exists()) {
-        const parentData = parentDocSnap.data();
-        if (parentData && parentData.studentIds && parentData.studentIds.length > 0) {
-          studentId = parentData.studentIds[0];
-        }
-      }
-      
-      setLogin('parent', studentId);
-      router.push('/dashboard');
-    } catch (error: any) {
-      let description = 'An unknown error occurred.';
-      if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-        description = 'Invalid email or password. Please try again.';
-      } else {
-        description = error.message;
-      }
-      toast({
-        variant: 'destructive',
-        title: 'Login Failed',
-        description: description,
-      });
-    }
-    setLoading(false);
-  };
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -110,19 +39,7 @@ export default function LoginPage() {
                 <CardTitle>Admin Login</CardTitle>
                 <CardDescription>Access the administrative dashboard.</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                 <div className="space-y-2">
-                    <Label htmlFor="admin-email">Email</Label>
-                    <Input id="admin-email" type="email" placeholder="admin@example.com" value={adminEmail} onChange={(e) => setAdminEmail(e.target.value)} />
-                </div>
-                 <div className="space-y-2">
-                    <Label htmlFor="admin-password">Password</Label>
-                    <Input id="admin-password" type="password" value={adminPassword} onChange={(e) => setAdminPassword(e.target.value)} />
-                </div>
-                <Button className="w-full" onClick={handleAdminLogin} disabled={loading}>
-                  {loading ? 'Logging in...' : 'Login as Admin'}
-                </Button>
-              </CardContent>
+              <AdminLoginForm />
             </Card>
             <Card>
               <CardHeader className="text-center">
@@ -132,19 +49,7 @@ export default function LoginPage() {
                 <CardTitle>Parent Login</CardTitle>
                 <CardDescription>Access the parent portal.</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                 <div className="space-y-2">
-                    <Label htmlFor="parent-email">Email</Label>
-                    <Input id="parent-email" type="email" placeholder="parent@example.com" value={parentEmail} onChange={(e) => setParentEmail(e.target.value)} />
-                </div>
-                 <div className="space-y-2">
-                    <Label htmlFor="parent-password">Password</Label>
-                    <Input id="parent-password" type="password" value={parentPassword} onChange={(e) => setParentPassword(e.target.value)} />
-                </div>
-                <Button className="w-full" onClick={handleParentLogin} disabled={loading}>
-                 {loading ? 'Logging in...' : 'Login as Parent'}
-                </Button>
-              </CardContent>
+              <ParentLoginForm />
             </Card>
           </div>
         </div>
