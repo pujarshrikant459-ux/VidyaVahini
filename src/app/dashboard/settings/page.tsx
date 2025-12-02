@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useForm, Controller } from "react-hook-form";
@@ -19,22 +20,52 @@ import { Textarea } from "@/components/ui/textarea";
 import { useSiteContent } from "@/hooks/use-site-content";
 import { useToast } from "@/hooks/use-toast";
 import { useUserRole } from "@/hooks/use-user-role";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { useAuth, useFirestore, useUser, setDocumentNonBlocking } from "@/firebase";
+import { useEffect } from "react";
+import { updateProfile } from "firebase/auth";
+import { doc } from "firebase/firestore";
 
 const aboutSchema = z.object({
   about: z.string().min(20, "About text must be at least 20 characters."),
+});
+
+const profileSchema = z.object({
+  displayName: z.string().min(2, "Name must be at least 2 characters."),
+  email: z.string().email("Invalid email address."),
 });
 
 export default function SettingsPage() {
   const { role } = useUserRole();
   const { aboutContent, setAboutContent } = useSiteContent();
   const { toast } = useToast();
+  const { user } = useUser();
+  const auth = useAuth();
+  const firestore = useFirestore();
 
-  const { control, handleSubmit, formState: { errors } } = useForm({
+  const aboutForm = useForm({
     resolver: zodResolver(aboutSchema),
     defaultValues: {
       about: aboutContent,
     },
   });
+
+  const profileForm = useForm<z.infer<typeof profileSchema>>({
+    resolver: zodResolver(profileSchema),
+    defaultValues: {
+      displayName: "",
+      email: "",
+    },
+  });
+
+  useEffect(() => {
+    if(user) {
+      profileForm.reset({
+        displayName: user.displayName || "",
+        email: user.email || "",
+      });
+    }
+  }, [user, profileForm]);
 
   const onAboutSubmit = (data: { about: string }) => {
     setAboutContent(data.about);
@@ -44,6 +75,38 @@ export default function SettingsPage() {
     });
   };
 
+  const onProfileSubmit = async (data: z.infer<typeof profileSchema>) => {
+    if (!user || !auth.currentUser) {
+      toast({ variant: "destructive", title: "Not logged in", description: "You must be logged in to update your profile." });
+      return;
+    }
+
+    try {
+      // Update Firebase Auth profile
+      await updateProfile(auth.currentUser, {
+        displayName: data.displayName,
+      });
+
+      // Update Firestore profile document
+      const parentDocRef = doc(firestore, 'parents', user.uid);
+      setDocumentNonBlocking(parentDocRef, { 
+        displayName: data.displayName 
+      }, { merge: true });
+
+      toast({
+        title: "Profile Updated",
+        description: "Your profile information has been saved.",
+      });
+    } catch (error: any) {
+       toast({
+        variant: "destructive",
+        title: "Error",
+        description: error.message || "Failed to update profile.",
+      });
+    }
+  };
+
+
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <Card>
@@ -51,16 +114,38 @@ export default function SettingsPage() {
           <CardTitle>Profile</CardTitle>
           <CardDescription>Update your personal information.</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="name">Name</Label>
-            <Input id="name" defaultValue="Parent Name" />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" defaultValue="parent@example.com" />
-          </div>
-           <Button>Save Changes</Button>
+        <CardContent>
+          <Form {...profileForm}>
+            <form onSubmit={profileForm.handleSubmit(onProfileSubmit)} className="space-y-4">
+              <FormField
+                control={profileForm.control}
+                name="displayName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={profileForm.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input type="email" {...field} disabled />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+               <Button type="submit">Save Changes</Button>
+            </form>
+          </Form>
         </CardContent>
       </Card>
 
@@ -71,24 +156,24 @@ export default function SettingsPage() {
             <CardDescription>Edit the "About Us" section on the homepage.</CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit(onAboutSubmit)} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="about">About Section Content</Label>
-                <Controller
+            <Form {...aboutForm}>
+              <form onSubmit={aboutForm.handleSubmit(onAboutSubmit)} className="space-y-4">
+                <FormField
+                  control={aboutForm.control}
                   name="about"
-                  control={control}
                   render={({ field }) => (
-                    <Textarea
-                      id="about"
-                      rows={5}
-                      {...field}
-                    />
+                    <FormItem>
+                      <FormLabel>About Section Content</FormLabel>
+                      <FormControl>
+                        <Textarea id="about" rows={5} {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
                   )}
                 />
-                {errors.about && <p className="text-sm font-medium text-destructive">{errors.about.message}</p>}
-              </div>
-              <Button type="submit">Save About Section</Button>
-            </form>
+                <Button type="submit">Save About Section</Button>
+              </form>
+            </Form>
           </CardContent>
         </Card>
       )}
