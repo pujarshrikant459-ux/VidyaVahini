@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from 'next/link';
@@ -13,13 +14,14 @@ import { useEffect, useState } from 'react';
 export default function Home() {
   const { photos, videos } = useGallery();
   const { aboutContent } = useSiteContent();
-  const heroImage = photos.find(p => p.id === 'hero');
-
+  
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  const heroImage = photos.find(p => p.id === 'hero');
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -48,7 +50,7 @@ export default function Home() {
       <main className="flex-1">
         <section className="relative w-full h-[60vh] text-white">
           <div className="absolute inset-0 bg-black/50 z-10" />
-           {heroImage && (
+           {isClient && heroImage && (
             <Image
               src={heroImage.imageUrl}
               alt="School building"
