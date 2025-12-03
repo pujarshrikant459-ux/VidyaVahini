@@ -2,9 +2,9 @@
   "placeholderImages": [
     {
       "id": "hero",
-      "description": "A vibrant image of a school building or campus with children.",
-      "imageUrl": "https://images.unsplash.com/photo-1509062522246-3755977927d7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzY2hvb2wlMjBjaGlsZHJlbnxlbnwwfHx8fDE3NjM0MDU5MDF8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "school children"
+      "description": "A vibrant and engaging photo of a student focused on learning.",
+      "imageUrl": "https://images.unsplash.com/photo-1523240795612-9a054b0db644?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxzdHVkZW50JTIwbGVhcm5pbmd8ZW58MHx8fHwxNzYzNDEwMzg1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "student learning"
     },
     {
       "id": "student-1",
@@ -99,7 +99,7 @@
     {
       "id": "video-3",
       "description": "Thumbnail for a video about a sports competition.",
-      "imageUrl": "https://images.unsplash.com/photo-1609773335024-be4301497ea9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxzcG9ydHMlMjBjb21wZXRpdGlvbnxlbnwwfHx8fDE3NjMyMDMwMDZ8MA&ixlib-rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1609773335024-be4301497ea9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxzcG9ydHMlMjBjb21wZXRpdGlvbnxlbnwwfHx8fDE3NjMyMDMwMDZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "sports competition"
     }
   ]

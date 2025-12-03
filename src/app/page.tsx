@@ -56,7 +56,7 @@ export default function Home() {
            {isClient && heroImage && (
             <Image
               src={heroImage.imageUrl}
-              alt="School campus with children"
+              alt="Student learning"
               fill
               className="object-cover"
               data-ai-hint={heroImage.imageHint}
@@ -64,8 +64,8 @@ export default function Home() {
             />
           )}
           <div className="relative z-20 container mx-auto flex flex-col items-center justify-center h-full text-center px-4">
-            <h2 className="text-4xl md:text-6xl font-bold font-headline mb-4">VidyaVahini: The Digital Bridge for Karnataka's Schools</h2>
-            <p className="text-lg md:text-2xl mb-8 max-w-3xl">Connecting students, teachers, and parents for a brighter future.</p>
+            <h2 className="text-4xl md:text-6xl font-bold font-headline mb-4">VidyaVahini: Charting the Course for Modern Education</h2>
+            <p className="text-lg md:text-2xl mb-8 max-w-3xl">A unified platform for Karnataka's schools, empowering students, teachers, and parents to succeed together.</p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link href="/login">
                 <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
@@ -176,3 +176,5 @@ function FeatureCard({ icon, title, description }: { icon: React.ReactNode, titl
     </Card>
   );
 }
+
+    
