@@ -11,7 +11,7 @@ import { useUserRole } from '@/hooks/use-user-role';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth, useFirestore } from '@/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 
 export function AdminLoginForm() {
   const { setLogin } = useUserRole();
@@ -20,17 +20,16 @@ export function AdminLoginForm() {
   const auth = useAuth();
   const firestore = useFirestore();
   
-  const [schoolId, setSchoolId] = useState('');
-  const [adminEmail, setAdminEmail] = useState('');
-  const [adminPassword, setAdminPassword] = useState('');
+  const [adminEmail, setAdminEmail] = useState('admin@example.com');
+  const [adminPassword, setAdminPassword] = useState('password');
   const [loading, setLoading] = useState(false);
 
   const handleAdminLogin = async () => {
-    if (!schoolId || !adminEmail || !adminPassword) {
+    if (!adminEmail || !adminPassword) {
       toast({
         variant: 'destructive',
         title: 'Missing Fields',
-        description: 'Please enter School ID, email, and password.',
+        description: 'Please enter your email and password.',
       });
       return;
     }
@@ -42,19 +41,12 @@ export function AdminLoginForm() {
       const userCredential = await signInWithEmailAndPassword(auth, adminEmail, adminPassword);
       const user = userCredential.user;
 
-      // 2. Verify the user is an admin for the given school ID
-      const schoolDocRef = doc(firestore, `schools/${schoolId}`);
-      const schoolDocSnap = await getDoc(schoolDocRef);
+      // 2. Verify the user is an admin by checking across all schools
+      const schoolsQuery = query(collection(firestore, 'schools'), where('adminUids', 'array-contains', user.uid));
+      const querySnapshot = await getDocs(schoolsQuery);
 
-      if (!schoolDocSnap.exists()) {
-        throw new Error("Invalid School ID.");
-      }
-
-      const schoolData = schoolDocSnap.data();
-      const adminUids = schoolData.adminUids || [];
-
-      if (!adminUids.includes(user.uid)) {
-        throw new Error("You are not an authorized administrator for this school.");
+      if (querySnapshot.empty) {
+         throw new Error("You are not an authorized administrator for any school.");
       }
       
       // 3. If everything is valid, set login state and redirect
@@ -80,10 +72,6 @@ export function AdminLoginForm() {
 
   return (
     <CardContent className="space-y-4">
-        <div className="space-y-2">
-            <Label htmlFor="school-id">School ID</Label>
-            <Input id="school-id" type="text" placeholder="Enter your school's unique ID" value={schoolId} onChange={(e) => setSchoolId(e.target.value)} />
-        </div>
         <div className="space-y-2">
             <Label htmlFor="admin-email">Email</Label>
             <Input id="admin-email" type="email" placeholder="admin@example.com" value={adminEmail} onChange={(e) => setAdminEmail(e.target.value)} />
