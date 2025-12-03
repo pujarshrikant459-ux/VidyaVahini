@@ -64,8 +64,8 @@ export default function Home() {
             />
           )}
           <div className="relative z-20 container mx-auto flex flex-col items-center justify-center h-full text-center px-4">
-            <h2 className="text-4xl md:text-6xl font-bold font-headline mb-4">VidyaVahini: Empowering Karnataka's Future</h2>
-            <p className="text-lg md:text-2xl mb-8 max-w-3xl">Empowering students, teachers, and parents with seamless access to school information.</p>
+            <h2 className="text-4xl md:text-6xl font-bold font-headline mb-4">VidyaVahini: The Digital Bridge for Karnataka's Schools</h2>
+            <p className="text-lg md:text-2xl mb-8 max-w-3xl">Connecting students, teachers, and parents for a brighter future.</p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link href="/login">
                 <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
