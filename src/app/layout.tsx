@@ -1,3 +1,4 @@
+
 import type { Metadata } from 'next';
 import './globals.css';
 import { cn } from '@/lib/utils';
@@ -45,5 +46,3 @@ export default function RootLayout({
     </html>
   );
 }
-
-    
