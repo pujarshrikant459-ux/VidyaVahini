@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useForm, type SubmitHandler } from "react-hook-form";
@@ -14,6 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { PlusCircle, Trash2 } from "lucide-react";
 import { useAnnouncements } from "@/hooks/use-announcements";
+import { useLocalization } from "@/hooks/use-localization";
 
 const FormSchema = z.object({
   title: z.string().min(5, { message: "Title must be at least 5 characters." }),
@@ -26,6 +28,7 @@ export default function AnnouncementsPage() {
   const { announcements, addAnnouncement, deleteAnnouncement } = useAnnouncements();
   const { toast } = useToast();
   const { role } = useUserRole();
+  const { t } = useLocalization();
 
   const form = useForm<FormData>({
     resolver: zodResolver(FormSchema),
@@ -58,8 +61,8 @@ export default function AnnouncementsPage() {
         <div className="md:col-span-1">
           <Card>
             <CardHeader>
-              <CardTitle>New Announcement</CardTitle>
-              <CardDescription>Create and publish a new announcement.</CardDescription>
+              <CardTitle>{t('newAnnouncement')}</CardTitle>
+              <CardDescription>{t('createAndPublishNewAnnouncement')}</CardDescription>
             </CardHeader>
             <CardContent>
               <Form {...form}>
@@ -69,7 +72,7 @@ export default function AnnouncementsPage() {
                     name="title"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Title</FormLabel>
+                        <FormLabel>{t('title')}</FormLabel>
                         <FormControl>
                           <Input placeholder="e.g., School Holiday" {...field} />
                         </FormControl>
@@ -82,7 +85,7 @@ export default function AnnouncementsPage() {
                     name="content"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Content</FormLabel>
+                        <FormLabel>{t('content')}</FormLabel>
                         <FormControl>
                           <Textarea placeholder="Describe the announcement..." {...field} />
                         </FormControl>
@@ -92,7 +95,7 @@ export default function AnnouncementsPage() {
                   />
                   <Button type="submit">
                     <PlusCircle className="mr-2 h-4 w-4" />
-                    Post Announcement
+                    {t('postAnnouncement')}
                   </Button>
                 </form>
               </Form>
@@ -104,15 +107,15 @@ export default function AnnouncementsPage() {
       <div className={role === "admin" ? "md:col-span-2" : "md:col-span-3"}>
         <Card>
           <CardHeader>
-            <CardTitle>All Announcements</CardTitle>
-            <CardDescription>View all past and present announcements.</CardDescription>
+            <CardTitle>{t('allAnnouncements')}</CardTitle>
+            <CardDescription>{t('viewAllAnnouncements')}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {announcements.map((announcement) => (
               <div key={announcement.id} className="p-4 border rounded-lg relative">
                 <h3 className="font-semibold text-lg">{announcement.title}</h3>
                 <p className="text-sm text-muted-foreground mb-2">
-                  Posted on {format(new Date(announcement.date), "PPP")}
+                  {t('postedOn')} {format(new Date(announcement.date), "PPP")}
                 </p>
                 <p>{announcement.content}</p>
                 {role === 'admin' && (
@@ -129,7 +132,7 @@ export default function AnnouncementsPage() {
               </div>
             ))}
             {announcements.length === 0 && (
-                <p className="text-center text-muted-foreground py-8">No announcements yet.</p>
+                <p className="text-center text-muted-foreground py-8">{t('noAnnouncementsYet')}</p>
             )}
           </CardContent>
         </Card>

@@ -30,6 +30,7 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useLocalization } from "@/hooks/use-localization";
 
 
 const noteSchema = z.object({
@@ -51,6 +52,7 @@ export default function AcademicsPage() {
   const { role } = useUserRole();
   const { students, currentStudent, addBehavioralNote } = useStudents();
   const { toast } = useToast();
+  const { t } = useLocalization();
 
   const [timetable, setTimetable] = useState<TimetableEntry[]>(initialTimetable);
   const [isEditingTimetable, setIsEditingTimetable] = useState(false);
@@ -150,7 +152,7 @@ export default function AcademicsPage() {
         name="title"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Title</FormLabel>
+            <FormLabel>{t('title')}</FormLabel>
             <FormControl><Input {...field} /></FormControl>
             <FormMessage />
           </FormItem>
@@ -162,7 +164,7 @@ export default function AcademicsPage() {
             name="subject"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Subject</FormLabel>
+                <FormLabel>{t('subject')}</FormLabel>
                 <FormControl><Input {...field} /></FormControl>
                 <FormMessage />
               </FormItem>
@@ -173,7 +175,7 @@ export default function AcademicsPage() {
             name="teacher"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Teacher</FormLabel>
+                <FormLabel>{t('teacher')}</FormLabel>
                 <FormControl><Input {...field} /></FormControl>
                 <FormMessage />
               </FormItem>
@@ -185,7 +187,7 @@ export default function AcademicsPage() {
         name="description"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Description</FormLabel>
+            <FormLabel>{t('description')}</FormLabel>
             <FormControl><Textarea {...field} /></FormControl>
             <FormMessage />
           </FormItem>
@@ -196,7 +198,7 @@ export default function AcademicsPage() {
         name="dueDate"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Due Date</FormLabel>
+            <FormLabel>{t('dueDate')}</FormLabel>
             <FormControl><Input type="date" {...field} /></FormControl>
             <FormMessage />
           </FormItem>
@@ -208,33 +210,33 @@ export default function AcademicsPage() {
   return (
     <Tabs defaultValue="homework" className="w-full">
       <TabsList className="grid w-full grid-cols-3">
-        <TabsTrigger value="homework">Homework</TabsTrigger>
-        <TabsTrigger value="timetable">Class Timetable</TabsTrigger>
-        <TabsTrigger value="notes">Behavioral Notes</TabsTrigger>
+        <TabsTrigger value="homework">{t('homework')}</TabsTrigger>
+        <TabsTrigger value="timetable">{t('timetable')}</TabsTrigger>
+        <TabsTrigger value="notes">{t('behavioralNotes')}</TabsTrigger>
       </TabsList>
       <TabsContent value="homework">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
-              <CardTitle>Homework</CardTitle>
-              <CardDescription>Daily and weekly homework updates.</CardDescription>
+              <CardTitle>{t('homework')}</CardTitle>
+              <CardDescription>{t('dailyWeeklyHomeworkUpdates')}</CardDescription>
             </div>
              {role === 'admin' && (
                <Dialog open={isAddHomeworkOpen} onOpenChange={setAddHomeworkOpen}>
                   <DialogTrigger asChild>
-                     <Button size="sm"><PlusCircle className="mr-2 h-4 w-4" /> Add Homework</Button>
+                     <Button size="sm"><PlusCircle className="mr-2 h-4 w-4" /> {t('addHomework')}</Button>
                   </DialogTrigger>
                   <DialogContent>
                      <DialogHeader>
-                        <DialogTitle>Add New Homework</DialogTitle>
-                        <DialogDescription>Create a new assignment for students.</DialogDescription>
+                        <DialogTitle>{t('addNewHomework')}</DialogTitle>
+                        <DialogDescription>{t('createNewAssignmentForStudents')}</DialogDescription>
                      </DialogHeader>
                       <Form {...homeworkForm}>
                         <form onSubmit={homeworkForm.handleSubmit(handleAddHomework)}>
                            <HomeworkFormFields form={homeworkForm} />
                            <DialogFooter className="mt-4">
-                              <DialogClose asChild><Button type="button" variant="outline">Cancel</Button></DialogClose>
-                              <Button type="submit">Add Homework</Button>
+                              <DialogClose asChild><Button type="button" variant="outline">{t('cancel')}</Button></DialogClose>
+                              <Button type="submit">{t('addHomework')}</Button>
                            </DialogFooter>
                         </form>
                       </Form>
@@ -250,8 +252,8 @@ export default function AcademicsPage() {
                     <form onSubmit={homeworkForm.handleSubmit(handleUpdateHomework)} className="p-4 border rounded-lg bg-secondary/50 space-y-4">
                       <HomeworkFormFields form={homeworkForm} isEdit={true} />
                       <div className="flex justify-end gap-2">
-                        <Button type="button" variant="ghost" onClick={handleCancelEdit}>Cancel</Button>
-                        <Button type="submit">Save Changes</Button>
+                        <Button type="button" variant="ghost" onClick={handleCancelEdit}>{t('cancel')}</Button>
+                        <Button type="submit">{t('saveChanges')}</Button>
                       </div>
                     </form>
                   </Form>
@@ -260,11 +262,11 @@ export default function AcademicsPage() {
                     <div className="flex justify-between items-start">
                       <div>
                         <h3 className="font-semibold">{hw.title}</h3>
-                        <p className="text-sm text-muted-foreground">Subject: {hw.subject} | Teacher: {hw.teacher}</p>
+                        <p className="text-sm text-muted-foreground">{t('subject')}: {hw.subject} | {t('teacher')}: {hw.teacher}</p>
                       </div>
                       <div className="text-sm text-right">
-                        <p>Due: {hw.dueDate}</p>
-                        <p className="text-muted-foreground">Assigned: {hw.assignedDate}</p>
+                        <p>{t('due')}: {hw.dueDate}</p>
+                        <p className="text-muted-foreground">{t('assigned')}: {hw.assignedDate}</p>
                       </div>
                     </div>
                     <p className="mt-2 text-sm">{hw.description}</p>
@@ -282,7 +284,7 @@ export default function AcademicsPage() {
                 )}
               </div>
             ))}
-             {homeworkList.length === 0 && <p className="text-center text-muted-foreground">No homework assigned.</p>}
+             {homeworkList.length === 0 && <p className="text-center text-muted-foreground">{t('noHomeworkAssigned')}</p>}
           </CardContent>
         </Card>
       </TabsContent>
@@ -290,17 +292,17 @@ export default function AcademicsPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
-              <CardTitle>Class Timetable</CardTitle>
-              <CardDescription>Weekly class schedule for your child's class.</CardDescription>
+              <CardTitle>{t('timetable')}</CardTitle>
+              <CardDescription>{t('weeklyClassSchedule')}</CardDescription>
             </div>
             {role === 'admin' && (
               isEditingTimetable ? (
                 <Button onClick={handleSaveTimetable} size="sm">
-                  <Save className="mr-2 h-4 w-4" /> Save
+                  <Save className="mr-2 h-4 w-4" /> {t('save')}
                 </Button>
               ) : (
                 <Button onClick={() => setIsEditingTimetable(true)} variant="outline" size="sm">
-                  <Pencil className="mr-2 h-4 w-4" /> Edit Timetable
+                  <Pencil className="mr-2 h-4 w-4" /> {t('editTimetable')}
                 </Button>
               )
             )}
@@ -309,7 +311,7 @@ export default function AcademicsPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Day</TableHead>
+                  <TableHead>{t('day')}</TableHead>
                   <TableHead>09:00 - 10:00</TableHead>
                   <TableHead>10:00 - 11:00</TableHead>
                   <TableHead>11:00 - 12:00</TableHead>
@@ -334,13 +336,13 @@ export default function AcademicsPage() {
                               <Input
                                 value={period.subject}
                                 onChange={(e) => handleTimetableChange(dayIndex, periodIndex, 'subject', e.target.value)}
-                                placeholder="Subject"
+                                placeholder={t('subject')}
                                 className="h-8 text-sm"
                               />
                               <Input
                                 value={period.teacher}
                                 onChange={(e) => handleTimetableChange(dayIndex, periodIndex, 'teacher', e.target.value)}
-                                placeholder="Teacher"
+                                placeholder={t('teacher')}
                                 className="h-8 text-xs"
                               />
                             </div>
@@ -366,8 +368,8 @@ export default function AcademicsPage() {
             <div className="md:col-span-1">
               <Card>
                 <CardHeader>
-                  <CardTitle>Add Behavioral Note</CardTitle>
-                  <CardDescription>Record an observation for a student.</CardDescription>
+                  <CardTitle>{t('addBehavioralNote')}</CardTitle>
+                  <CardDescription>{t('recordObservationForStudent')}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Form {...noteForm}>
@@ -377,11 +379,11 @@ export default function AcademicsPage() {
                         name="studentId"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Student</FormLabel>
+                            <FormLabel>{t('student')}</FormLabel>
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                               <FormControl>
                                 <SelectTrigger>
-                                  <SelectValue placeholder="Select a student..." />
+                                  <SelectValue placeholder={t('selectStudent')} />
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
@@ -401,7 +403,7 @@ export default function AcademicsPage() {
                         name="note"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Note</FormLabel>
+                            <FormLabel>{t('note')}</FormLabel>
                             <FormControl>
                               <Textarea
                                 placeholder="e.g., Showed great leadership during the group project."
@@ -412,7 +414,7 @@ export default function AcademicsPage() {
                           </FormItem>
                         )}
                       />
-                      <Button type="submit">Save Note</Button>
+                      <Button type="submit">{t('saveNote')}</Button>
                     </form>
                   </Form>
                 </CardContent>
@@ -423,9 +425,9 @@ export default function AcademicsPage() {
           <div className={role === 'admin' ? "md:col-span-2" : "md:col-span-3"}>
             <Card>
               <CardHeader>
-                <CardTitle>Behavioral Notes</CardTitle>
+                <CardTitle>{t('behavioralNotes')}</CardTitle>
                 <CardDescription>
-                  Observations from teachers about your child's behavior and involvement.
+                  {t('observationsFromTeachers')}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -440,10 +442,10 @@ export default function AcademicsPage() {
                   ))
                 ) : (
                   <p className="text-center text-muted-foreground py-8">
-                    {role === 'parent' ? "No notes have been recorded for your child yet." : "Select a student to view notes."}
+                    {role === 'parent' ? t('noNotesForChild') : t('selectStudentToViewNotes')}
                   </p>
                 )}
-                 {role === 'admin' && <p className="text-center text-muted-foreground py-8">This view is for parents. Admins can add notes.</p>}
+                 {role === 'admin' && <p className="text-center text-muted-foreground py-8">{t('adminNoteViewHint')}</p>}
               </CardContent>
             </Card>
           </div>

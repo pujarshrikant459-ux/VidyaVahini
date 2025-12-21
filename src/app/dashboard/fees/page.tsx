@@ -13,12 +13,14 @@ import { useUserRole } from "@/hooks/use-user-role";
 import { useStudents } from "@/hooks/use-students";
 import { useToast } from "@/hooks/use-toast";
 import { feeStructure } from "@/lib/data";
+import { useLocalization } from "@/hooks/use-localization";
 
 
 export default function FeesPage() {
   const { role } = useUserRole();
   const { students, currentStudent, payFee } = useStudents();
   const { toast } = useToast();
+  const { t } = useLocalization();
   const parentStudent = currentStudent;
 
   
@@ -33,13 +35,13 @@ export default function FeesPage() {
   const statusBadge = (status: 'paid' | 'pending' | 'overdue' | 'approved') => {
     switch (status) {
       case 'paid':
-        return <Badge variant="default" className="bg-green-600 hover:bg-green-700">Paid</Badge>;
+        return <Badge variant="default" className="bg-green-600 hover:bg-green-700">{t('paid')}</Badge>;
       case 'overdue':
         return <Badge variant="destructive">Overdue</Badge>;
       case 'approved':
         return <Badge variant="secondary">Ready to Pay</Badge>;
       case 'pending':
-        return <Badge variant="outline">Pending Approval</Badge>;
+        return <Badge variant="outline">{t('pending')}</Badge>;
     }
   };
 
@@ -47,8 +49,8 @@ export default function FeesPage() {
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Fee Management</CardTitle>
-                <CardDescription>Oversee and manage all student fee records.</CardDescription>
+                <CardTitle>{t('feeManagement')}</CardTitle>
+                <CardDescription>{t('overseeFeeRecords')}</CardDescription>
             </CardHeader>
             <CardContent>
                 <FeeManagementAdmin initialStudents={students} />
@@ -60,24 +62,24 @@ export default function FeesPage() {
   return (
     <Tabs defaultValue="parent-view" className="w-full">
       <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger value="parent-view">My Child's Fees</TabsTrigger>
-        <TabsTrigger value="fee-structure">Fee Structure</TabsTrigger>
+        <TabsTrigger value="parent-view">{t('myChildsFees')}</TabsTrigger>
+        <TabsTrigger value="fee-structure">{t('feeStructure')}</TabsTrigger>
       </TabsList>
       <TabsContent value="parent-view">
         <Card>
           <CardHeader>
-            <CardTitle>Fee Details for {parentStudent?.name}</CardTitle>
-            <CardDescription>View upcoming payments and your payment history.</CardDescription>
+            <CardTitle>{t('feeDetailsFor')} {parentStudent?.name}</CardTitle>
+            <CardDescription>{t('viewUpcomingPaymentsAndHistory')}</CardDescription>
           </CardHeader>
           <CardContent>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Fee Type</TableHead>
-                  <TableHead>Amount</TableHead>
-                  <TableHead>Due Date</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Action</TableHead>
+                  <TableHead>{t('feeType')}</TableHead>
+                  <TableHead>{t('amount')}</TableHead>
+                  <TableHead>{t('dueDate')}</TableHead>
+                  <TableHead>{t('status')}</TableHead>
+                  <TableHead>{t('action')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -93,9 +95,9 @@ export default function FeesPage() {
                     </TableCell>
                     <TableCell>
                       {fee.status === 'approved' || fee.status === 'overdue' ? (
-                        <Button size="sm" onClick={() => handlePayFee(parentStudent.id, fee.id, fee.type)}>Pay Now</Button>
+                        <Button size="sm" onClick={() => handlePayFee(parentStudent.id, fee.id, fee.type)}>{t('payNow')}</Button>
                       ) : (
-                        <Button size="sm" variant="outline" disabled>{fee.status === 'paid' ? 'Paid' : 'Pending'}</Button>
+                        <Button size="sm" variant="outline" disabled>{fee.status === 'paid' ? t('paid') : t('pending')}</Button>
                       )}
                     </TableCell>
                   </TableRow>
@@ -103,7 +105,7 @@ export default function FeesPage() {
                  {!parentStudent || parentStudent.fees.length === 0 && (
                     <TableRow>
                         <TableCell colSpan={5} className="text-center text-muted-foreground h-24">
-                            No fee records found for your child.
+                            {t('noFeeRecordsForChild')}
                         </TableCell>
                     </TableRow>
                 )}
@@ -115,15 +117,15 @@ export default function FeesPage() {
       <TabsContent value="fee-structure">
         <Card>
           <CardHeader>
-            <CardTitle>School Fee Structure</CardTitle>
-            <CardDescription>An overview of the different types of fees applicable.</CardDescription>
+            <CardTitle>{t('schoolFeeStructure')}</CardTitle>
+            <CardDescription>{t('overviewOfFees')}</CardDescription>
           </CardHeader>
           <CardContent>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Fee Type</TableHead>
-                  <TableHead>Description</TableHead>
+                  <TableHead>{t('feeType')}</TableHead>
+                  <TableHead>{t('description')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>

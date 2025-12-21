@@ -10,9 +10,11 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+import { useLocalization } from "@/hooks/use-localization";
 
 export default function ClassesPage() {
     const { students } = useStudents();
+    const { t } = useLocalization();
 
     const classes = Array.from({ length: 10 }, (_, i) => {
         const grade = i + 1;
@@ -29,7 +31,7 @@ export default function ClassesPage() {
         return {
             name: `${className} Grade`,
             studentCount: studentsInClass.length,
-            teacher: teacher?.name || 'Not Assigned',
+            teacher: teacher?.name || t('notAssigned'),
             students: studentsInClass,
         };
     });
@@ -37,8 +39,8 @@ export default function ClassesPage() {
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Classes</CardTitle>
-                <CardDescription>Manage and view all classes from 1st to 10th grade.</CardDescription>
+                <CardTitle>{t('classes')}</CardTitle>
+                <CardDescription>{t('manageClasses')}</CardDescription>
             </CardHeader>
             <CardContent>
                 <Accordion type="single" collapsible className="w-full">
@@ -49,7 +51,7 @@ export default function ClassesPage() {
                                     <div className="flex flex-col items-start">
                                         <span className="font-medium text-lg">{c.name}</span>
                                         <span className="text-sm text-muted-foreground">
-                                            {c.studentCount} Students | Teacher: {c.teacher}
+                                            {c.studentCount} {t('studentsCount')} | {t('teacher')}: {c.teacher}
                                         </span>
                                     </div>
                                 </div>
@@ -59,10 +61,10 @@ export default function ClassesPage() {
                                     <Table>
                                         <TableHeader>
                                             <TableRow>
-                                                <TableHead className="hidden w-[100px] sm:table-cell">Image</TableHead>
-                                                <TableHead>Name</TableHead>
-                                                <TableHead>Class Section</TableHead>
-                                                <TableHead>Roll Number</TableHead>
+                                                <TableHead className="hidden w-[100px] sm:table-cell">{t('image')}</TableHead>
+                                                <TableHead>{t('name')}</TableHead>
+                                                <TableHead>{t('classSection')}</TableHead>
+                                                <TableHead>{t('rollNumber')}</TableHead>
                                             </TableRow>
                                         </TableHeader>
                                         <TableBody>
@@ -92,7 +94,7 @@ export default function ClassesPage() {
                                         </TableBody>
                                     </Table>
                                 ) : (
-                                    <p className="text-center text-muted-foreground p-4">No students enrolled in this class yet.</p>
+                                    <p className="text-center text-muted-foreground p-4">{t('noStudentsEnrolled')}</p>
                                 )}
                             </AccordionContent>
                         </AccordionItem>

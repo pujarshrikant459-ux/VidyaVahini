@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -16,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { PlusCircle, Trash2, Camera, Video, PlayCircle } from "lucide-react";
+import { useLocalization } from "@/hooks/use-localization";
 
 const FormSchema = z.object({
   type: z.enum(["photo", "video"]),
@@ -29,6 +31,7 @@ type FormData = z.infer<typeof FormSchema>;
 export default function GalleryManagementPage() {
   const { photos, videos, addGalleryItem, deleteGalleryItem } = useGallery();
   const { toast } = useToast();
+  const { t } = useLocalization();
 
   const form = useForm<FormData>({
     resolver: zodResolver(FormSchema),
@@ -63,8 +66,8 @@ export default function GalleryManagementPage() {
   const UploadForm = ({ type }: { type: 'photo' | 'video' }) => (
     <Card>
       <CardHeader>
-        <CardTitle>Add New {type === 'photo' ? 'Photo' : 'Video'}</CardTitle>
-        <CardDescription>Provide the URL and description for the new gallery item.</CardDescription>
+        <CardTitle>{type === 'photo' ? t('addPhoto') : t('addVideo')}</CardTitle>
+        <CardDescription>{t('provideUrlAndDescription')}</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -85,7 +88,7 @@ export default function GalleryManagementPage() {
               name="imageUrl"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Image/Thumbnail URL</FormLabel>
+                  <FormLabel>{t('imageUrl')}</FormLabel>
                   <FormControl>
                     <Input placeholder="https://images.unsplash.com/..." {...field} />
                   </FormControl>
@@ -98,7 +101,7 @@ export default function GalleryManagementPage() {
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>{t('description')}</FormLabel>
                   <FormControl>
                     <Textarea placeholder="e.g., Annual Sports Day 2023" {...field} />
                   </FormControl>
@@ -111,18 +114,18 @@ export default function GalleryManagementPage() {
               name="imageHint"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Image Hint</FormLabel>
+                  <FormLabel>{t('imageHint')}</FormLabel>
                   <FormControl>
                     <Input placeholder="e.g., school sports" {...field} />
                   </FormControl>
-                   <FormDescription>Two keyword hint for AI image search.</FormDescription>
+                   <FormDescription>{t('twoKeywordHint')}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <Button type="submit" onClick={() => form.setValue('type', type)}>
               <PlusCircle className="mr-2 h-4 w-4" />
-              Add to Gallery
+              {t('addToGallery')}
             </Button>
           </form>
         </Form>
@@ -133,8 +136,8 @@ export default function GalleryManagementPage() {
   return (
     <Tabs defaultValue="photos" className="w-full">
       <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger value="photos"><Camera className="mr-2"/>Manage Photos</TabsTrigger>
-        <TabsTrigger value="videos"><Video className="mr-2"/>Manage Videos</TabsTrigger>
+        <TabsTrigger value="photos"><Camera className="mr-2"/>{t('managePhotos')}</TabsTrigger>
+        <TabsTrigger value="videos"><Video className="mr-2"/>{t('manageVideos')}</TabsTrigger>
       </TabsList>
       <TabsContent value="photos">
         <div className="grid gap-6 md:grid-cols-3">
@@ -144,7 +147,7 @@ export default function GalleryManagementPage() {
           <div className="md:col-span-2">
              <Card>
                 <CardHeader>
-                    <CardTitle>Existing Photos</CardTitle>
+                    <CardTitle>{t('existingPhotos')}</CardTitle>
                 </CardHeader>
                 <CardContent className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {photos.map((photo) => (
@@ -168,7 +171,7 @@ export default function GalleryManagementPage() {
                         </Button>
                     </div>
                     ))}
-                    {photos.length === 0 && <p className="col-span-full text-center text-muted-foreground">No photos in the gallery.</p>}
+                    {photos.length === 0 && <p className="col-span-full text-center text-muted-foreground">{t('noPhotosInGallery')}</p>}
                 </CardContent>
              </Card>
           </div>
@@ -182,7 +185,7 @@ export default function GalleryManagementPage() {
             <div className="md:col-span-2">
                  <Card>
                     <CardHeader>
-                        <CardTitle>Existing Videos</CardTitle>
+                        <CardTitle>{t('existingVideos')}</CardTitle>
                     </CardHeader>
                     <CardContent className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         {videos.map((video) => (
@@ -209,7 +212,7 @@ export default function GalleryManagementPage() {
                             </Button>
                         </div>
                         ))}
-                        {videos.length === 0 && <p className="col-span-full text-center text-muted-foreground">No videos in the gallery.</p>}
+                        {videos.length === 0 && <p className="col-span-full text-center text-muted-foreground">{t('noVideosInGallery')}</p>}
                     </CardContent>
                 </Card>
             </div>
