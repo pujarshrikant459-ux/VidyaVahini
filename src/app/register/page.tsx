@@ -55,10 +55,10 @@ export default function RegisterPage() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
-      password: '',
-      displayName: '',
-      studentId: '',
+      email: 'parent@example.com',
+      password: 'password',
+      displayName: 'Demo Parent',
+      studentId: '1',
     },
   });
 
