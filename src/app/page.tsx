@@ -71,13 +71,6 @@ export default function Home() {
               </Link>
             </div>
           </div>
-           <div className="absolute bottom-4 right-4 z-20">
-              <Link href="/register/school" passHref>
-                <Button size="sm" variant="outline" className="bg-transparent text-white border-white hover:bg-white hover:text-primary">
-                  <Building className="mr-2 h-4 w-4"/> Register Your School
-                </Button>
-              </Link>
-            </div>
         </section>
 
         <section id="features" className="py-16 bg-background">
