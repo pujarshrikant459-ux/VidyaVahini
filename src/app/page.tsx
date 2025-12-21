@@ -9,47 +9,12 @@ import Image from 'next/image';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useGallery } from '@/hooks/use-gallery';
 import { useSiteContent } from '@/hooks/use-site-content';
-import { useEffect, useState } from 'react';
-import { useLocalization, type Language } from '@/hooks/use-localization';
 
 export default function Home() {
   const { photos, videos } = useGallery();
   const { aboutContent } = useSiteContent();
-  const { language, setLanguage, t } = useLocalization();
-
-  const [languageSelected, setLanguageSelected] = useState(false);
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-    const storedLang = localStorage.getItem('vva-language');
-    if (storedLang) {
-      setLanguageSelected(true);
-    }
-  }, []);
-
-  const handleLanguageSelect = (lang: Language) => {
-    setLanguage(lang);
-    setLanguageSelected(true);
-  };
 
   const heroImage = photos.find(p => p.id === 'hero');
-
-  if (isClient && !languageSelected) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-background p-4">
-        <div className="text-center">
-            <GraduationCap className="h-16 w-16 mx-auto text-primary mb-4" />
-            <h1 className="text-3xl md:text-5xl font-bold font-headline mb-2">Welcome to VidyaVahini</h1>
-            <p className="text-lg text-muted-foreground mb-8">Please select your language to continue.</p>
-        </div>
-        <div className="flex flex-col sm:flex-row gap-4">
-            <Button size="lg" onClick={() => handleLanguageSelect('en')}>Continue in English</Button>
-            <Button size="lg" variant="outline" onClick={() => handleLanguageSelect('kn')}>ಕನ್ನಡದಲ್ಲಿ ಮುಂದುವರಿಸಿ</Button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -63,12 +28,12 @@ export default function Home() {
             <Link href="#features" className="text-sm font-medium hover:underline">Features</Link>
             <Link href="#gallery" className="text-sm font-medium hover:underline">Gallery</Link>
             <Link href="#about" className="text-sm font-medium hover:underline">About</Link>
-            <Link href="/login">
+            <Link href="/select-language">
               <Button variant="secondary">Login</Button>
             </Link>
           </nav>
           <div className="md:hidden">
-             <Link href="/login">
+             <Link href="/select-language">
               <Button variant="secondary">Login</Button>
             </Link>
           </div>
@@ -92,7 +57,7 @@ export default function Home() {
             <h2 className="text-4xl md:text-6xl font-bold font-headline mb-4">VidyaVahini: Karnataka's Digital Education Portal</h2>
             <p className="text-lg md:text-2xl mb-8 max-w-3xl">Connecting schools, empowering students, and building a brighter future for Karnataka.</p>
             <div className="flex flex-wrap justify-center gap-4">
-              <Link href="/login">
+              <Link href="/select-language">
                 <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
                   Access Portal
                 </Button>
@@ -199,5 +164,3 @@ function FeatureCard({ icon, title, description }: { icon: React.ReactNode, titl
     </Card>
   );
 }
-
-    
