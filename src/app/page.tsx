@@ -152,8 +152,11 @@ export default function Home() {
       </main>
 
       <footer className="bg-primary text-primary-foreground py-6">
-        <div className="container mx-auto text-center">
+        <div className="container mx-auto flex justify-between items-center">
           <p>&copy; {new Date().getFullYear()} VidyaVahini. All Rights Reserved.</p>
+          <Link href="/register/school" className="text-sm font-medium hover:underline">
+            Register Your School
+          </Link>
         </div>
       </footer>
     </div>
