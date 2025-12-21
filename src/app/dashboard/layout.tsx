@@ -31,6 +31,7 @@ import { cn } from "@/lib/utils";
 import { DashboardHeader } from "@/components/dashboard/header";
 import { Button } from "@/components/ui/button";
 import { useUserRole } from "@/hooks/use-user-role";
+import { useLocalization } from "@/hooks/use-localization";
 
 export default function DashboardLayout({
   children,
@@ -39,6 +40,8 @@ export default function DashboardLayout({
 }) {
   const pathname = usePathname();
   const { role, studentId } = useUserRole();
+  const { t } = useLocalization();
+
   const isActive = (path: string) => {
     if (path === "/dashboard") {
       return pathname === path;
@@ -60,81 +63,81 @@ export default function DashboardLayout({
         <SidebarContent>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild isActive={isActive("/dashboard")} tooltip="Dashboard">
+              <SidebarMenuButton asChild isActive={isActive("/dashboard")} tooltip={t('dashboard')}>
                 <Link href="/dashboard">
                   <Home />
-                  <span>Dashboard</span>
+                  <span>{t('dashboard')}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild isActive={isActive("/dashboard/students")} tooltip={role === 'admin' ? "Students" : "My Child"}>
+              <SidebarMenuButton asChild isActive={isActive("/dashboard/students")} tooltip={role === 'admin' ? t('students') : t('myChild')}>
                 <Link href={role === 'admin' ? '/dashboard/students' : studentProfilePath}>
                   <Users />
-                  <span>{role === 'admin' ? "Students" : "My Child"}</span>
+                  <span>{role === 'admin' ? t('students') : t('myChild')}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild isActive={isActive("/dashboard/academics")} tooltip="Academics">
+              <SidebarMenuButton asChild isActive={isActive("/dashboard/academics")} tooltip={t('academics')}>
                 <Link href="/dashboard/academics">
                   <BookOpen />
-                  <span>Academics</span>
+                  <span>{t('academics')}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
              {role === 'admin' && (
                <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={isActive("/dashboard/classes")} tooltip="Classes">
+                <SidebarMenuButton asChild isActive={isActive("/dashboard/classes")} tooltip={t('classes')}>
                   <Link href="/dashboard/classes">
                     <BookCopy />
-                    <span>Classes</span>
+                    <span>{t('classes')}</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             )}
             <SidebarMenuItem>
-              <SidebarMenuButton asChild isActive={isActive("/dashboard/transport")} tooltip="Transport">
+              <SidebarMenuButton asChild isActive={isActive("/dashboard/transport")} tooltip={t('transport')}>
                 <Link href="/dashboard/transport">
                   <Bus />
-                  <span>Transport</span>
+                  <span>{t('transport')}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild isActive={isActive("/dashboard/fees")} tooltip="Fees">
+              <SidebarMenuButton asChild isActive={isActive("/dashboard/fees")} tooltip={t('fees')}>
                 <Link href="/dashboard/fees">
                   <CreditCard />
-                  <span>Fees</span>
+                  <span>{t('fees')}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             {role === 'admin' && (
                <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={isActive("/dashboard/staff")} tooltip="Staff">
+                <SidebarMenuButton asChild isActive={isActive("/dashboard/staff")} tooltip={t('staff')}>
                   <Link href="/dashboard/staff">
                     <Users />
-                    <span>Staff</span>
+                    <span>{t('staff')}</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             )}
              {role === 'admin' && (
               <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={isActive("/dashboard/gallery")} tooltip="Gallery">
+                <SidebarMenuButton asChild isActive={isActive("/dashboard/gallery")} tooltip={t('gallery')}>
                   <Link href="/dashboard/gallery">
                     <GalleryIcon />
-                    <span>Gallery</span>
+                    <span>{t('gallery')}</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             )}
             {role === 'admin' && (
               <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={isActive("/dashboard/announcements")} tooltip="Announcements">
+                <SidebarMenuButton asChild isActive={isActive("/dashboard/announcements")} tooltip={t('announcements')}>
                   <Link href="/dashboard/announcements">
                     <Megaphone />
-                    <span>Announcements</span>
+                    <span>{t('announcements')}</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -144,10 +147,10 @@ export default function DashboardLayout({
         <SidebarFooter>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild isActive={isActive("/dashboard/settings")} tooltip="Settings">
+              <SidebarMenuButton asChild isActive={isActive("/dashboard/settings")} tooltip={t('settings')}>
                 <Link href="/dashboard/settings">
                   <Settings />
-                  <span>Settings</span>
+                  <span>{t('settings')}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>

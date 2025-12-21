@@ -1,0 +1,19 @@
+
+{
+  "dashboard": "Dashboard",
+  "students": "Students",
+  "myChild": "My Child",
+  "academics": "Academics",
+  "classes": "Classes",
+  "transport": "Transport",
+  "fees": "Fees",
+  "staff": "Staff",
+  "gallery": "Gallery",
+  "announcements": "Announcements",
+  "settings": "Settings",
+  "selectLanguage": "Select Language",
+  "language": "Language",
+  "english": "English",
+  "kannada": "Kannada",
+  "selectPreferredLanguage": "Select your preferred language."
+}

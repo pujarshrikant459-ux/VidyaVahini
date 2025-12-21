@@ -25,6 +25,7 @@ import { useAuth, useFirestore, useUser, setDocumentNonBlocking } from "@/fireba
 import { useEffect } from "react";
 import { updateProfile } from "firebase/auth";
 import { doc } from "firebase/firestore";
+import { useLocalization, type Language } from "@/hooks/use-localization";
 
 const aboutSchema = z.object({
   about: z.string().min(20, "About text must be at least 20 characters."),
@@ -42,6 +43,7 @@ export default function SettingsPage() {
   const { user } = useUser();
   const auth = useAuth();
   const firestore = useFirestore();
+  const { language, setLanguage, t } = useLocalization();
 
   const aboutForm = useForm({
     resolver: zodResolver(aboutSchema),
@@ -203,17 +205,17 @@ export default function SettingsPage() {
       
       <Card>
         <CardHeader>
-          <CardTitle>Language</CardTitle>
-          <CardDescription>Select your preferred language.</CardDescription>
+          <CardTitle>{t('language')}</CardTitle>
+          <CardDescription>{t('selectPreferredLanguage')}</CardDescription>
         </CardHeader>
         <CardContent>
-           <Select defaultValue="english">
+           <Select value={language} onValueChange={(value) => setLanguage(value as Language)}>
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select Language" />
+                <SelectValue placeholder={t('selectLanguage')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="english">English</SelectItem>
-                <SelectItem value="kannada">ಕನ್ನಡ</SelectItem>
+                <SelectItem value="en">{t('english')}</SelectItem>
+                <SelectItem value="kn">{t('kannada')}</SelectItem>
               </SelectContent>
             </Select>
         </CardContent>

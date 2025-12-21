@@ -9,6 +9,7 @@ import { StudentsProvider } from '@/hooks/use-students';
 import { GalleryProvider } from '@/hooks/use-gallery';
 import { SiteContentProvider } from '@/hooks/use-site-content';
 import { FirebaseClientProvider } from '@/firebase';
+import { LocalizationProvider } from '@/hooks/use-localization';
 
 export const metadata: Metadata = {
   title: 'VidyaVahini: Karnataka\'s Digital Education Portal',
@@ -29,17 +30,19 @@ export default function RootLayout({
       </head>
       <body className={cn('font-body antialiased min-h-screen bg-background')}>
         <FirebaseClientProvider>
-          <UserRoleProvider>
-            <AnnouncementsProvider>
-              <StudentsProvider>
-                <GalleryProvider>
-                  <SiteContentProvider>
-                    {children}
-                  </SiteContentProvider>
-                </GalleryProvider>
-              </StudentsProvider>
-            </AnnouncementsProvider>
-          </UserRoleProvider>
+          <LocalizationProvider>
+            <UserRoleProvider>
+              <AnnouncementsProvider>
+                <StudentsProvider>
+                  <GalleryProvider>
+                    <SiteContentProvider>
+                      {children}
+                    </SiteContentProvider>
+                  </GalleryProvider>
+                </StudentsProvider>
+              </AnnouncementsProvider>
+            </UserRoleProvider>
+          </LocalizationProvider>
         </FirebaseClientProvider>
         <Toaster />
       </body>
