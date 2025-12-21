@@ -11,8 +11,8 @@ import { SiteContentProvider } from '@/hooks/use-site-content';
 import { FirebaseClientProvider } from '@/firebase';
 
 export const metadata: Metadata = {
-  title: 'VidyaVahini',
-  description: 'Karnataka Government School Management Portal',
+  title: 'VidyaVahini: Karnataka\'s Digital Education Portal',
+  description: 'Connecting schools, empowering students, and building a brighter future for Karnataka.',
 };
 
 export default function RootLayout({
