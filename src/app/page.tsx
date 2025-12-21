@@ -10,18 +10,46 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useGallery } from '@/hooks/use-gallery';
 import { useSiteContent } from '@/hooks/use-site-content';
 import { useEffect, useState } from 'react';
+import { useLocalization, type Language } from '@/hooks/use-localization';
 
 export default function Home() {
   const { photos, videos } = useGallery();
   const { aboutContent } = useSiteContent();
-  
+  const { language, setLanguage, t } = useLocalization();
+
+  const [languageSelected, setLanguageSelected] = useState(false);
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
+    const storedLang = localStorage.getItem('vva-language');
+    if (storedLang) {
+      setLanguageSelected(true);
+    }
   }, []);
 
+  const handleLanguageSelect = (lang: Language) => {
+    setLanguage(lang);
+    setLanguageSelected(true);
+  };
+
   const heroImage = photos.find(p => p.id === 'hero');
+
+  if (isClient && !languageSelected) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-background p-4">
+        <div className="text-center">
+            <GraduationCap className="h-16 w-16 mx-auto text-primary mb-4" />
+            <h1 className="text-3xl md:text-5xl font-bold font-headline mb-2">Welcome to VidyaVahini</h1>
+            <p className="text-lg text-muted-foreground mb-8">Please select your language to continue.</p>
+        </div>
+        <div className="flex flex-col sm:flex-row gap-4">
+            <Button size="lg" onClick={() => handleLanguageSelect('en')}>Continue in English</Button>
+            <Button size="lg" variant="outline" onClick={() => handleLanguageSelect('kn')}>ಕನ್ನಡದಲ್ಲಿ ಮುಂದುವರಿಸಿ</Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -138,7 +166,7 @@ export default function Home() {
           <div className="container mx-auto px-4 text-center">
             <h3 className="text-3xl font-bold font-headline mb-4">About VidyaVahini</h3>
             <p className="max-w-3xl mx-auto text-muted-foreground">
-              {isClient ? aboutContent : ''}
+              {aboutContent}
             </p>
           </div>
         </section>
@@ -171,3 +199,5 @@ function FeatureCard({ icon, title, description }: { icon: React.ReactNode, titl
     </Card>
   );
 }
+
+    
