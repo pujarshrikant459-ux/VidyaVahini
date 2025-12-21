@@ -1,3 +1,4 @@
+
 "use client";
 
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
@@ -19,29 +20,43 @@ const initialVideos = PlaceHolderImages.filter(p => p.id.startsWith('video-'));
 
 
 export function GalleryProvider({ children }: { children: ReactNode }) {
-  const [photos, setPhotos] = useState<ImagePlaceholder[]>(() => {
-    if (typeof window === 'undefined') return initialPhotos;
-    const stored = localStorage.getItem(GALLERY_STORAGE_KEY);
-    return stored ? JSON.parse(stored).photos : initialPhotos;
-  });
-
-  const [videos, setVideos] = useState<ImagePlaceholder[]>(() => {
-    if (typeof window === 'undefined') return initialVideos;
-    const stored = localStorage.getItem(GALLERY_STORAGE_KEY);
-    return stored ? JSON.parse(stored).videos : initialVideos;
-  });
+  const [photos, setPhotos] = useState<ImagePlaceholder[]>(initialPhotos);
+  const [videos, setVideos] = useState<ImagePlaceholder[]>(initialVideos);
 
   useEffect(() => {
+    // This effect runs only on the client-side
+    const stored = localStorage.getItem(GALLERY_STORAGE_KEY);
+    if (stored) {
+      try {
+        const { photos: storedPhotos, videos: storedVideos } = JSON.parse(stored);
+        if (storedPhotos) setPhotos(storedPhotos);
+        if (storedVideos) setVideos(storedVideos);
+      } catch (e) {
+        console.error("Failed to parse gallery from localStorage", e);
+        // If parsing fails, we stick with the initial data
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    // This effect also runs only on the client-side
     const galleryState = { photos, videos };
-    localStorage.setItem(GALLERY_STORAGE_KEY, JSON.stringify(galleryState));
+    // We don't want to write the initial server data to localStorage immediately
+    if (JSON.stringify(photos) !== JSON.stringify(initialPhotos) || JSON.stringify(videos) !== JSON.stringify(initialVideos)) {
+      localStorage.setItem(GALLERY_STORAGE_KEY, JSON.stringify(galleryState));
+    }
   }, [photos, videos]);
 
   useEffect(() => {
     const handleStorageChange = (event: StorageEvent) => {
       if (event.key === GALLERY_STORAGE_KEY && event.newValue) {
-        const { photos, videos } = JSON.parse(event.newValue);
-        setPhotos(photos);
-        setVideos(videos);
+        try {
+            const { photos, videos } = JSON.parse(event.newValue);
+            setPhotos(photos);
+            setVideos(videos);
+        } catch (e) {
+            console.error("Failed to parse gallery from storage event", e);
+        }
       }
     };
     window.addEventListener('storage', handleStorageChange);

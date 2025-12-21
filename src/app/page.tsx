@@ -50,7 +50,7 @@ export default function Home() {
       <main className="flex-1">
         <section className="relative w-full h-[60vh] text-white">
           <div className="absolute inset-0 bg-black/50 z-10" />
-           {isClient && heroImage && (
+           {heroImage && (
             <Image
               src={heroImage.imageUrl}
               alt="Indian students in a classroom"
