@@ -3,7 +3,7 @@
     {
       "id": "hero",
       "description": "Indian students in a classroom, evoking a sense of national pride and educational progress.",
-      "imageUrl": "https://images.unsplash.com/photo-1627993043239-2d6343a0e637?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxJbmRpYW4lMjBzdHVkZW50c3xlbnwwfHx8fDE3MjcyMTEwNDl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1577896851231-70f144b59b44?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxJbmRpYW4lMjBzdHVkZW50c3xlbnwwfHx8fDE3MjcyMTEwNDl8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "Indian students"
     },
     {
@@ -47,60 +47,6 @@
       "description": "Photo of a bus driver.",
       "imageUrl": "https://images.unsplash.com/photo-1593035013811-2db9b3c36980?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxkcml2ZXIlMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjI5ODI5ODV8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "driver portrait"
-    },
-    {
-      "id": "gallery-1",
-      "description": "School event photo.",
-      "imageUrl": "https://images.unsplash.com/photo-1712735250687-da592ff9cd70?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxzY2hvb2wlMjBldmVudHxlbnwwfHx8fDE3NjMyMDMwMDZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "school event"
-    },
-    {
-      "id": "gallery-2",
-      "description": "Students in a classroom.",
-      "imageUrl": "https://images.unsplash.com/photo-1652766399415-aa89236590fa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxzdHVkZW50cyUyMGNsYXNzcm9vbXxlbnwwfHx8fDE3NjMxMjg2NjB8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "students classroom"
-    },
-    {
-      "id": "gallery-3",
-      "description": "School sports day.",
-      "imageUrl": "https://images.unsplash.com/photo-1529267988596-c9e1c9e4670f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxzY2hvb2wlMjBzcG9ydHN8ZW58MHx8fHwxNzYzMTMzNzEyfDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "school sports"
-    },
-    {
-      "id": "gallery-4",
-      "description": "Science fair project.",
-      "imageUrl": "https://images.unsplash.com/photo-1582513166998-56ed1ea02d13?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxzY2llbmNlJTIwZmFpcnxlbnwwfHx8fDE3NjMwOTUxMDR8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "science fair"
-    },
-    {
-      "id": "gallery-5",
-      "description": "School library.",
-      "imageUrl": "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzY2hvb2wlMjBsaWJyYXJ5fGVufDB8fHx8MTc2MzIwMzAwNnww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "school library"
-    },
-    {
-      "id": "gallery-6",
-      "description": "Art class creativity.",
-      "imageUrl": "https://images.unsplash.com/photo-1654386016692-40c6d18d7aad?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxhcnQlMjBjbGFzc3xlbnwwfHx8fDE3NjMxMDkxMDR8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "art class"
-    },
-    {
-      "id": "video-1",
-      "description": "Thumbnail for a video about Annual Day.",
-      "imageUrl": "https://images.unsplash.com/photo-1758844899268-c43f6a696d8f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxhbm51YWwlMjBkYXl8ZW58MHx8fHwxNzYzMjAzMDA2fDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "annual day"
-    },
-    {
-      "id": "video-2",
-      "description": "Thumbnail for a video about a school tour.",
-      "imageUrl": "https://images.unsplash.com/photo-1761948245691-dffaedd942d6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxzY2hvb2wlMjB0b3VyfGVufDB8fHx8MTc2MzIwMzAwNnww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "school tour"
-    },
-    {
-      "id": "video-3",
-      "description": "Thumbnail for a video about a sports competition.",
-      "imageUrl": "https://images.unsplash.com/photo-1609773335024-be4301497ea9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxzcG9ydHMlMjBjb21wZXRpdGlvbnxlbnwwfHx8fDE3NjMyMDMwMDZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "sports competition"
     }
   ]
 }
