@@ -18,10 +18,11 @@ export default function StaffPage() {
   const { toast } = useToast();
   const { role } = useUserRole();
 
-  const handleAddStaff = (newStaffData: Omit<Teacher, 'id'>) => {
+  const handleAddStaff = (newStaffData: Omit<Teacher, 'id' | 'photo'>) => {
     const newStaff: Teacher = {
       ...newStaffData,
       id: `staff-${Date.now()}`,
+      photo: `https://picsum.photos/seed/${Date.now()}/100/100`,
     };
     setStaff(prev => [newStaff, ...prev]);
     toast({

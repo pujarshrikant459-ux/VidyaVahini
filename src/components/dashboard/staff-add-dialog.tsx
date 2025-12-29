@@ -30,7 +30,6 @@ const FormSchema = z.object({
   subject: z.string().optional(),
   classAssigned: z.string().optional(),
   contact: z.string().min(10, { message: "A valid contact number is required." }),
-  photo: z.string().url({ message: "Please enter a valid image URL." }),
 });
 
 type FormData = z.infer<typeof FormSchema>;
@@ -38,7 +37,7 @@ type FormData = z.infer<typeof FormSchema>;
 interface StaffAddDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (staff: Omit<Teacher, 'id'>) => void;
+  onSave: (staff: Omit<Teacher, 'id' | 'photo'>) => void;
 }
 
 export function StaffAddDialog({ isOpen, onClose, onSave }: StaffAddDialogProps) {
@@ -50,7 +49,6 @@ export function StaffAddDialog({ isOpen, onClose, onSave }: StaffAddDialogProps)
       subject: "",
       classAssigned: "",
       contact: "",
-      photo: "",
     },
   });
 
@@ -137,19 +135,6 @@ export function StaffAddDialog({ isOpen, onClose, onSave }: StaffAddDialogProps)
                     <FormLabel>Contact</FormLabel>
                     <FormControl>
                         <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                    </FormItem>
-                )}
-                />
-            <FormField
-                control={form.control}
-                name="photo"
-                render={({ field }) => (
-                    <FormItem>
-                    <FormLabel>Photo URL</FormLabel>
-                    <FormControl>
-                        <Input placeholder="https://example.com/photo.jpg" {...field} />
                     </FormControl>
                     <FormMessage />
                     </FormItem>
