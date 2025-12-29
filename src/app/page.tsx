@@ -6,15 +6,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { GraduationCap, Bus, BookOpen, User, CreditCard, Bell, Camera, Video, PlayCircle, Building } from 'lucide-react';
 import Image from 'next/image';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useGallery } from '@/hooks/use-gallery';
 import { useSiteContent } from '@/hooks/use-site-content';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export default function Home() {
-  const { photos, videos } = useGallery();
   const { aboutContent } = useSiteContent();
 
-  const heroImage = photos.find(p => p.id === 'hero');
+  const heroImage = PlaceHolderImages.find(p => p.id === 'hero');
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -26,7 +24,6 @@ export default function Home() {
           </div>
           <nav className="hidden md:flex gap-4 items-center">
             <Link href="#features" className="text-sm font-medium hover:underline">Features</Link>
-            <Link href="#gallery" className="text-sm font-medium hover:underline">Gallery</Link>
             <Link href="#about" className="text-sm font-medium hover:underline">About</Link>
             <Link href="/select-language">
               <Button variant="secondary">Login</Button>
@@ -77,53 +74,6 @@ export default function Home() {
               <FeatureCard icon={<Bell />} title="Parent Dashboard" description="Stay updated with your child's progress." />
               <FeatureCard icon={<GraduationCap />} title="Staff Directory" description="Connect with teachers and school staff." />
             </div>
-          </div>
-        </section>
-        
-        <section id="gallery" className="py-16 bg-secondary">
-          <div className="container mx-auto px-4">
-            <h3 className="text-3xl font-bold text-center mb-12 font-headline">Gallery</h3>
-            <Tabs defaultValue="photos" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 max-w-md mx-auto">
-                <TabsTrigger value="photos"><Camera className="mr-2"/>Photos</TabsTrigger>
-                <TabsTrigger value="videos"><Video className="mr-2"/>Videos</TabsTrigger>
-              </TabsList>
-              <TabsContent value="photos" className="mt-8">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {photos.filter(p => !p.id.startsWith('video-') && p.id !== 'hero').map((photo) => (
-                    <div key={photo.id} className="group overflow-hidden rounded-lg">
-                       <Image
-                          src={photo.imageUrl}
-                          alt={photo.description}
-                          width={600}
-                          height={400}
-                          className="object-cover w-full h-full aspect-video group-hover:scale-105 transition-transform duration-300"
-                          data-ai-hint={photo.imageHint}
-                        />
-                    </div>
-                  ))}
-                </div>
-              </TabsContent>
-              <TabsContent value="videos" className="mt-8">
-                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {videos.map((video) => (
-                      <div key={video.id} className="group relative overflow-hidden rounded-lg">
-                        <Image
-                          src={video.imageUrl}
-                          alt={video.description}
-                          width={600}
-                          height={400}
-                          className="object-cover w-full h-full aspect-video"
-                          data-ai-hint={video.imageHint}
-                        />
-                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                            <PlayCircle className="h-16 w-16 text-white/80 group-hover:text-white group-hover:scale-110 transition-all duration-300" />
-                        </div>
-                      </div>
-                    ))}
-                 </div>
-              </TabsContent>
-            </Tabs>
           </div>
         </section>
 

@@ -6,7 +6,6 @@ import { Toaster } from "@/components/ui/toaster";
 import { UserRoleProvider } from '@/hooks/use-user-role';
 import { AnnouncementsProvider } from '@/hooks/use-announcements';
 import { StudentsProvider } from '@/hooks/use-students';
-import { GalleryProvider } from '@/hooks/use-gallery';
 import { SiteContentProvider } from '@/hooks/use-site-content';
 import { FirebaseClientProvider } from '@/firebase';
 import { LocalizationProvider } from '@/hooks/use-localization';
@@ -34,11 +33,9 @@ export default function RootLayout({
             <UserRoleProvider>
               <AnnouncementsProvider>
                 <StudentsProvider>
-                  <GalleryProvider>
-                    <SiteContentProvider>
-                      {children}
-                    </SiteContentProvider>
-                  </GalleryProvider>
+                  <SiteContentProvider>
+                    {children}
+                  </SiteContentProvider>
                 </StudentsProvider>
               </AnnouncementsProvider>
             </UserRoleProvider>

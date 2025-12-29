@@ -1,97 +1,80 @@
-
-"use client";
-
-import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { PlaceHolderImages, type ImagePlaceholder } from "@/lib/placeholder-images";
-
-interface GalleryContextType {
-  photos: ImagePlaceholder[];
-  videos: ImagePlaceholder[];
-  addGalleryItem: (type: 'photo' | 'video', item: ImagePlaceholder) => void;
-  deleteGalleryItem: (type: 'photo' | 'video', id: string) => void;
-}
-
-const GalleryContext = createContext<GalleryContextType | undefined>(undefined);
-
-const GALLERY_STORAGE_KEY = 'vva-gallery';
-
-const initialPhotos = PlaceHolderImages.filter(p => !p.id.startsWith('video-'));
-const initialVideos = PlaceHolderImages.filter(p => p.id.startsWith('video-'));
-
-
-export function GalleryProvider({ children }: { children: ReactNode }) {
-  const [photos, setPhotos] = useState<ImagePlaceholder[]>(initialPhotos);
-  const [videos, setVideos] = useState<ImagePlaceholder[]>(initialVideos);
-
-  useEffect(() => {
-    // This effect runs only on the client-side
-    const stored = localStorage.getItem(GALLERY_STORAGE_KEY);
-    if (stored) {
-      try {
-        const { photos: storedPhotos, videos: storedVideos } = JSON.parse(stored);
-        if (storedPhotos) setPhotos(storedPhotos);
-        if (storedVideos) setVideos(storedVideos);
-      } catch (e) {
-        console.error("Failed to parse gallery from localStorage", e);
-        // If parsing fails, we stick with the initial data
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    // This effect also runs only on the client-side
-    const galleryState = { photos, videos };
-    // We don't want to write the initial server data to localStorage immediately
-    if (JSON.stringify(photos) !== JSON.stringify(initialPhotos) || JSON.stringify(videos) !== JSON.stringify(initialVideos)) {
-      localStorage.setItem(GALLERY_STORAGE_KEY, JSON.stringify(galleryState));
-    }
-  }, [photos, videos]);
-
-  useEffect(() => {
-    const handleStorageChange = (event: StorageEvent) => {
-      if (event.key === GALLERY_STORAGE_KEY && event.newValue) {
-        try {
-            const { photos, videos } = JSON.parse(event.newValue);
-            setPhotos(photos);
-            setVideos(videos);
-        } catch (e) {
-            console.error("Failed to parse gallery from storage event", e);
-        }
-      }
-    };
-    window.addEventListener('storage', handleStorageChange);
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
-  }, []);
-
-  const addGalleryItem = (type: 'photo' | 'video', item: ImagePlaceholder) => {
-    if (type === 'photo') {
-      setPhotos(prev => [item, ...prev]);
-    } else {
-      setVideos(prev => [item, ...prev]);
-    }
-  };
-  
-  const deleteGalleryItem = (type: 'photo' | 'video', id: string) => {
-     if (type === 'photo') {
-      setPhotos(prev => prev.filter(p => p.id !== id));
-    } else {
-      setVideos(prev => prev.filter(v => v.id !== id));
-    }
-  }
-
-  return (
-    <GalleryContext.Provider value={{ photos, videos, addGalleryItem, deleteGalleryItem }}>
-      {children}
-    </GalleryContext.Provider>
-  );
-}
-
-export function useGallery() {
-  const context = useContext(GalleryContext);
-  if (context === undefined) {
-    throw new Error('useGallery must be used within a GalleryProvider');
-  }
-  return context;
+{
+  "dashboard": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್",
+  "students": "ವಿದ್ಯಾರ್ಥಿಗಳು",
+  "myChild": "ನನ್ನ ಮಗು",
+  "academics": "ಶೈಕ್ಷಣಿಕ",
+  "classes": "ತರಗತಿಗಳು",
+  "transport": "ಸಾರಿಗೆ",
+  "fees": "ಶುಲ್ಕ",
+  "staff": "ಸಿಬ್ಬಂದಿ",
+  "announcements": "ಘೋಷಣೆಗಳು",
+  "settings": "ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
+  "selectLanguage": "ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+  "language": "ಭಾಷೆ",
+  "english": "English",
+  "kannada": "ಕನ್ನಡ",
+  "selectPreferredLanguage": "ನಿಮ್ಮ ಆದ್ಯತೆಯ ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ.",
+  "homework": "ಮನೆಕೆಲಸ",
+  "timetable": "ತರಗತಿ ವೇಳಾಪಟ್ಟಿ",
+  "behavioralNotes": "ವರ್ತನೆಯ ಟಿಪ್ಪಣಿಗಳು",
+  "dailyWeeklyHomeworkUpdates": "ದೈನಂದಿನ ಮತ್ತು ಸಾಪ್ತಾಹಿಕ ಮನೆಕೆಲಸದ ನವೀಕರಣಗಳು.",
+  "addHomework": "ಮನೆಕೆಲಸ ಸೇರಿಸಿ",
+  "addNewHomework": "ಹೊಸ ಮನೆಕೆಲಸ ಸೇರಿಸಿ",
+  "createNewAssignmentForStudents": "ವಿದ್ಯಾರ್ಥಿಗಳಿಗೆ ಹೊಸ ನಿಯೋಜನೆಯನ್ನು ರಚಿಸಿ.",
+  "title": "ಶೀರ್ಷಿಕೆ",
+  "subject": "ವಿಷಯ",
+  "teacher": "ಶಿಕ್ಷಕರು",
+  "description": "ವಿವರಣೆ",
+  "dueDate": "ಕೊನೆಯ ದಿನಾಂಕ",
+  "cancel": "ರದ್ದುಮಾಡಿ",
+  "saveChanges": "ಬದಲಾವಣೆಗಳನ್ನು ಉಳಿಸಿ",
+  "due": "ದೇಯ",
+  "assigned": "ನಿಯೋಜಿಸಲಾಗಿದೆ",
+  "noHomeworkAssigned": "ಯಾವುದೇ ಮನೆಕೆಲಸವನ್ನು ನಿಯೋಜಿಸಲಾಗಿಲ್ಲ.",
+  "weeklyClassSchedule": "ನಿಮ್ಮ ಮಗುವಿನ ತರಗತಿಯ ಸಾಪ್ತಾಹಿಕ ವೇಳಾಪಟ್ಟಿ.",
+  "save": "ಉಳಿಸಿ",
+  "editTimetable": "ವೇಳಾಪಟ್ಟಿ ಸಂಪಾದಿಸಿ",
+  "day": "ದಿನ",
+  "addBehavioralNote": "ವರ್ತನೆಯ ಟಿಪ್ಪಣಿ ಸೇರಿಸಿ",
+  "recordObservationForStudent": "ವಿದ್ಯಾರ್ಥಿಯ ಅವಲೋಕನವನ್ನು ದಾಖಲಿಸಿ.",
+  "student": "ವಿದ್ಯಾರ್ಥಿ",
+  "selectStudent": "ವಿದ್ಯಾರ್ಥಿಯನ್ನು ಆಯ್ಕೆಮಾಡಿ...",
+  "note": "ಟಿಪ್ಪಣಿ",
+  "saveNote": "ಟಿಪ್ಪಣಿ ಉಳಿಸಿ",
+  "observationsFromTeachers": "ನಿಮ್ಮ ಮಗುವಿನ ನಡವಳಿಕೆ ಮತ್ತು ಭಾಗವಹಿಸುವಿಕೆಯ ಬಗ್ಗೆ ಶಿಕ್ಷಕರ ಅವಲೋಕನಗಳು.",
+  "noNotesForChild": "ನಿಮ್ಮ ಮಗುವಿಗೆ ಇನ್ನೂ ಯಾವುದೇ ಟಿಪ್ಪಣಿಗಳನ್ನು ದಾಖಲಿಸಲಾಗಿಲ್ಲ.",
+  "selectStudentToViewNotes": "ಟಿಪ್ಪಣಿಗಳನ್ನು ವೀಕ್ಷಿಸಲು ವಿದ್ಯಾರ್ಥಿಯನ್ನು ಆಯ್ಕೆಮಾಡಿ.",
+  "adminNoteViewHint": "ಈ ವೀಕ್ಷಣೆಯು ಪೋಷಕರಿಗಾಗಿದೆ. ನಿರ್ವಾಹಕರು ಟಿಪ್ಪಣಿಗಳನ್ನು ಸೇರಿಸಬಹುದು.",
+  "newAnnouncement": "ಹೊಸ ಪ್ರಕಟಣೆ",
+  "createAndPublishNewAnnouncement": "ಹೊಸ ಪ್ರಕಟಣೆಯನ್ನು ರಚಿಸಿ ಮತ್ತು ಪ್ರಕಟಿಸಿ.",
+  "content": "ವಿಷಯ",
+  "postAnnouncement": "ಪ್ರಕಟಣೆಯನ್ನು ಪೋಸ್ಟ್ ಮಾಡಿ",
+  "allAnnouncements": "ಎಲ್ಲಾ ಪ್ರಕಟಣೆಗಳು",
+  "viewAllAnnouncements": "ಹಿಂದಿನ ಮತ್ತು ಪ್ರಸ್ತುತ ಎಲ್ಲಾ ಪ್ರಕಟಣೆಗಳನ್ನು ವೀಕ್ಷಿಸಿ.",
+  "postedOn": "ಪೋಸ್ಟ್ ಮಾಡಲಾಗಿದೆ",
+  "noAnnouncementsYet": "ಇನ್ನೂ ಯಾವುದೇ ಪ್ರಕಟಣೆಗಳಿಲ್ಲ.",
+  "manageClasses": "1 ರಿಂದ 10 ನೇ ತರಗತಿಯವರೆಗಿನ ಎಲ್ಲಾ ತರಗತಿಗಳನ್ನು ನಿರ್ವಹಿಸಿ ಮತ್ತು ವೀಕ್ಷಿಸಿ.",
+  "studentsCount": "ವಿದ್ಯಾರ್ಥಿಗಳು",
+  "notAssigned": "ನಿಯೋಜಿಸಲಾಗಿಲ್ಲ",
+  "image": "ಚಿತ್ರ",
+  "name": "ಹೆಸರು",
+  "classSection": "ವರ್ಗ ವಿಭಾಗ",
+  "rollNumber": "ರೋಲ್ ಸಂಖ್ಯೆ",
+  "noStudentsEnrolled": "ಈ ತರಗತಿಯಲ್ಲಿ ಇನ್ನೂ ಯಾವುದೇ ವಿದ್ಯಾರ್ಥಿಗಳು ದಾಖಲಾಗಿಲ್ಲ.",
+  "feeManagement": "ಶುಲ್ಕ ನಿರ್ವಹಣೆ",
+  "overseeFeeRecords": "ಎಲ್ಲಾ ವಿದ್ಯಾರ್ಥಿ ಶುಲ್ಕ ದಾಖಲೆಗಳನ್ನು ಮೇಲ್ವಿಚಾರಣೆ ಮಾಡಿ ಮತ್ತು ನಿರ್ವಹಿಸಿ.",
+  "myChildsFees": "ನನ್ನ ಮಗುವಿನ ಶುಲ್ಕಗಳು",
+  "feeStructure": "ಶುಲ್ಕ ರಚನೆ",
+  "feeDetailsFor": "ಶುಲ್ಕ ವಿವರಗಳು",
+  "viewUpcomingPaymentsAndHistory": "ಮುಂಬರುವ ಪಾವತಿಗಳು ಮತ್ತು ನಿಮ್ಮ ಪಾವತಿ ಇತಿಹಾಸವನ್ನು ವೀಕ್ಷಿಸಿ.",
+  "feeType": "ಶುಲ್ಕದ ವಿಧ",
+  "amount": "ಮೊತ್ತ",
+  "status": "ಸ್ಥಿತಿ",
+  "action": "ಕ್ರಿಯೆ",
+  "payNow": "ಈಗ ಪಾವತಿಸಿ",
+  "paid": "ಪಾವತಿಸಲಾಗಿದೆ",
+  "pending": "ಬಾಕಿ ಇದೆ",
+  "noFeeRecordsForChild": "ನಿಮ್ಮ ಮಗುವಿಗೆ ಯಾವುದೇ ಶುಲ್ಕ ದಾಖಲೆಗಳು ಕಂಡುಬಂದಿಲ್ಲ.",
+  "schoolFeeStructure": "ಶಾಲಾ ಶುಲ್ಕ ರಚನೆ",
+  "overviewOfFees": "ಅನ್ವಯವಾಗುವ ವಿವಿಧ ರೀತಿಯ ಶುಲ್ಕಗಳ ಅವಲೋಕನ."
 }

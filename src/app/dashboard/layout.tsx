@@ -12,7 +12,6 @@ import {
   Megaphone,
   Settings,
   Users,
-  Image as GalleryIcon,
   BookCopy
 } from "lucide-react";
 import {
@@ -118,16 +117,6 @@ export default function DashboardLayout({
                   <Link href="/dashboard/staff">
                     <Users />
                     <span>{t('staff')}</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            )}
-             {role === 'admin' && (
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={isActive("/dashboard/gallery")} tooltip={t('gallery')}>
-                  <Link href="/dashboard/gallery">
-                    <GalleryIcon />
-                    <span>{t('gallery')}</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

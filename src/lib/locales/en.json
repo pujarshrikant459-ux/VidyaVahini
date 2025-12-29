@@ -8,7 +8,6 @@
   "transport": "Transport",
   "fees": "Fees",
   "staff": "Staff",
-  "gallery": "Gallery",
   "announcements": "Announcements",
   "settings": "Settings",
   "selectLanguage": "Select Language",
@@ -78,18 +77,5 @@
   "pending": "Pending",
   "noFeeRecordsForChild": "No fee records found for your child.",
   "schoolFeeStructure": "School Fee Structure",
-  "overviewOfFees": "An overview of the different types of fees applicable.",
-  "managePhotos": "Manage Photos",
-  "manageVideos": "Manage Videos",
-  "addPhoto": "Add New Photo",
-  "addVideo": "Add New Video",
-  "provideUrlAndDescription": "Provide the URL and description for the new gallery item.",
-  "imageUrl": "Image/Thumbnail URL",
-  "imageHint": "Image Hint",
-  "twoKeywordHint": "Two keyword hint for AI image search.",
-  "addToGallery": "Add to Gallery",
-  "existingPhotos": "Existing Photos",
-  "noPhotosInGallery": "No photos in the gallery.",
-  "existingVideos": "Existing Videos",
-  "noVideosInGallery": "No videos in the gallery."
+  "overviewOfFees": "An overview of the different types of fees applicable."
 }

@@ -8,7 +8,6 @@
   "transport": "ಸಾರಿಗೆ",
   "fees": "ಶುಲ್ಕ",
   "staff": "ಸಿಬ್ಬಂದಿ",
-  "gallery": "ಗ್ಯಾಲರಿ",
   "announcements": "ಘೋಷಣೆಗಳು",
   "settings": "ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
   "selectLanguage": "ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ",
@@ -78,18 +77,5 @@
   "pending": "ಬಾಕಿ ಇದೆ",
   "noFeeRecordsForChild": "ನಿಮ್ಮ ಮಗುವಿಗೆ ಯಾವುದೇ ಶುಲ್ಕ ದಾಖಲೆಗಳು ಕಂಡುಬಂದಿಲ್ಲ.",
   "schoolFeeStructure": "ಶಾಲಾ ಶುಲ್ಕ ರಚನೆ",
-  "overviewOfFees": "ಅನ್ವಯವಾಗುವ ವಿವಿಧ ರೀತಿಯ ಶುಲ್ಕಗಳ ಅವಲೋಕನ.",
-  "managePhotos": "ಫೋಟೋಗಳನ್ನು ನಿರ್ವಹಿಸಿ",
-  "manageVideos": "ವೀಡಿಯೊಗಳನ್ನು ನಿರ್ವಹಿಸಿ",
-  "addPhoto": "ಹೊಸ ಫೋಟೋ ಸೇರಿಸಿ",
-  "addVideo": "ಹೊಸ ವೀಡಿಯೊ ಸೇರಿಸಿ",
-  "provideUrlAndDescription": "ಹೊಸ ಗ್ಯಾಲರಿ ಐಟಂಗೆ URL ಮತ್ತು ವಿವರಣೆಯನ್ನು ಒದಗಿಸಿ.",
-  "imageUrl": "ಚಿತ್ರ/ಥಂಬ್‌ನೇಲ್ URL",
-  "imageHint": "ಚಿತ್ರ ಸುಳಿವು",
-  "twoKeywordHint": "AI ಇಮೇಜ್ ಹುಡುಕಾಟಕ್ಕಾಗಿ ಎರಡು ಕೀವರ್ಡ್ ಸುಳಿವು.",
-  "addToGallery": "ಗ್ಯಾಲರಿಗೆ ಸೇರಿಸಿ",
-  "existingPhotos": "ಅಸ್ತಿತ್ವದಲ್ಲಿರುವ ಫೋಟೋಗಳು",
-  "noPhotosInGallery": "ಗ್ಯಾಲರಿಯಲ್ಲಿ ಯಾವುದೇ ಫೋಟೋಗಳಿಲ್ಲ.",
-  "existingVideos": "ಅಸ್ತಿತ್ವದಲ್ಲಿರುವ ವೀಡಿಯೊಗಳು",
-  "noVideosInGallery": "ಗ್ಯಾಲರಿಯಲ್ಲಿ ಯಾವುದೇ ವೀಡಿಯೊಗಳಿಲ್ಲ."
+  "overviewOfFees": "ಅನ್ವಯವಾಗುವ ವಿವಿಧ ರೀತಿಯ ಶುಲ್ಕಗಳ ಅವಲೋಕನ."
 }
