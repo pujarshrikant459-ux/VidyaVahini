@@ -10,7 +10,7 @@ interface StudentsContextType {
   students: Student[];
   currentStudent: Student | null;
   updateStudent: (updatedStudent: Student) => void;
-  addStudent: (newStudentData: Omit<Student, 'id' | 'attendance' | 'fees' | 'behavioralNotes'>) => void;
+  addStudent: (newStudentData: Omit<Student, 'id' | 'attendance' | 'fees' | 'behavioralNotes' | 'photo'>) => void;
   deleteStudent: (studentId: string) => void;
   updateStudentAttendance: (studentId: string, date: Date, status: 'present' | 'absent' | 'late') => void;
   payFee: (studentId: string, feeId: string) => void;
@@ -73,10 +73,11 @@ export function StudentsProvider({ children }: { children: ReactNode }) {
     setStudents(prev => prev.map(s => s.id === updatedStudent.id ? updatedStudent : s));
   };
   
-  const addStudent = (newStudentData: Omit<Student, 'id' | 'attendance' | 'fees' | 'behavioralNotes'>) => {
+  const addStudent = (newStudentData: Omit<Student, 'id' | 'attendance' | 'fees' | 'behavioralNotes' | 'photo'>) => {
      const newStudent: Student = {
       ...newStudentData,
       id: `s-${Date.now()}`,
+      photo: `https://picsum.photos/seed/${Date.now()}/100/100`,
       attendance: [],
       fees: [],
       behavioralNotes: [],

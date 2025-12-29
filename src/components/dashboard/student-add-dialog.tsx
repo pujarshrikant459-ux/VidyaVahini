@@ -31,7 +31,6 @@ const FormSchema = z.object({
   class: z.string().min(1, { message: "Class is required." }),
   rollNumber: z.string().min(1, { message: "Roll number is required." }),
   contact: z.string().min(10, { message: "A valid contact number is required." }),
-  photo: z.string().url({ message: "Please enter a valid image URL." }),
 });
 
 type FormData = z.infer<typeof FormSchema>;
@@ -39,7 +38,7 @@ type FormData = z.infer<typeof FormSchema>;
 interface StudentAddDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (student: Omit<Student, 'id' | 'attendance' | 'fees' | 'behavioralNotes'>) => void;
+  onSave: (student: Omit<Student, 'id' | 'attendance' | 'fees' | 'behavioralNotes' | 'photo'>) => void;
 }
 
 export function StudentAddDialog({ isOpen, onClose, onSave }: StudentAddDialogProps) {
@@ -50,7 +49,6 @@ export function StudentAddDialog({ isOpen, onClose, onSave }: StudentAddDialogPr
       class: "",
       rollNumber: "",
       contact: "",
-      photo: "",
     },
   });
 
@@ -123,19 +121,6 @@ export function StudentAddDialog({ isOpen, onClose, onSave }: StudentAddDialogPr
                       <FormLabel>Contact</FormLabel>
                       <FormControl>
                           <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                      </FormItem>
-                  )}
-                  />
-              <FormField
-                  control={form.control}
-                  name="photo"
-                  render={({ field }) => (
-                      <FormItem>
-                      <FormLabel>Photo URL</FormLabel>
-                      <FormControl>
-                          <Input placeholder="https://example.com/photo.jpg" {...field} />
                       </FormControl>
                       <FormMessage />
                       </FormItem>
