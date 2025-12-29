@@ -56,7 +56,7 @@ export default function DashboardLayout({
         <SidebarHeader>
           <div className="flex items-center gap-2 p-2">
             <GraduationCap className="w-7 h-7 text-sidebar-primary" />
-            <span className="text-lg font-semibold font-headline">Shiksha Connect</span>
+            <span className="text-lg font-semibold font-headline">VidyaSetu</span>
           </div>
         </SidebarHeader>
         <SidebarContent>

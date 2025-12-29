@@ -127,7 +127,7 @@ export default function SchoolRegisterPage() {
         <div className="container mx-auto flex justify-between items-center">
           <Link href="/" className="flex items-center gap-3 text-primary">
             <GraduationCap className="h-8 w-8" />
-            <h1 className="text-2xl font-bold font-headline">Shiksha Connect</h1>
+            <h1 className="text-2xl font-bold font-headline">VidyaSetu</h1>
           </Link>
           <div className="flex items-center gap-4">
             <Button variant="ghost" asChild>
@@ -165,7 +165,7 @@ export default function SchoolRegisterPage() {
               <CardHeader>
                 <CardTitle>School Registration</CardTitle>
                 <CardDescription>
-                  Register your school to start using Shiksha Connect.
+                  Register your school to start using VidyaSetu.
                 </CardDescription>
               </CardHeader>
               <CardContent>

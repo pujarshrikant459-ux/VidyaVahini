@@ -11,8 +11,8 @@ import { FirebaseClientProvider } from '@/firebase';
 import { LocalizationProvider } from '@/hooks/use-localization';
 
 export const metadata: Metadata = {
-  title: 'Shiksha Connect: Karnataka\'s Digital Education Portal',
-  description: 'Connecting schools, empowering students, and building a brighter future for Karnataka.',
+  title: 'VidyaSetu: Bridge of Education',
+  description: 'VidyaSetu - A digital bridge connecting schools, students, and parents for a brighter future in Karnataka.',
 };
 
 export default function RootLayout({

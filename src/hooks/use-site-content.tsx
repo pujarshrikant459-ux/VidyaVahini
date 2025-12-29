@@ -3,7 +3,7 @@
 
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
-const defaultAboutContent = "Shiksha Connect is a modern, professional portal for Karnataka Government Schools, designed to bridge the communication gap between parents, students, and teachers. Our mission is to provide an easy-to-use platform for all school-related information, promoting transparency and collaboration.";
+const defaultAboutContent = "VidyaSetu is a modern, professional portal for Karnataka Government Schools, designed to bridge the communication gap between parents, students, and teachers. Our mission is to provide an easy-to-use platform for all school-related information, promoting transparency and collaboration.";
 
 interface SiteContentContextType {
   aboutContent: string;
