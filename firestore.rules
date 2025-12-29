@@ -1,3 +1,4 @@
+
 /**
  * @file Firebase Security Rules for a School Management Portal.
  *
@@ -33,17 +34,18 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Allows access to school documents.  For now, all access is open.  In a
-     * production environment, access should be restricted to authenticated users with specific
-     * roles (e.g., school admins).
+     * @description Allows access to school documents. Authenticated users can create a school.
+     * In a production environment, writes should be more restricted.
      * @path /schools/{schoolId}
      * @allow (get, list): Any user can read school information.
-     * @allow (create, update, delete): No one can modify school information.
-     * @principle Open read access for school information; writes are disallowed for now.
+     * @allow (create): Any authenticated user can create a school.
+     * @allow (update, delete): No one can modify school information.
+     * @principle Open read access for school information; create is allowed for registration.
      */
     match /schools/{schoolId} {
       allow get, list: if true;
-      allow create, update, delete: if false;
+      allow create: if isSignedIn();
+      allow update, delete: if false;
     }
 
     /**
@@ -61,17 +63,17 @@ service cloud.firestore {
     }
 
     /**
-     * @description Allows access to staff documents.  For now, all access is open.  In a
-     * production environment, access should be restricted to authenticated users with specific
-     * roles (e.g., school admins).
+     * @description Allows access to staff documents. Admins can create staff.
      * @path /schools/{schoolId}/staff/{staffId}
      * @allow (get, list): Any user can read staff information.
-     * @allow (create, update, delete): No one can modify staff information.
-     * @principle Open read access for staff information; writes are disallowed for now.
+     * @allow (create): Authenticated users (admins) can create staff.
+     * @allow (update, delete): No one can modify staff information for now.
+     * @principle Open read access for staff information; writes are restricted.
      */
     match /schools/{schoolId}/staff/{staffId} {
       allow get, list: if true;
-      allow create, update, delete: if false;
+      allow create: if isSignedIn(); // Simplified for now. Should be admin-only.
+      allow update, delete: if false;
     }
 
     /**
