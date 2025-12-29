@@ -1,3 +1,4 @@
+
 "use client";
 
 import { createContext, useContext, useState, ReactNode, useEffect, useMemo } from 'react';
@@ -10,6 +11,7 @@ interface StudentsContextType {
   currentStudent: Student | null;
   updateStudent: (updatedStudent: Student) => void;
   addStudent: (newStudentData: Omit<Student, 'id' | 'attendance' | 'fees' | 'behavioralNotes'>) => void;
+  deleteStudent: (studentId: string) => void;
   updateStudentAttendance: (studentId: string, date: Date, status: 'present' | 'absent' | 'late') => void;
   payFee: (studentId: string, feeId: string) => void;
   addFee: (studentId: string, feeData: Omit<FeeRecord, 'id' | 'status'>) => void;
@@ -81,6 +83,10 @@ export function StudentsProvider({ children }: { children: ReactNode }) {
     };
     setStudents(prev => [newStudent, ...prev]);
   };
+  
+  const deleteStudent = (studentId: string) => {
+    setStudents(prev => prev.filter(s => s.id !== studentId));
+  }
   
   const updateStudentAttendance = (studentId: string, day: Date, status: 'present' | 'absent' | 'late') => {
     const dateString = day.toISOString().split('T')[0];
@@ -183,7 +189,7 @@ export function StudentsProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <StudentsContext.Provider value={{ students, currentStudent, updateStudent, addStudent, updateStudentAttendance, payFee, addFee, approveFee, addBehavioralNote }}>
+    <StudentsContext.Provider value={{ students, currentStudent, updateStudent, addStudent, deleteStudent, updateStudentAttendance, payFee, addFee, approveFee, addBehavioralNote }}>
       {children}
     </StudentsContext.Provider>
   );

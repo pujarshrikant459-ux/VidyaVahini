@@ -13,10 +13,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { MoreHorizontal, PlusCircle, UserPlus } from "lucide-react";
+import { MoreHorizontal, PlusCircle, UserPlus, Trash2 } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { StudentEditDialog } from "@/components/dashboard/student-edit-dialog";
 import { StudentAddDialog } from "@/components/dashboard/student-add-dialog";
@@ -28,11 +38,12 @@ import { useStudents } from "@/hooks/use-students";
 
 export default function StudentsPage() {
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
+  const [deletingStudent, setDeletingStudent] = useState<Student | null>(null);
   const [registeringParentForStudent, setRegisteringParentForStudent] = useState<Student | null>(null);
   const [isAddDialogOpen, setAddDialogOpen] = useState(false);
   const { toast } = useToast();
   const { role, studentId } = useUserRole();
-  const { students, updateStudent, addStudent: addStudentToContext } = useStudents();
+  const { students, updateStudent, addStudent: addStudentToContext, deleteStudent } = useStudents();
   const router = useRouter();
 
   useEffect(() => {
@@ -74,6 +85,18 @@ export default function StudentsPage() {
     });
     setAddDialogOpen(false);
   };
+
+  const handleDeleteConfirm = () => {
+    if (deletingStudent) {
+      deleteStudent(deletingStudent.id);
+      toast({
+        title: "Student Deleted",
+        description: `${deletingStudent.name} has been removed from the records.`,
+      });
+      setDeletingStudent(null);
+    }
+  };
+
 
   if (role === 'parent') {
     // Render a loading state or null while redirecting
@@ -164,7 +187,10 @@ export default function StudentsPage() {
                               Register Parent
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem className="text-destructive">Delete Student</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => setDeletingStudent(student)} className="text-destructive focus:bg-destructive/10 focus:text-destructive">
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              Delete Student
+                            </DropdownMenuItem>
                           </>
                         )}
                       </DropdownMenuContent>
@@ -195,6 +221,22 @@ export default function StudentsPage() {
           isOpen={!!registeringParentForStudent}
           onClose={handleRegisterParentClose}
         />
+      )}
+      {deletingStudent && (
+        <AlertDialog open={!!deletingStudent} onOpenChange={() => setDeletingStudent(null)}>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                    This action cannot be undone. This will permanently delete the student record for <span className="font-semibold">{deletingStudent.name}</span>.
+                </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={handleDeleteConfirm} className="bg-destructive hover:bg-destructive/90">Delete</AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
       )}
     </>
   );
