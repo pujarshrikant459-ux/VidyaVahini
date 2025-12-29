@@ -9,7 +9,7 @@ export const behavioralNotes: BehavioralNote[] = [
 export const students: Student[] = [
   {
     id: '1',
-    name: 'Akash Kumar',
+    name: 'Akash',
     class: '10th A',
     rollNumber: '10A-01',
     contact: '9876543210',
