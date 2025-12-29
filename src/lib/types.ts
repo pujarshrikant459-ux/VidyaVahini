@@ -52,6 +52,12 @@ export interface TimetableEntry {
   periods: { time: string; subject: string; teacher: string }[];
 }
 
+export interface TransportStop {
+  stop: string;
+  pickupTime: string;
+  dropTime: string;
+}
+
 export interface Transport {
   id: string;
   busNumber: string;
@@ -61,7 +67,7 @@ export interface Transport {
     photo: string;
     mobile: string;
   };
-  stops: { stop: string; pickupTime: string; dropTime: string }[];
+  stops: TransportStop[];
 }
 
 export interface Announcement {
