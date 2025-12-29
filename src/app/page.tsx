@@ -38,7 +38,7 @@ export default function Home() {
       </header>
 
       <main className="flex-1">
-        <section className="relative w-full h-[60vh] text-white">
+        <section className="relative w-full h-[50vh] text-white">
           <div className="absolute inset-0 bg-black/50 z-10" />
            {heroImage && (
             <Image
