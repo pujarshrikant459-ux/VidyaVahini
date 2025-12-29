@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -44,7 +45,7 @@ export function DashboardHeader() {
       if (segments[1] === 'students' && segments.length > 2) return 'Student Profile';
       return title.charAt(0).toUpperCase() + title.slice(1);
     }
-    return "VidyaVahini";
+    return "Shiksha Connect";
   };
   
   const handleClearNotifications = () => {

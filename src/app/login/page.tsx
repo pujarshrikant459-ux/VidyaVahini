@@ -23,7 +23,7 @@ export default function LoginPage() {
         <div className="container mx-auto flex justify-between items-center">
           <Link href="/" className="flex items-center gap-3 text-primary">
             <GraduationCap className="h-8 w-8" />
-            <h1 className="text-2xl font-bold font-headline">VidyaVahini</h1>
+            <h1 className="text-2xl font-bold font-headline">Shiksha Connect</h1>
           </Link>
            <div className="flex items-center gap-4">
                <Button variant="outline" asChild>

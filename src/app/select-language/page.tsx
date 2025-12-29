@@ -29,7 +29,7 @@ export default function SelectLanguagePage() {
     <div className="flex flex-col items-center justify-center min-h-screen bg-background p-4">
       <div className="text-center">
         <GraduationCap className="h-16 w-16 mx-auto text-primary mb-4" />
-        <h1 className="text-3xl md:text-5xl font-bold font-headline mb-2">Welcome to VidyaVahini</h1>
+        <h1 className="text-3xl md:text-5xl font-bold font-headline mb-2">Welcome to Shiksha Connect</h1>
         <p className="text-lg text-muted-foreground mb-8">Please select your language to continue.</p>
       </div>
       <div className="flex flex-col sm:flex-row gap-4">

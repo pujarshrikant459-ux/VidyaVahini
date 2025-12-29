@@ -20,7 +20,7 @@ export default function Home() {
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center gap-3">
             <GraduationCap className="h-8 w-8" />
-            <h1 className="text-2xl font-bold font-headline">VidyaVahini</h1>
+            <h1 className="text-2xl font-bold font-headline">Shiksha Connect</h1>
           </div>
           <nav className="hidden md:flex gap-4 items-center">
             <Link href="#features" className="text-sm font-medium hover:underline">Features</Link>
@@ -51,7 +51,7 @@ export default function Home() {
             />
           )}
           <div className="relative z-20 container mx-auto flex flex-col items-center justify-center h-full text-center px-4">
-            <h2 className="text-4xl md:text-6xl font-bold font-headline mb-4">VidyaVahini: Karnataka's Digital Education Portal</h2>
+            <h2 className="text-4xl md:text-6xl font-bold font-headline mb-4">Shiksha Connect: Karnataka's Digital Education Portal</h2>
             <p className="text-lg md:text-2xl mb-8 max-w-3xl">Connecting schools, empowering students, and building a brighter future for Karnataka.</p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link href="/select-language">
@@ -79,7 +79,7 @@ export default function Home() {
 
         <section id="about" className="py-16 bg-background">
           <div className="container mx-auto px-4 text-center">
-            <h3 className="text-3xl font-bold font-headline mb-4">About VidyaVahini</h3>
+            <h3 className="text-3xl font-bold font-headline mb-4">About Shiksha Connect</h3>
             <p className="max-w-3xl mx-auto text-muted-foreground">
               {aboutContent}
             </p>
@@ -89,7 +89,7 @@ export default function Home() {
 
       <footer className="bg-primary text-primary-foreground py-6">
         <div className="container mx-auto flex justify-between items-center">
-          <p>&copy; {new Date().getFullYear()} VidyaVahini. All Rights Reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Shiksha Connect. All Rights Reserved.</p>
           <Link href="/register/school" className="text-sm font-medium hover:underline">
             Register Your School
           </Link>
