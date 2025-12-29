@@ -1,3 +1,4 @@
+
 "use client";
 
 import { OverviewCards } from "@/components/dashboard/overview-cards";
@@ -5,19 +6,30 @@ import { FinancialInsights } from "@/components/dashboard/financial-insights";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { ArrowRight, Bell } from "lucide-react";
+import { ArrowRight, Bell, Building } from "lucide-react";
 import { format } from "date-fns";
 import { useUserRole } from "@/hooks/use-user-role";
 import { useAnnouncements } from "@/hooks/use-announcements";
 import { useStudents } from "@/hooks/use-students";
 
 export default function DashboardPage() {
-  const { role } = useUserRole();
+  const { role, schoolName } = useUserRole();
   const { announcements } = useAnnouncements();
   const { students } = useStudents();
 
   return (
     <div className="flex-1 space-y-4">
+      {role === 'admin' && schoolName && (
+        <Card className="bg-primary text-primary-foreground">
+          <CardHeader className="flex flex-row items-center gap-4 space-y-0">
+            <Building className="h-8 w-8" />
+            <div>
+              <CardTitle className="text-2xl font-bold">{schoolName}</CardTitle>
+              <CardDescription className="text-primary-foreground/80">Administrator Dashboard</CardDescription>
+            </div>
+          </CardHeader>
+        </Card>
+      )}
       <OverviewCards students={students} />
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
         {role === 'admin' && (

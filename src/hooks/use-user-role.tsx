@@ -1,3 +1,4 @@
+
 "use client";
 
 import { createContext, useContext, useState, ReactNode } from 'react';
@@ -7,7 +8,9 @@ export type UserRole = 'admin' | 'parent';
 interface UserRoleContextType {
   role: UserRole;
   studentId: string | null;
-  setLogin: (role: UserRole, studentId?: string) => void;
+  schoolId: string | null;
+  schoolName: string | null;
+  setLogin: (role: UserRole, details?: { studentId?: string; schoolId?: string; schoolName?: string }) => void;
 }
 
 const UserRoleContext = createContext<UserRoleContextType | undefined>(undefined);
@@ -15,14 +18,18 @@ const UserRoleContext = createContext<UserRoleContextType | undefined>(undefined
 export function UserRoleProvider({ children }: { children: ReactNode }) {
   const [role, setRole] = useState<UserRole>('parent');
   const [studentId, setStudentId] = useState<string | null>(null);
+  const [schoolId, setSchoolId] = useState<string | null>(null);
+  const [schoolName, setSchoolName] = useState<string | null>(null);
 
-  const setLogin = (role: UserRole, studentId?: string) => {
+  const setLogin = (role: UserRole, details?: { studentId?: string; schoolId?: string; schoolName?: string }) => {
     setRole(role);
-    setStudentId(studentId || null);
+    setStudentId(details?.studentId || null);
+    setSchoolId(details?.schoolId || null);
+    setSchoolName(details?.schoolName || null);
   };
 
   return (
-    <UserRoleContext.Provider value={{ role, studentId, setLogin }}>
+    <UserRoleContext.Provider value={{ role, studentId, schoolId, schoolName, setLogin }}>
       {children}
     </UserRoleContext.Provider>
   );

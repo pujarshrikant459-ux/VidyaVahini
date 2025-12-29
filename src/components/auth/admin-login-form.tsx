@@ -49,8 +49,14 @@ export function AdminLoginForm() {
          throw new Error("You are not an authorized administrator for any school.");
       }
       
+      // Assuming admin belongs to the first school found
+      const schoolDoc = querySnapshot.docs[0];
+      const schoolData = schoolDoc.data();
+      const schoolId = schoolDoc.id;
+      const schoolName = schoolData.name;
+
       // 3. If everything is valid, set login state and redirect
-      setLogin('admin');
+      setLogin('admin', { schoolId, schoolName });
       router.push('/dashboard');
 
     } catch (error: any) {

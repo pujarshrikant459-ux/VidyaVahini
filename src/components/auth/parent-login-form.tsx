@@ -41,7 +41,7 @@ export function ParentLoginForm() {
         }
       }
       
-      setLogin('parent', studentId);
+      setLogin('parent', { studentId });
       router.push('/dashboard');
     } catch (error: any) {
       let description = 'An unknown error occurred.';
@@ -75,4 +75,3 @@ export function ParentLoginForm() {
     </CardContent>
   );
 }
-
