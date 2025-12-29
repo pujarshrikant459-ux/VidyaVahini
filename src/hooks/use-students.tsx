@@ -26,26 +26,27 @@ const STUDENTS_STORAGE_KEY = 'vva-students';
 export function StudentsProvider({ children }: { children: ReactNode }) {
   const { role, studentId } = useUserRole();
   
-  const [students, setStudents] = useState<Student[]>(() => {
-    if (typeof window === 'undefined') {
-      return initialStudents;
-    }
-    const storedStudents = localStorage.getItem(STUDENTS_STORAGE_KEY);
-    try {
-        if (storedStudents) {
-            const parsedStudents = JSON.parse(storedStudents);
-            // Quick validation to ensure behavioralNotes is an array
-            return parsedStudents.map((s: Student) => ({ ...s, behavioralNotes: s.behavioralNotes || []}));
-        }
-    } catch (e) {
-        console.error("Failed to parse students from localStorage", e);
-    }
-    return initialStudents;
-  });
+  const [students, setStudents] = useState<Student[]>(initialStudents);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem(STUDENTS_STORAGE_KEY, JSON.stringify(students));
-  }, [students]);
+    try {
+      const storedStudents = localStorage.getItem(STUDENTS_STORAGE_KEY);
+      if (storedStudents) {
+        const parsedStudents = JSON.parse(storedStudents);
+        setStudents(parsedStudents.map((s: Student) => ({ ...s, behavioralNotes: s.behavioralNotes || [] })));
+      }
+    } catch (e) {
+      console.error("Failed to parse students from localStorage", e);
+    }
+    setIsInitialized(true);
+  }, []);
+
+  useEffect(() => {
+    if (isInitialized) {
+        localStorage.setItem(STUDENTS_STORAGE_KEY, JSON.stringify(students));
+    }
+  }, [students, isInitialized]);
 
   useEffect(() => {
     const handleStorageChange = (event: StorageEvent) => {
