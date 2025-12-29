@@ -2,7 +2,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -35,6 +34,7 @@ import type { Student } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
 import { useUserRole } from "@/hooks/use-user-role";
 import { useStudents } from "@/hooks/use-students";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export default function StudentsPage() {
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
@@ -126,9 +126,6 @@ export default function StudentsPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="hidden w-[100px] sm:table-cell">
-                  <span className="sr-only">Image</span>
-                </TableHead>
                 <TableHead>Name</TableHead>
                 <TableHead>Class</TableHead>
                 <TableHead className="hidden md:table-cell">Roll Number</TableHead>
@@ -143,20 +140,15 @@ export default function StudentsPage() {
             <TableBody>
               {students.map((student) => (
                 <TableRow key={student.id}>
-                  <TableCell className="hidden sm:table-cell">
-                    <Image
-                      alt="Student avatar"
-                      className="aspect-square rounded-full object-cover"
-                      height="64"
-                      src={student.photo}
-                      width="64"
-                      data-ai-hint="student portrait"
-                    />
-                  </TableCell>
                   <TableCell className="font-medium">
-                    <Link href={`/dashboard/students/${student.id}`} className="hover:underline">
-                      {student.name}
-                    </Link>
+                    <div className="flex items-center gap-3">
+                        <Avatar className="h-8 w-8">
+                            <AvatarFallback>{student.name.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        <Link href={`/dashboard/students/${student.id}`} className="hover:underline">
+                        {student.name}
+                        </Link>
+                    </div>
                   </TableCell>
                   <TableCell>
                     <Badge variant="outline">{student.class}</Badge>

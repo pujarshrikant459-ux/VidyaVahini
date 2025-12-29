@@ -7,7 +7,6 @@ import type { Student } from "@/lib/types";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { useLocalization } from "@/hooks/use-localization";
@@ -61,7 +60,6 @@ export default function ClassesPage() {
                                     <Table>
                                         <TableHeader>
                                             <TableRow>
-                                                <TableHead className="hidden w-[100px] sm:table-cell">{t('image')}</TableHead>
                                                 <TableHead>{t('name')}</TableHead>
                                                 <TableHead>{t('classSection')}</TableHead>
                                                 <TableHead>{t('rollNumber')}</TableHead>
@@ -70,16 +68,6 @@ export default function ClassesPage() {
                                         <TableBody>
                                             {c.students.map(student => (
                                                 <TableRow key={student.id}>
-                                                    <TableCell className="hidden sm:table-cell">
-                                                        <Image
-                                                            alt="Student avatar"
-                                                            className="aspect-square rounded-full object-cover"
-                                                            height="40"
-                                                            src={student.photo}
-                                                            width="40"
-                                                            data-ai-hint="student portrait"
-                                                        />
-                                                    </TableCell>
                                                     <TableCell className="font-medium">
                                                         <Link href={`/dashboard/students/${student.id}`} className="hover:underline">
                                                             {student.name}

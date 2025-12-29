@@ -38,7 +38,7 @@ type FormData = z.infer<typeof FormSchema>;
 interface StudentAddDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (student: Omit<Student, 'id' | 'attendance' | 'fees' | 'behavioralNotes' | 'photo'>) => void;
+  onSave: (student: Omit<Student, 'id' | 'attendance' | 'fees' | 'behavioralNotes'>) => void;
 }
 
 export function StudentAddDialog({ isOpen, onClose, onSave }: StudentAddDialogProps) {

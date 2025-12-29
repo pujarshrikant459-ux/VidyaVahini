@@ -1,9 +1,8 @@
+
 "use client";
 
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Calendar } from "@/components/ui/calendar";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { User, Phone, Hash, BookUser, IndianRupee } from "lucide-react";
@@ -16,6 +15,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { useStudents } from "@/hooks/use-students";
+import { Badge } from "@/components/ui/badge";
 
 export default function StudentProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -162,24 +162,9 @@ export default function StudentProfilePage({ params }: { params: Promise<{ id: s
     <div className="grid gap-4 md:grid-cols-3">
       <div className="md:col-span-1 space-y-4">
         <Card>
-          <CardContent className="pt-6 flex flex-col items-center gap-4">
-            <Image
-              src={student.photo}
-              alt={student.name}
-              width={128}
-              height={128}
-              className="rounded-full object-cover aspect-square"
-              data-ai-hint="student portrait"
-            />
-            <div className="text-center">
-              <h2 className="text-2xl font-bold font-headline">{student.name}</h2>
-              <p className="text-muted-foreground">{student.class}</p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
           <CardHeader>
-            <CardTitle>Details</CardTitle>
+             <CardTitle className="text-2xl font-bold font-headline">{student.name}</CardTitle>
+             <CardDescription>{student.class}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <InfoItem icon={<User />} label="Name" value={student.name} />

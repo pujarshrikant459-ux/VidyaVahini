@@ -1,9 +1,5 @@
-import type { Student, Teacher, Homework, TimetableEntry, Transport, Announcement, BehavioralNote } from './types';
-import { PlaceHolderImages } from './placeholder-images';
 
-const student1Photo = PlaceHolderImages.find(p => p.id === 'student-1')?.imageUrl || '';
-const student2Photo = PlaceHolderImages.find(p => p.id === 'student-2')?.imageUrl || '';
-const student3Photo = PlaceHolderImages.find(p => p.id === 'student-3')?.imageUrl || '';
+import type { Student, Teacher, Homework, TimetableEntry, Transport, Announcement, BehavioralNote } from './types';
 
 export const behavioralNotes: BehavioralNote[] = [
     { id: 'bn-1', date: '2023-10-25', note: 'Akash was very participative in the class discussion about algebra.', teacher: 'Mr. Ramesh Gupta' },
@@ -16,7 +12,6 @@ export const students: Student[] = [
     name: 'Akash Kumar',
     class: '10th A',
     rollNumber: '10A-01',
-    photo: student1Photo,
     contact: '9876543210',
     attendance: [
       { date: '2023-10-01', status: 'present' },
@@ -35,7 +30,6 @@ export const students: Student[] = [
     name: 'Priya Sharma',
     class: '9th B',
     rollNumber: '09B-15',
-    photo: student2Photo,
     contact: '9988776655',
     attendance: [
       { date: '2023-10-01', status: 'present' },
@@ -54,7 +48,6 @@ export const students: Student[] = [
     name: 'Rohan Singh',
     class: '10th A',
     rollNumber: '10A-02',
-    photo: student3Photo,
     contact: '9123456789',
     attendance: [],
     fees: [],
@@ -183,5 +176,3 @@ export const feeStructure = [
   { name: "Development / Maintenance Fee", description: "Contribution towards school infrastructure and upkeep." },
   { name: "Hostel Fee (if applicable)", description: "For students availing the hostel facility." },
 ];
-
-    

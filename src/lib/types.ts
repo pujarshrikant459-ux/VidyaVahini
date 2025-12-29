@@ -1,3 +1,4 @@
+
 export type UserRole = 'admin' | 'parent' | 'teacher';
 
 export interface Student {
@@ -5,7 +6,6 @@ export interface Student {
   name: string;
   class: string;
   rollNumber: string;
-  photo: string;
   contact: string;
   attendance: AttendanceRecord[];
   fees: FeeRecord[];
