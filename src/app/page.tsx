@@ -52,7 +52,7 @@ export default function Home() {
           )}
           <div className="relative z-20 container mx-auto flex flex-col items-center justify-center h-full text-center px-4">
             <h2 className="text-4xl md:text-6xl font-bold font-headline mb-4">Shiksha Connect: Karnataka's Digital Education Portal</h2>
-            <p className="text-lg md:text-2xl mb-8 max-w-3xl">Connecting schools, empowering students, and building a brighter future for Karnataka.</p>
+            <p className="text-lg md:text-2xl mb-8 max-w-3xl">Connect. Empower. Build the Future of Karnataka.</p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link href="/select-language">
                 <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
