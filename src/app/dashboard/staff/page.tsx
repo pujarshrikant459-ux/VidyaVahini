@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { teachers as initialTeachers } from "@/lib/data";
 import type { Teacher } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
@@ -51,17 +50,7 @@ export default function StaffPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {staff.map((member) => (
               <Card key={member.id} className="text-center overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                <div className="bg-secondary/50 p-4">
-                  <Image
-                    src={member.photo}
-                    alt={member.name}
-                    width={100}
-                    height={100}
-                    className="rounded-full object-cover aspect-square mx-auto border-4 border-background"
-                    data-ai-hint="professional portrait"
-                  />
-                </div>
-                <CardContent className="p-4 space-y-1">
+                <CardContent className="p-4 pt-6 space-y-1">
                   <h3 className="font-bold text-lg font-headline">{member.name}</h3>
                   <p className="text-primary">{member.role}</p>
                   {member.subject && <p className="text-sm text-muted-foreground">{member.subject}</p>}
