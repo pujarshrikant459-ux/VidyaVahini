@@ -26,7 +26,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth, useFirestore, setDocumentNonBlocking, addDocumentNonBlocking } from '@/firebase';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, type User } from 'firebase/auth';
 import { collection, doc } from 'firebase/firestore';
 import { GraduationCap, Home, CheckCircle } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -55,13 +55,29 @@ export default function SchoolRegisterPage() {
       password: '',
     },
   });
+  
+  async function getOrCreateUser(values: z.infer<typeof formSchema>): Promise<User> {
+    try {
+      // First, try to sign in. This handles the "email-already-in-use" case gracefully.
+      const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
+      return userCredential.user;
+    } catch (error: any) {
+      // If sign-in fails because the user doesn't exist, create a new user.
+      if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+        const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
+        return userCredential.user;
+      }
+      // Re-throw other errors (e.g., wrong password, network issues).
+      throw error;
+    }
+  }
+
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
     try {
-      // 1. Create the admin user in Firebase Auth
-      const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
-      const user = userCredential.user;
+      // 1. Get existing user or create a new one.
+      const user = await getOrCreateUser(values);
 
       // 2. Create the school document in Firestore
       const schoolsColRef = collection(firestore, 'schools');
