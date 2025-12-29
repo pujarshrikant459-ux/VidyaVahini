@@ -2,7 +2,6 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import { transport as initialTransport } from "@/lib/data";
 import type { Transport, TransportStop } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
@@ -56,7 +55,7 @@ export default function TransportPage() {
     }
   };
   
-  const handleDriverChange = (field: 'name' | 'mobile' | 'photo', value: string) => {
+  const handleDriverChange = (field: 'name' | 'mobile', value: string) => {
     if (editableTransport) {
       setEditableTransport({
         ...editableTransport,
@@ -136,14 +135,6 @@ export default function TransportPage() {
             </CardHeader>
             <CardContent className="grid gap-6 md:grid-cols-3">
               <div className="md:col-span-1 flex flex-col items-center text-center p-4 bg-secondary/50 rounded-lg">
-                <Image
-                  src={currentBusData.driver.photo}
-                  alt={currentBusData.driver.name}
-                  width={96}
-                  height={96}
-                  className="rounded-full object-cover aspect-square mb-4 border-2 border-primary"
-                  data-ai-hint="driver portrait"
-                />
                 {isEditing ? (
                   <div className="space-y-2">
                      <Input 

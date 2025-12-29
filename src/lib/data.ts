@@ -5,12 +5,6 @@ const student1Photo = PlaceHolderImages.find(p => p.id === 'student-1')?.imageUr
 const student2Photo = PlaceHolderImages.find(p => p.id === 'student-2')?.imageUrl || '';
 const student3Photo = PlaceHolderImages.find(p => p.id === 'student-3')?.imageUrl || '';
 
-const headmasterPhoto = PlaceHolderImages.find(p => p.id === 'staff-headmaster')?.imageUrl || '';
-const teacher1Photo = PlaceHolderImages.find(p => p.id === 'staff-teacher-1')?.imageUrl || '';
-const teacher2Photo = PlaceHolderImages.find(p => p.id === 'staff-teacher-2')?.imageUrl || '';
-
-const driver1Photo = PlaceHolderImages.find(p => p.id === 'driver-1')?.imageUrl || '';
-
 export const behavioralNotes: BehavioralNote[] = [
     { id: 'bn-1', date: '2023-10-25', note: 'Akash was very participative in the class discussion about algebra.', teacher: 'Mr. Ramesh Gupta' },
     { id: 'bn-2', date: '2023-10-26', note: 'Showed great leadership during the group science project.', teacher: 'Mrs. Sunita Devi' },
@@ -73,7 +67,6 @@ export const teachers: Teacher[] = [
     id: 'hm-01',
     name: 'Dr. Anjali Rao',
     role: 'Head Master',
-    photo: headmasterPhoto,
     contact: '8123456789',
   },
   {
@@ -82,7 +75,6 @@ export const teachers: Teacher[] = [
     role: 'Teacher',
     subject: 'Mathematics',
     classAssigned: '10th A',
-    photo: teacher1Photo,
     contact: '8987654321',
   },
   {
@@ -91,7 +83,6 @@ export const teachers: Teacher[] = [
     role: 'Teacher',
     subject: 'Science',
     classAssigned: '9th B',
-    photo: teacher2Photo,
     contact: '8765432109',
   },
 ];
@@ -152,7 +143,6 @@ export const transport: Transport[] = [
     route: 'Majestic to School',
     driver: {
       name: 'Ravi Kumar',
-      photo: driver1Photo,
       mobile: '9876512345',
     },
     stops: [

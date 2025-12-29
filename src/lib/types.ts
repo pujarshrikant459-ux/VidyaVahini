@@ -33,7 +33,6 @@ export interface Teacher {
   role: string;
   subject?: string;
   classAssigned?: string;
-  photo: string;
   contact: string;
 }
 
@@ -64,7 +63,6 @@ export interface Transport {
   route: string;
   driver: {
     name: string;
-    photo: string;
     mobile: string;
   };
   stops: TransportStop[];
