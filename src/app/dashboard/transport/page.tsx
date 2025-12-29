@@ -8,7 +8,7 @@ import type { Transport, TransportStop } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Phone, MapPin, Clock, Pencil, Save, X } from "lucide-react";
+import { Phone, MapPin, Clock, Pencil, Save, X, Bus, Route } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useUserRole } from "@/hooks/use-user-role";
 import { useStudents } from "@/hooks/use-students";
@@ -46,6 +46,15 @@ export default function TransportPage() {
     });
     handleEditCancel();
   };
+
+  const handleBusInfoChange = (field: 'route' | 'busNumber', value: string) => {
+    if (editableTransport) {
+      setEditableTransport({
+        ...editableTransport,
+        [field]: value,
+      });
+    }
+  };
   
   const handleDriverChange = (field: 'name' | 'mobile' | 'photo', value: string) => {
     if (editableTransport) {
@@ -76,13 +85,35 @@ export default function TransportPage() {
 
         return (
           <Card key={bus.id}>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <div>
-                <CardTitle>Bus Route: {bus.route}</CardTitle>
-                <p className="text-muted-foreground">Bus Number: {bus.busNumber}</p>
-              </div>
+            <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              {isEditing ? (
+                 <div className="flex-1 space-y-2 w-full">
+                    <div className="relative">
+                       <Route className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                        <Input 
+                          value={editableTransport.route}
+                          onChange={(e) => handleBusInfoChange('route', e.target.value)}
+                          className="pl-8 font-semibold text-lg"
+                        />
+                    </div>
+                     <div className="relative">
+                       <Bus className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                        <Input 
+                            value={editableTransport.busNumber}
+                            onChange={(e) => handleBusInfoChange('busNumber', e.target.value)}
+                            className="pl-8"
+                        />
+                    </div>
+                 </div>
+              ) : (
+                <div>
+                    <CardTitle>Bus Route: {currentBusData.route}</CardTitle>
+                    <p className="text-muted-foreground">Bus Number: {currentBusData.busNumber}</p>
+                </div>
+              )}
+
               {role === 'admin' && (
-                <div className="flex gap-2">
+                <div className="flex gap-2 self-end sm:self-auto">
                   {isEditing ? (
                     <>
                       <Button variant="outline" size="sm" onClick={handleEditCancel}>
