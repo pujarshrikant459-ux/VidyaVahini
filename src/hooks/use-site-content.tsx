@@ -15,17 +15,24 @@ const SiteContentContext = createContext<SiteContentContextType | undefined>(und
 const ABOUT_CONTENT_STORAGE_KEY = 'vva-about-content';
 
 export function SiteContentProvider({ children }: { children: ReactNode }) {
-  const [aboutContent, setAboutContentState] = useState<string>(() => {
-    if (typeof window === 'undefined') {
-      return defaultAboutContent;
-    }
-    const storedContent = localStorage.getItem(ABOUT_CONTENT_STORAGE_KEY);
-    return storedContent ? storedContent : defaultAboutContent;
-  });
+  const [aboutContent, setAboutContentState] = useState<string>(defaultAboutContent);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem(ABOUT_CONTENT_STORAGE_KEY, aboutContent);
-  }, [aboutContent]);
+    // This effect runs only on the client, after the initial render.
+    const storedContent = localStorage.getItem(ABOUT_CONTENT_STORAGE_KEY);
+    if (storedContent) {
+      setAboutContentState(storedContent);
+    }
+    setIsInitialized(true);
+  }, []);
+
+  useEffect(() => {
+    // This effect saves to localStorage only after the state has been initialized.
+    if (isInitialized) {
+        localStorage.setItem(ABOUT_CONTENT_STORAGE_KEY, aboutContent);
+    }
+  }, [aboutContent, isInitialized]);
 
   useEffect(() => {
     const handleStorageChange = (event: StorageEvent) => {
